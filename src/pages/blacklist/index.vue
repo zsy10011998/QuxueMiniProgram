@@ -48,9 +48,6 @@ export default {
   },
   methods: {
     // 去用户详情
-    // 1
-    //
-    //
     toDetail (id) {
       wx.navigateTo({ url: '../user-profile/main?userID=' + id })
     }
