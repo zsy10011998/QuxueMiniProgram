@@ -113,81 +113,59 @@ export default {
     }
   }
 }
+// 1
 </script>
 
 <style lang="stylus" scoped>
-.counter-warp {
-  height: 100%;
-  background: $white;
-  text-align: center;
-
-  .header {
-    padding: 30px 40px;
-    background-color: $theme-green;
-    color: white;
-
-    .header-content {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-
-      .icon {
-        width: 110px;
-        height: 100px;
-      }
-
-      .text {
-        text-align: center;
-        padding-left: 8px;
-
-        .text-header {
-          font-size: 28px;
-          font-family: YouYuan;
-        }
-
-        .text-content {
-          padding-top: 8px;
-          font-size: 16px;
-          font-family: Microsoft YaHei;
-        }
-      }
-    }
-  }
-
-  >>> .login-table {
-    margin: 60px auto 45px;
-  }
-}
-
->>> .input {
-  text-align: center;
-  height: 32px;
-  width: 250px;
-  background-color: #f8f8f9;
-  border-block-color: #dddee1;
-  border-radius: 8px;
-  font-size: 16px;
-  border: 1px solid $border-base;
-  margin-bottom: 8px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.login-button {
-  width: 80vw;
-  background-color: $theme-green;
-  color: white;
-  font-size: 16px;
-  margin: 10px auto 10px;
-
-  &::before {
-    width: 20px;
-    height: 20px;
-    margin: 0 6px 2px 0;
-  }
-}
-
-.clicked {
-  background-color: $dark-green;
-}
+.counter-warp
+  height 100%
+  background $white
+  text-align center
+  .header
+    padding 30px 40px
+    background-color $theme-green
+    color white
+    .header-content
+      display flex
+      flex-direction column
+      align-items center
+      .icon
+        width 110px
+        height 100px
+      .text
+        text-align center
+        padding-left 8px
+        .text-header
+          font-size 28px
+          font-family YouYuan
+        .text-content
+          padding-top 8px
+          font-size 16px
+          font-family Microsoft YaHei
+  >>> .login-table
+    margin 60px auto 45px
+>>> .input
+  text-align center
+  height 32px
+  width 250px
+  background-color #f8f8f9
+  border-block-color #dddee1
+  border-radius 8px
+  font-size 16px
+  border 1px solid $border-base
+  margin-bottom 8px
+  margin-left auto
+  margin-right auto
+.login-button
+  width 80vw
+  background-color $theme-green
+  color white
+  font-size 16px
+  margin 10px auto 10px
+  &::before
+    width 20px
+    height 20px
+    margin 0 6px 2px 0
+.clicked
+  background-color $dark-green
 </style>
