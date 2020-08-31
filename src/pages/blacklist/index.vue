@@ -1,14 +1,19 @@
 <template>
   <div class="blacklist">
-    <div v-if="blacklist.length === 0" class="wrapper">
+    <div v-if="blacklist.length === 0"
+         class="wrapper">
       <div class="none">
         你还没屏蔽任何人哦
       </div>
     </div>
     <div v-else>
-      <div class="list" @click="toDetail(item.userID)" v-for="item in userList" :key="item.userID">
+      <div class="list"
+           @click="toDetail(item.userID)"
+           v-for="item in userList"
+           :key="item.userID">
         <div class="avatar">
-          <img :src="item.avatar || '/static/images/avatar.png'" style="width: 100%;height: 100%">
+          <img :src="item.avatar || '/static/images/avatar.png'"
+               style="width: 100%;height: 100%">
         </div>
         <div class="name">
           {{item.nick || item.userID}}
@@ -43,6 +48,7 @@ export default {
   },
   methods: {
     // 去用户详情
+    // 1
     toDetail (id) {
       wx.navigateTo({ url: '../user-profile/main?userID=' + id })
     }
