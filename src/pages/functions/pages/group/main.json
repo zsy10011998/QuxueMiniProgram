@@ -1,5 +1,9 @@
 {
   "navigationBarTitleText": "分组",
   "disableScroll": false,
-  "usingComponents": {}
+  "usingComponents": {
+    "i-input": "../../../static/iview/input/index",
+    "i-button": "../../../static/iview/button/index",
+    "i-panel": "../../static/iview/panel/index"
+  }
 }
