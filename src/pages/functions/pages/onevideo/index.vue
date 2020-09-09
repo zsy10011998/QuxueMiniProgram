@@ -27,8 +27,13 @@ export default {
 <style>
 .title {
   text-align: center;
-  height: 40rpx;
-  font-size: 40rpx;
+  font-size: 35rpx;
+  padding: 10rpx;
+  flex: 1;
+  line-height: 1.6;
+  padding: 4px 0;
+  min-height: 22px;
+  height: auto;
 }
 .video {
   padding: 30rpx;

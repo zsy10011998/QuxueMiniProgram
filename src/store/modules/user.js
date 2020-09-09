@@ -31,9 +31,9 @@ const userModules = {
       state.myInfo = {}
       state.studentNo = ''
     },
-    setStudentNo (state, studentNo) {
-      state.studentNo = studentNo
-    },
+    // setStudentNo (state, studentNo) {
+    //   state.studentNo = studentNo
+    // },
     setUserId (state, userId) {
       state.userId = userId
     }

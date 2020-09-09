@@ -1,24 +1,46 @@
 <template>
   <div class="profile">
     <i-cell-group>
-      <i-cell title="昵称" :value="myInfo.userID" value-class="cell-value"></i-cell>
+      <i-cell title="昵称"
+              :value="myInfo.userID"
+              value-class="cell-value"></i-cell>
       <i-cell title="头像">
-        <i-avatar slot="footer" i-class="avatar" :src="myInfo.avatar" />
+        <i-avatar slot="footer"
+                  i-class="avatar"
+                  :src="myInfo.avatar" />
       </i-cell>
-      <i-cell title="个性签名" value-class="cell-value" is-link url="../update-profile/main?type=user&key=signature">
-        <div slot="footer" class="signature">
+      <i-cell title="个性签名"
+              value-class="cell-value"
+              is-link
+              url="../update-profile/main?type=user&key=signature">
+        <div slot="footer"
+             class="signature">
           {{myInfo.selfSignature || '暂无'}}
         </div>
       </i-cell>
-      <i-cell title="学号" :value="studentNo" value-class="cell-value"
-      is-link url="../update-profile/main?type=user&key=studentNo"></i-cell>
-      <i-cell title="重置密码"  value-class="cell-value" is-link url="../update-profile/main?type=user&key=password"></i-cell>
-      <i-cell title="统一认证账号" value-class="cell-value" is-link
-        url="../update-profile/main?type=user&key=buaa"></i-cell>
+      <i-cell title="学号"
+              :value="studentNo"
+              value-class="cell-value"
+              is-link
+              url="../update-profile/main?type=user&key=studentNo"></i-cell>
+      <i-cell title="重置密码"
+              value-class="cell-value"
+              is-link
+              url="../update-profile/main?type=user&key=password"></i-cell>
+      <i-cell title="统一认证账号"
+              value-class="cell-value"
+              is-link
+              url="../update-profile/main?type=user&key=buaa"></i-cell>
     </i-cell-group>
     <view style="margin-top: 50px; text-align: center">
-      <button @getuserinfo="getAvatar" open-type="getUserInfo" size="mini" type="primary" >获取用户头像</button>  <br>
-      <button @click="refresh()" type="primary" size="mini" style="margin-top: 15px;">刷新课表</button>
+      <button @getuserinfo="getAvatar"
+              open-type="getUserInfo"
+              size="mini"
+              type="primary">获取用户头像</button> <br>
+      <button @click="refresh()"
+              type="primary"
+              size="mini"
+              style="margin-top: 15px;">刷新课表</button>
     </view>
   </div>
 </template>
@@ -51,6 +73,7 @@ export default {
       wx.$app.updateMyProfile({ avatar: avatar }).then(res => {
         wx.$app.getMyProfile().then(res => {
           wx.store.commit('updateMyInfo', res.data)
+          console.log(res.data)
         })
       })
     },

@@ -11,7 +11,7 @@
       </div>
     </div>
 
-    <i-panel i-class="login-table">
+    <!-- <i-panel i-class="login-table">
       <i-input type="text"
                v-model="loginForm.username"
                title="昵称"
@@ -27,15 +27,15 @@
                maxlength="20"
                i-class="input"
                @change="updatePassword" />
-    </i-panel>
+    </i-panel> -->
 
     <button hover-class="clicked"
             :loading="loading"
             class="login-button"
-            @click="login">登录</button>
-    <button hover-class="clicked"
+            @click="login">微信登录</button>
+    <!-- <button hover-class="clicked"
             class="login-button"
-            @click="signUp()">还未注册？点击这里</button>
+            @click="signUp()">还未注册？点击这里</button> -->
   </div>
 </template>
 
@@ -56,7 +56,8 @@ export default {
   },
   computed: {
     ...mapState({
-      myInfo: state => state.user.myInfo
+      myInfo: state => state.user.myInfo,
+      openid: state => state.student.openid
     })
   },
   onUnload () {
@@ -64,6 +65,40 @@ export default {
   },
   methods: {
     login () {
+      // let that = this
+      wx.login({
+        success: (res) => {
+          if (res.code) {
+            // 发起网络请求
+            this.$WXRequest.post({
+              url: '/onLogin/',
+              data: {
+                code: res.code
+              }
+            }).then(res => {
+              if (res.repCode === 200) {
+                wx.store.commit('setOpenId', res.openid)
+                console.log(res)
+                if (res.isRegister === false) {
+                  wx.navigateTo({ url: '../signUp/main' })
+                } else {
+                  wx.switchTab({ url: '../other-function/main' })
+                }
+              } else {
+                wx.showToast({
+                  title: '请重试',
+                  icon: 'none',
+                  duration: 1500
+                })
+              }
+            })
+          } else {
+            console.log('登录失败！' + res.errMsg)
+          }
+        }
+      })
+    },
+    login1 () {
       let passwordDigest = md5(this.loginForm.password)
       this.$WXRequest.post({
         url: '/sessions/',
@@ -99,9 +134,6 @@ export default {
           this.loading = false
         }
       })
-    },
-    signUp () {
-      wx.navigateTo({ url: '../signUp/main' })
     },
     updateUsername (event) {
       let title = event.mp.detail.detail.value

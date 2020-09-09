@@ -20,26 +20,24 @@
     "pages/calendar/main",
     "pages/other-function/main"
   ],
-  "subPackages": [
-    {
-      "root": "pages/functions/",
-      "name": "schedule",
-      "pages": [
-        "pages/course-schedule/main",
-        "pages/schedule-update/main",
-        "pages/schedule-index/main",
-        "pages/module-index/main",
-        "pages/module-detail/main",
-        "pages/module-edit/main",
-        "pages/block-edit/main",
-        "pages/block-detail/main",
-        "pages/chatterbot/main",
-        "pages/videos/main",
-        "pages/onevideo/main",
-        "pages/group/main"
-      ]
-    }
-  ],
+  "subPackages": [{
+    "root": "pages/functions/",
+    "name": "schedule",
+    "pages": [
+      "pages/course-schedule/main",
+      "pages/schedule-update/main",
+      "pages/schedule-index/main",
+      "pages/module-index/main",
+      "pages/module-detail/main",
+      "pages/module-edit/main",
+      "pages/block-edit/main",
+      "pages/block-detail/main",
+      "pages/chatterbot/main",
+      "pages/videos/main",
+      "pages/onevideo/main",
+      "pages/group/main"
+    ]
+  }],
   "window": {
     "backgroundColor": "#ededed",
     "backgroundTextStyle": "light",
@@ -52,31 +50,19 @@
     "backgroundColor": "#fff",
     "selectedColor": "#1aad16",
     "borderStyle": "white",
-    "list": [
-      {
-        "text": "消息",
-        "pagePath": "pages/index/main",
-        "iconPath": "static/theme/chat.png",
-        "selectedIconPath": "static/theme/chat-theme.png"
-      },
-      {
-        "text": "通讯录",
-        "pagePath": "pages/contact/main",
-        "iconPath": "static/theme/contact.png",
-        "selectedIconPath": "static/theme/contact-theme.png"
+    "list": [{
+        "text": "功能",
+        "pagePath": "pages/other-function/main",
+        "iconPath": "static/theme/setting.png",
+        "selectedIconPath": "static/theme/setting-theme.png"
       },
       {
         "text": "帐号",
         "pagePath": "pages/own/main",
         "iconPath": "static/theme/own.png",
         "selectedIconPath": "static/theme/own-theme.png"
-      },
-      {
-        "text": "其他功能",
-        "pagePath": "pages/other-function/main",
-        "iconPath": "static/theme/setting.png",
-        "selectedIconPath": "static/theme/setting-theme.png"
       }
+
     ],
     "position": "bottom"
   },

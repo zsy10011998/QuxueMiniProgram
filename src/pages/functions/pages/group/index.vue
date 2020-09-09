@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!-- <div class="user-id">学号：{{studentNo}}</div> -->
+    <!-- <div class="user-id">学号：{{$store.state.studentNo}}</div> -->
     <i-panel i-class="login-table">
       <i-input type="text"
                v-model="groupinformation.studentNo"
@@ -11,17 +11,17 @@
                disabled=true
                @change="updatestudetNo" />
       <i-input type="text"
-               v-model="groupinformation.username"
-               title="昵称"
-               placeholder="请输入昵称"
+               v-model="groupinformation.information1"
+               title="信息1"
+               placeholder="请输入信息1"
                maxlength="20"
                i-class="input"
                @change="updateUsername" />
 
-      <i-input type="password"
-               v-model="groupinformation.password"
-               title="密码"
-               placeholder="请输入密码"
+      <i-input type="text"
+               v-model="groupinformation.information2"
+               title="信息2"
+               placeholder="请输入信息2"
                maxlength="20"
                i-class="input"
                @change="updatePassword" />
@@ -39,9 +39,10 @@ export default {
   data () {
     return {
       groupinformation: {
-        username: '',
-        password: '',
-        studentNo: ''
+        studentNo: '',
+        information1: '',
+        information2: ''
+
       }
     }
   },
@@ -58,31 +59,44 @@ export default {
   methods: {
     updateUsername (event) {
       let title = event.mp.detail.detail.value
-      this.$set(this.groupinformation, 'username', title)
+      this.$set(this.groupinformation, 'information1', title)
     },
     updatePassword (event) {
       let title = event.mp.detail.detail.value
-      this.$set(this.groupinformation, 'password', title)
+      this.$set(this.groupinformation, 'information2', title)
       console.log(this.groupinformation)
     },
     login () {
       console.log(this.groupinformation)
       this.$WXRequest.post({
-        url: '/sessions/',
+        url: '/groupinf/',
         data: {
           studentNo: this.groupinformation.studentNo,
           groupinformation: this.groupinformation
         }
       }).then(res => {
-        if (res.repCode === 200 || res.repCode === 300) {
-        } else {
-          wx.switchTab({ url: '../../../other-function/main' })
+        if (res.repCode === 700) {
           wx.showToast({
             title: res.errMsg,
             icon: 'none',
             duration: 1500
           })
+        } else {
+          wx.showToast({
+            title: '提交成功',
+            icon: 'none',
+            duration: 1500
+          })
         }
+        // if (res.repCode === 200 || res.repCode === 300) {
+        // } else {
+        //   wx.switchTab({ url: '../../../other-function/main' })
+        //   wx.showToast({
+        //     title: res.errMsg,
+        //     icon: 'none',
+        //     duration: 1500
+        //   })
+        // }
       })
     }
   }

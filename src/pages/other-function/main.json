@@ -1,5 +1,5 @@
 {
-  "navigationBarTitleText": "其他功能",
+  "navigationBarTitleText": "功能",
   "disableScroll": false,
   "usingComponents": {
     "i-input": "../../../static/iview/input/index",

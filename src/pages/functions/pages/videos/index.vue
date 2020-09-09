@@ -10,7 +10,7 @@
         <div v-for="(item2, index2) in item1.videos"
              :key="index2">
           <view class="title2"
-                @click="hidleclick(item2.videoname,item2.videourl)">·{{item2.videoname}} </view>
+                @click="hidleclick(item2.videoname,item2.videourl)">{{index2+1}}.{{item2.videoname}} </view>
         </div>
       </div>
     </div>
@@ -66,11 +66,20 @@ export default {
 }
 .title1 {
   font-size: 50rpx;
-  height: 80rpx;
-  font-weight: 500;
+  padding: 10rpx;
+  flex: 1;
+  line-height: 1.6;
+  padding: 4px 0;
+  min-height: 22px;
+  height: auto;
 }
 .title2 {
   font-size: 35rpx;
   padding: 10rpx;
+  flex: 1;
+  line-height: 1.6;
+  padding: 4px 0;
+  min-height: 22px;
+  height: auto;
 }
 </style>

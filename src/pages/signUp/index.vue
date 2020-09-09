@@ -13,31 +13,13 @@
 
     <i-panel i-class="login-table">
       <i-input type="text"
-               v-model="signUpForm.username"
-               title="昵称"
-               placeholder="请输入昵称"
+               title="姓名"
+               placeholder="请输入姓名"
                maxlength=20
                i-class="input"
                @change="updateUsername" />
 
-      <i-input type="password"
-               v-model="signUpForm.password"
-               title="密码"
-               placeholder="请输入密码"
-               maxlength=20
-               i-class="input"
-               @change="updatePassword" />
-
-      <i-input type="password"
-               v-model="signUpForm.passwordConfirm"
-               title="确认密码"
-               placeholder="请确认密码"
-               maxlength=20
-               i-class="input"
-               @change="updatePasswordConfirm" />
-
       <i-input type="text"
-               v-model="signUpForm.studentNo"
                title="学号"
                placeholder="请输入学号"
                maxlength=10
@@ -58,15 +40,13 @@
 
 <script>
 import { mapState } from 'vuex'
-import { genTestUserSig } from '../../../static/utils/GenerateTestUserSig'
-import md5 from 'js-md5'
+// import { genTestUserSig } from '../../../static/utils/GenerateTestUserSig'
+// import md5 from 'js-md5'
 export default {
   data () {
     return {
       signUpForm: {
         username: '',
-        password: '',
-        passwordConfirm: '',
         studentNo: ''
       },
       loading: false
@@ -74,7 +54,7 @@ export default {
   },
   computed: {
     ...mapState({
-      myInfo: state => state.user.myInfo
+      openid: state => state.student.openid
     })
   },
   onUnload () {
@@ -89,20 +69,6 @@ export default {
           duration: 1500
         })
         return
-      } else if (this.signUpForm.password !== this.signUpForm.passwordConfirm) {
-        wx.showToast({
-          title: '密码不一致',
-          icon: 'none',
-          duration: 1500
-        })
-        return
-      } else if (this.signUpForm.password.length < 6) {
-        wx.showToast({
-          title: '密码强度不够，密码长度至少为6位',
-          icon: 'none',
-          duration: 1500
-        })
-        return
       } else if (this.signUpForm.studentNo.length < 8) {
         wx.showToast({
           title: '学号格式错误',
@@ -111,29 +77,27 @@ export default {
         })
         return
       }
+      // console.log(this.openid)
+      // console.log(this.signUpForm.username)
+      // console.log(this.signUpForm.studentNo)
       this.$WXRequest.post({
-        url: '/users/',
+        url: '/register/',
         data: {
-          username: this.signUpForm.username,
-          password_digest: md5(this.signUpForm.password),
+          openid: this.openid,
+          name: this.signUpForm.username,
           studentNo: this.signUpForm.studentNo
         }
       }).then(res => {
-        console.log(res)
         if (res.repCode === 200) {
-          this.$WXRequest.saveSession(res.data.sessionId)
-          let userID = this.signUpForm.username
-          wx.store.commit('setStudentNo', this.signUpForm.studentNo)
-          wx.store.commit('setUserId', res.data.userId)
-          console.log('Sign Up')
-          console.log(wx.store.state.user)
-          wx.$app.login({
-            userID,
-            userSig: genTestUserSig(userID).userSig
+          wx.store.commit('setName', this.name)
+          wx.store.commit('setStudentNo', this.studentNo)
+          wx.showToast({
+            title: res.errMsg,
+            icon: 'none',
+            duration: 1500
           }).then(() => {
-            wx.switchTab({ url: '../index/main' })
-          }).catch(() => {
-            this.loading = false
+            console.log('login success')
+            wx.switchTab({ url: '../other-function/main' })
           })
         } else {
           wx.showToast({
@@ -149,14 +113,6 @@ export default {
       let title = event.mp.detail.detail.value
       this.$set(this.signUpForm, 'username', title)
     },
-    updatePassword (event) {
-      let password = event.mp.detail.detail.value
-      this.$set(this.signUpForm, 'password', password)
-    },
-    updatePasswordConfirm (event) {
-      let password = event.mp.detail.detail.value
-      this.$set(this.signUpForm, 'passwordConfirm', password)
-    },
     updateStudentNo (event) {
       let studentNo = event.mp.detail.detail.value
       this.$set(this.signUpForm, 'studentNo', studentNo)
@@ -169,78 +125,55 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-.counter-warp {
-  height: 100%;
-  background: $white;
-  text-align: center;
-
-  .header {
-    padding: 30px 40px;
-    background-color: $theme-green;
-    color: white;
-
-    .header-content {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-
-      .icon {
-        width: 110px;
-        height: 100px;
-      }
-
-      .text {
-        text-align: center;
-        padding-left: 8px;
-
-        .text-header {
-          font-size: 28px;
-          font-family: YouYuan;
-        }
-
-        .text-content {
-          padding-top: 8px;
-          font-size: 16px;
-          font-family: Microsoft YaHei;
-        }
-      }
-    }
-  }
-
-  >>> .login-table {
-    margin: 60px auto 45px;
-  }
-}
-
->>> .input {
-  text-align: center;
-  height: 32px;
-  width: 250px;
-  background-color: #f8f8f9;
-  border-block-color: #dddee1;
-  border-radius: 8px;
-  font-size: 16px;
-  border: 1px solid $border-base;
-  margin-bottom: 8px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.login-button {
-  width: 80vw;
-  background-color: $theme-green;
-  color: white;
-  font-size: 16px;
-  margin: 10px auto 10px;
-
-  &::before {
-    width: 20px;
-    height: 20px;
-    margin: 0 6px 2px 0;
-  }
-}
-
-.clicked {
-  background-color: $dark-green;
-}
+.counter-warp
+  height 100%
+  background $white
+  text-align center
+  .header
+    padding 30px 40px
+    background-color $theme-green
+    color white
+    .header-content
+      display flex
+      flex-direction column
+      align-items center
+      .icon
+        width 110px
+        height 100px
+      .text
+        text-align center
+        padding-left 8px
+        .text-header
+          font-size 28px
+          font-family YouYuan
+        .text-content
+          padding-top 8px
+          font-size 16px
+          font-family Microsoft YaHei
+  >>> .login-table
+    margin 60px auto 45px
+>>> .input
+  text-align center
+  height 32px
+  width 250px
+  background-color #f8f8f9
+  border-block-color #dddee1
+  border-radius 8px
+  font-size 16px
+  border 1px solid $border-base
+  margin-bottom 8px
+  margin-left auto
+  margin-right auto
+.login-button
+  width 80vw
+  background-color $theme-green
+  color white
+  font-size 16px
+  margin 10px auto 10px
+  &::before
+    width 20px
+    height 20px
+    margin 0 6px 2px 0
+.clicked
+  background-color $dark-green
 </style>
