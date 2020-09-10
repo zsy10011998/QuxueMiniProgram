@@ -4,11 +4,10 @@
       <i-avatar slot="footer"
                 i-class="avatar"
                 shape="square"
-                :src="myInfo.avatar || '/static/images/avatar.png'" />
+                :src="avatarUrl || '/static/images/avatar.png'" />
       <br />
       <i-icon type="mine"
               size="30" />
-      {{myInfo.nick}}
     </view>
     <i-row>
       <i-col span="12">
@@ -131,6 +130,12 @@ export default {
       }
       console.log(this.name)
     })
+    wx.getUserInfo({
+      success: function (res) {
+        console.log('获得头像')
+        wx.store.commit('setAvatarUrl', res.userInfo.avatarUrl)
+      }
+    })
   },
 
   computed: {
@@ -138,7 +143,8 @@ export default {
       openid: state => state.student.openid,
       name: state => state.student.name,
       studentNo: state => state.student.studentNo,
-      myInfo: state => state.user.myInfo
+      myInfo: state => state.user.myInfo,
+      avatarUrl: state => state.student.avatarUrl
     })
   },
   methods: {

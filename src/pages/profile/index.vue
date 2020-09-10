@@ -1,15 +1,17 @@
 <template>
   <div class="profile">
     <i-cell-group>
-      <i-cell title="昵称"
-              :value="myInfo.userID"
-              value-class="cell-value"></i-cell>
+      <i-cell title="姓名"
+              :value="name"
+              value-class="cell-value"
+              is-link
+              url="../update-profile/main?type=user&key=name"></i-cell>
       <i-cell title="头像">
         <i-avatar slot="footer"
                   i-class="avatar"
-                  :src="myInfo.avatar" />
+                  :src="avatarUrl" />
       </i-cell>
-      <i-cell title="个性签名"
+      <!-- <i-cell title="个性签名"
               value-class="cell-value"
               is-link
               url="../update-profile/main?type=user&key=signature">
@@ -17,26 +19,26 @@
              class="signature">
           {{myInfo.selfSignature || '暂无'}}
         </div>
-      </i-cell>
+      </i-cell> -->
       <i-cell title="学号"
               :value="studentNo"
               value-class="cell-value"
               is-link
               url="../update-profile/main?type=user&key=studentNo"></i-cell>
-      <i-cell title="重置密码"
+      <!-- <i-cell title="重置密码"
               value-class="cell-value"
               is-link
-              url="../update-profile/main?type=user&key=password"></i-cell>
+              url="../update-profile/main?type=user&key=password"></i-cell> -->
       <i-cell title="统一认证账号"
               value-class="cell-value"
               is-link
               url="../update-profile/main?type=user&key=buaa"></i-cell>
     </i-cell-group>
     <view style="margin-top: 50px; text-align: center">
-      <button @getuserinfo="getAvatar"
+      <!-- <button @click="getInfo()"
               open-type="getUserInfo"
               size="mini"
-              type="primary">获取用户头像</button> <br>
+              type="primary">获取用户头像</button> <br> -->
       <button @click="refresh()"
               type="primary"
               size="mini"
@@ -59,12 +61,25 @@ export default {
   computed: {
     ...mapState({
       myInfo: state => state.user.myInfo,
-      studentNo: state => state.user.studentNo
+      studentNo: state => state.student.studentNo,
+      name: state => state.student.name,
+      avatarUrl: state => state.student.avatarUrl
     })
   },
   methods: {
     onChange (e) {
       this.avatar = e.target.value
+    },
+    getInfo () {
+      wx.getUserInfo({
+        success: function (res) {
+          console.log(res)
+          // var avatarUrl = 'userInfo.avatarUrl'
+          // var nickName = 'userInfo.nickName'
+          // this.avatar = res.userInfo.avatarUrl
+          console.log(res.userInfo.avatarUrl)
+        }
+      })
     },
     getAvatar (event) {
       console.log('In getting avatar')

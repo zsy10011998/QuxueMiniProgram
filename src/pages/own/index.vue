@@ -2,17 +2,17 @@
   <div class="container">
     <div class="info-card">
       <image class="avatar"
-             :src="myInfo.avatar || '/static/images/avatar.png'" />
+             :src=" avatarUrl || '/static/images/avatar.png'" />
       <div class="basic">
         <div class="username">{{name || '未设置'}}</div>
         <div class="user-id">学号：{{studentNo}}</div>
       </div>
     </div>
     <i-cell-group i-class="cell-group">
-      <i-cell title="个性签名">
+      <!-- <i-cell title="个性签名">
         <div slot="footer"
              class="signature">{{myInfo.selfSignature || '暂无'}}</div>
-      </i-cell>
+      </i-cell> -->
     </i-cell-group>
     <i-cell-group i-class="cell-group">
       <i-cell title="修改资料"
@@ -37,7 +37,8 @@ export default {
     ...mapState({
       myInfo: state => state.user.myInfo,
       name: state => state.student.name,
-      studentNo: state => state.student.studentNo
+      studentNo: state => state.student.studentNo,
+      avatarUrl: state => state.student.avatarUrl
     })
   },
   mounted () {

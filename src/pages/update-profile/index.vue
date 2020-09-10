@@ -1,60 +1,57 @@
 <template>
   <div class="update-profile-wrapper">
     <input v-if="key!=='password'"
-      class="input"
-      :class="focus ? 'input-focus' : ''"
-      type="text" 
-      v-model="value"
-      :placeholder="placeholder" 
-      :focus="focus"
-      @blur="focus = false"
-      @focus="focus = true"
-      >
-    <input v-if="key==='buaa'"
-      class="input"
-      :class="focus2 ? 'input-focus' : ''"
-      type="text" 
-      placeholder="请输入密码" 
-      password
-      v-model="password"
-      :focus="focus2"
-      @blur="focus2 = false"
-      @focus="focus2 = true"
-      >
+           class="input"
+           :class="focus ? 'input-focus' : ''"
+           type="text"
+           v-model="value"
+           :placeholder="placeholder"
+           :focus="focus"
+           @blur="focus = false"
+           @focus="focus = true">
+    <!-- <input v-if="key==='buaa'"
+           class="input"
+           :class="focus2 ? 'input-focus' : ''"
+           type="text"
+           placeholder="请输入密码"
+           password
+           v-model="password"
+           :focus="focus2"
+           @blur="focus2 = false"
+           @focus="focus2 = true">
     <input v-if="key==='password'"
-      class="input"
-      :class="focus3 ? 'input-focus' : ''"
-      type="text" 
-      placeholder="请输入原始密码" 
-      password
-      v-model="originPassword"
-      :focus="focus3"
-      @blur="focus3 = false"
-      @focus="focus3 = true"
-      >
+           class="input"
+           :class="focus3 ? 'input-focus' : ''"
+           type="text"
+           placeholder="请输入原始密码"
+           password
+           v-model="originPassword"
+           :focus="focus3"
+           @blur="focus3 = false"
+           @focus="focus3 = true">
     <input v-if="key==='password'"
-      class="input"
-      :class="focus4 ? 'input-focus' : ''"
-      type="text" 
-      placeholder="请输入新密码" 
-      password
-      v-model="newPassword"
-      :focus="focus4"
-      @blur="focus4 = false"
-      @focus="focus4 = true"
-      >
+           class="input"
+           :class="focus4 ? 'input-focus' : ''"
+           type="text"
+           placeholder="请输入新密码"
+           password
+           v-model="newPassword"
+           :focus="focus4"
+           @blur="focus4 = false"
+           @focus="focus4 = true">
     <input v-if="key==='password'"
-      class="input"
-      :class="focus5 ? 'input-focus' : ''"
-      type="text" 
-      placeholder="请确认新密码" 
-      password
-      v-model="newPasswordConfirm"
-      :focus="focus5"
-      @blur="focus5 = false"
-      @focus="focus5 = true"
-      >
-    <button :class="{'button-disabled' : disabled}" :disabled="disabled" @click="handleClick">确认修改</button>
+           class="input"
+           :class="focus5 ? 'input-focus' : ''"
+           type="text"
+           placeholder="请确认新密码"
+           password
+           v-model="newPasswordConfirm"
+           :focus="focus5"
+           @blur="focus5 = false"
+           @focus="focus5 = true"> -->
+    <button :class="{'button-disabled' : disabled}"
+            :disabled="disabled"
+            @click="handleClick()">确认修改</button>
   </div>
 </template>
 
@@ -68,64 +65,33 @@ export default {
     return {
       type: 'user', // user / group
       key: '',
-      groupID: '',
       value: '',
-      password: '',
+      // password: '',
       focus: true,
       focus2: false,
       focus3: true,
       focus4: false,
-      focus5: false,
-      originPassword: '',
-      newPassword: '',
-      newPasswordConfirm: ''
+      focus5: false
+
     }
   },
   computed: {
     ...mapState({
       myInfo: state => state.user.myInfo,
       groupProfile: state => state.conversation.currentConversation.groupProfile,
-      studentNo: state => state.user.studentNo
+      openid: state => state.student.openid,
+      name: state => state.student.name,
+      stutNo: state => state.student.studentNo
     }),
     disabled () {
       switch (this.key) {
-        case 'nick':
-          if (this.value !== this.myInfo.nick) {
-            return false
-          }
-          break
-        case 'signature':
-          if (this.value !== this.myInfo.selfSignature) {
-            return false
-          }
-          break
-        case 'nameCard':
-          if (this.groupProfile && this.groupProfile.selfInfo && this.value !== this.groupProfile.selfInfo.nameCard) {
-            return false
-          }
-          break
         case 'name':
-          if (this.groupProfile && this.value !== this.groupProfile.name) {
-            return false
-          }
-          break
-        case 'notification':
-          if (this.groupProfile && this.value !== this.groupProfile.notification) {
-            return false
-          }
-          break
-        case 'buaa':
-          if (this.value && this.password) {
+          if (this.value !== this.name && this.value !== '' && undefined !== this.value) {
             return false
           }
           break
         case 'studentNo':
-          if (this.value !== this.studentNo) {
-            return false
-          }
-          break
-        case 'password':
-          if (this.originPassword && this.newPassword && this.newPasswordConfirm) {
+          if (this.value !== this.stutNo && this.value !== '' && undefined !== this.value) {
             return false
           }
           break
@@ -144,6 +110,8 @@ export default {
           return '请输入统一认证账号'
         case 'studentNo':
           return '请输入学号'
+        case 'name':
+          return '请输入姓名'
       }
     }
   },
@@ -167,10 +135,10 @@ export default {
         title = '修改群名片'
         this.value = this.groupProfile.selfInfo.nameCard
         break
-      case 'name':
-        title = '修改群名称'
-        this.value = this.groupProfile.name
-        break
+      // case 'name':
+      //   title = '修改群名称'
+      //   this.value = this.groupProfile.name
+      //   break
       case 'notification':
         title = '修改群公告'
         this.value = this.groupProfile.notification
@@ -189,94 +157,102 @@ export default {
         this.originPassword = ''
         this.newPassword = ''
         break
+      case 'name':
+        title = '修改姓名'
+        break
     }
     wx.setNavigationBarTitle({ title })
   },
   methods: {
     handleClick () {
-      if (this.key === 'buaa') {
-        this.updateBuaaInfo()
-      } else if (this.key === 'studentNo') {
+      if (this.key === 'studentNo') {
         this.updatestudentNo()
-      } else if (this.key === 'password') {
-        this.resetPassword()
-      } else if (this.type === 'user') {
-        this.updateMyProfile()
-      } else if (this.type === 'group') {
-        this.updateGroupProfile()
+      } else if (this.key === 'name') {
+        this.updateName()
       }
     },
-    updateMyProfile () {
-      switch (this.key) {
-        case 'nick':
-          wx.$app.updateMyProfile({ nick: this.value })
-            .then(this.handleResolve())
-            .catch(this.handleReject())
-          break
-        case 'signature':
-          wx.$app.updateMyProfile({ selfSignature: this.value })
-            .then(this.handleResolve())
-            .catch(this.handleReject())
-          break
-      }
-    },
-    updateGroupProfile () {
-      switch (this.key) {
-        case 'nameCard':
-          wx.$app.setGroupMemberNameCard({
-            groupID: this.groupID,
-            nameCard: this.value
-          }).then(this.handleResolve())
-            .catch(this.handleReject())
-          break
-        case 'name':
-          wx.$app.updateGroupProfile({
-            groupID: this.groupID,
-            name: this.value
-          }).then(this.handleResolve())
-            .catch(this.handleReject())
-          break
-        case 'notification':
-          wx.$app.updateGroupProfile({
-            groupID: this.groupID,
-            notification: this.value
-          }).then(this.handleResolve())
-            .catch(this.handleReject())
-          break
-        default:
-          break
-      }
-    },
-    updateBuaaInfo () {
-      let id = wx.store.state.user.userId
-      this.$WXRequest.put({
-        url: '/users/' + id + '/',
-        data: {
-          studentID: this.value,
-          student_password: this.password
-        }
-      }).then(res => {
-        this.handleResolve()
-      })
-    },
+
     updatestudentNo () {
-      let id = wx.store.state.user.userId
-      if (this.value.length !== 8) {
+      console.log(this.value)
+      console.log(undefined !== this.value)
+      if (this.value === '') {
         wx.showToast({
-          title: '密码格式错误',
+          title: '不能为空',
           icon: 'none',
-          duration: 1000
+          duration: 1500
         })
         return
       }
-      wx.store.commit('setStudentNo', this.value)
-      this.$WXRequest.put({
-        url: '/users/' + id + '/',
+      if (this.value.length < 8) {
+        wx.showToast({
+          title: '学号格式错误',
+          icon: 'none',
+          duration: 1500
+        })
+        return
+      }
+      if (this.value === this.stutNo) {
+        wx.showToast({
+          title: '学号未改变',
+          icon: 'none',
+          duration: 1500
+        })
+        return
+      }
+      // wx.store.commit('setStudentNo', this.value)
+      this.$WXRequest.post({
+        url: '/changeInfo/',
         data: {
+          openid: this.openid,
           studentNo: this.value
         }
       }).then(res => {
-        this.handleResolve()
+        if (res.repCode === 200) {
+          wx.store.commit('setStudentNo', this.value)
+          this.handleResolve()
+        } else {
+          console.log(res)
+          wx.showToast({
+
+            title: res.errmsg,
+            duration: 600
+          })
+        }
+      })
+    },
+    updateName () {
+      if (this.value === '') {
+        wx.showToast({
+          title: '不能为空',
+          icon: 'none',
+          duration: 1500
+        })
+        return
+      }
+      if (this.value === this.name) {
+        wx.showToast({
+          title: '姓名未改变',
+          icon: 'none',
+          duration: 1500
+        })
+        return
+      }
+      this.$WXRequest.post({
+        url: '/changeInfo/',
+        data: {
+          openid: this.openid,
+          name: this.value
+        }
+      }).then(res => {
+        if (res.repCode === 200) {
+          wx.store.commit('setName', this.value)
+          this.handleResolve()
+        } else {
+          wx.showToast({
+            title: res.errsmg,
+            duration: 600
+          })
+        }
       })
     },
     resetPassword () {
@@ -358,7 +334,7 @@ export default {
     border-bottom 1px solid $light-background
   .input-focus
     border-bottom 1px solid $primary
-  button 
+  button
     margin-top 24px
     color $white
     background-color $primary

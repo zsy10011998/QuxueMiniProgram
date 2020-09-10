@@ -2,7 +2,8 @@ const studentModules = {
   state: {
     openid: '',
     name: '',
-    studentNo: ''
+    studentNo: '',
+    avatarUrl: ''
   },
   mutations: {
     setOpenId (state, openid) {
@@ -13,6 +14,9 @@ const studentModules = {
     },
     setStudentNo (state, studentNo) {
       state.studentNo = studentNo
+    },
+    setAvatarUrl (state, avatarUrl) {
+      state.avatarUrl = avatarUrl
     }
   }
 
