@@ -66,6 +66,7 @@ export default {
   methods: {
     login () {
       // let that = this
+      wx.startRecord()
       wx.login({
         success: (res) => {
           if (res.code) {

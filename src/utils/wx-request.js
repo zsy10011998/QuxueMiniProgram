@@ -1,8 +1,8 @@
 import store from '../store/index'
 
 // const host = 'https://hpla1.tustcs.com'
-const host = 'https://cs.zhouyc.cc/'
-// const host = 'http://127.0.0.1:8000'
+// const host = 'https://cs.zhouyc.cc/'
+const host = 'http://127.0.0.1:8000'
 
 function request (url, method, data, loading = true) {
   let header = { 'content-type': 'application/json' }

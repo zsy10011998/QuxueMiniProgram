@@ -18,7 +18,9 @@
     "pages/profile/main",
     "pages/update-profile/main",
     "pages/calendar/main",
-    "pages/other-function/main"
+    "pages/other-function/main",
+    "pages/uploadfile/main",
+    "pages/introduction/main"
   ],
   "subPackages": [{
     "root": "pages/functions/",
