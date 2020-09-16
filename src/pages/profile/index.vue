@@ -29,20 +29,20 @@
               value-class="cell-value"
               is-link
               url="../update-profile/main?type=user&key=password"></i-cell> -->
-      <i-cell title="统一认证账号"
+      <!-- <i-cell title="统一认证账号"
               value-class="cell-value"
               is-link
-              url="../update-profile/main?type=user&key=buaa"></i-cell>
+              url="../update-profile/main?type=user&key=buaa"></i-cell> -->
     </i-cell-group>
     <view style="margin-top: 50px; text-align: center">
       <!-- <button @click="getInfo()"
               open-type="getUserInfo"
               size="mini"
               type="primary">获取用户头像</button> <br> -->
-      <button @click="refresh()"
+      <!-- <button @click="refresh()"
               type="primary"
               size="mini"
-              style="margin-top: 15px;">刷新课表</button>
+              style="margin-top: 15px;">刷新课表</button> -->
     </view>
   </div>
 </template>

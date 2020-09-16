@@ -11,38 +11,18 @@
       </div>
     </div>
 
-    <!-- <i-panel i-class="login-table">
-      <i-input type="text"
-               v-model="loginForm.username"
-               title="昵称"
-               placeholder="请输入昵称"
-               maxlength="20"
-               i-class="input"
-               @change="updateUsername" />
-
-      <i-input type="password"
-               v-model="loginForm.password"
-               title="密码"
-               placeholder="请输入密码"
-               maxlength="20"
-               i-class="input"
-               @change="updatePassword" />
-    </i-panel> -->
-
     <button hover-class="clicked"
+            open-type="getUserInfo"
             :loading="loading"
             class="login-button"
             @click="login">微信登录</button>
-    <!-- <button hover-class="clicked"
-            class="login-button"
-            @click="signUp()">还未注册？点击这里</button> -->
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-import { genTestUserSig } from '../../../static/utils/GenerateTestUserSig'
-import md5 from 'js-md5'
+// import { genTestUserSig } from '../../../static/utils/GenerateTestUserSig'
+// import md5 from 'js-md5'
 export default {
   data () {
     return {
@@ -56,7 +36,6 @@ export default {
   },
   computed: {
     ...mapState({
-      myInfo: state => state.user.myInfo,
       openid: state => state.student.openid
     })
   },
@@ -66,7 +45,6 @@ export default {
   methods: {
     login () {
       // let that = this
-      wx.startRecord()
       wx.login({
         success: (res) => {
           if (res.code) {
@@ -83,7 +61,17 @@ export default {
                 if (res.isRegister === false) {
                   wx.navigateTo({ url: '../signUp/main' })
                 } else {
-                  wx.switchTab({ url: '../other-function/main' })
+                  wx.getUserInfo({
+                    success: function (res) {
+                      console.log('获得头像')
+                      wx.store.commit('setAvatarUrl', res.userInfo.avatarUrl)
+                      console.log(1)
+                      wx.switchTab({ url: '../other-function/main' })
+                    }
+                  }).then(() => {
+
+                  }
+                  )
                 }
               } else {
                 wx.showToast({
@@ -98,51 +86,6 @@ export default {
           }
         }
       })
-    },
-    login1 () {
-      let passwordDigest = md5(this.loginForm.password)
-      this.$WXRequest.post({
-        url: '/sessions/',
-        data: {
-          username: this.loginForm.username,
-          password_digest: passwordDigest
-        }
-
-      }).then(res => {
-        if (res.repCode === 200 || res.repCode === 300) {
-          this.$WXRequest.saveSession(res.data.sessionId)
-          wx.store.commit('setStudentNo', res.data.studentNo)
-          wx.store.commit('setUserId', res.data.userId)
-          console.log('Login')
-          console.log(res)
-          console.log(wx.store.state.user)
-          let userID = this.loginForm.username
-          wx.$app.login({
-            userID,
-            userSig: genTestUserSig(userID).userSig
-          }).then(() => {
-            console.log('login success')
-            wx.switchTab({ url: '../index/main' })
-          }).catch(() => {
-            this.loading = false
-          })
-        } else {
-          wx.showToast({
-            title: res.errMsg,
-            icon: 'none',
-            duration: 1500
-          })
-          this.loading = false
-        }
-      })
-    },
-    updateUsername (event) {
-      let title = event.mp.detail.detail.value
-      this.$set(this.loginForm, 'username', title)
-    },
-    updatePassword (event) {
-      let title = event.mp.detail.detail.value
-      this.$set(this.loginForm, 'password', title)
     }
   }
 }
@@ -151,20 +94,22 @@ export default {
 
 <style lang="stylus" scoped>
 .counter-warp
-  height 100%
+  height 800rpx
   background $white
   text-align center
   .header
+    height 80%
     padding 30px 40px
     background-color $theme-green
     color white
     .header-content
-      display flex
+      display inline-block
       flex-direction column
       align-items center
+      vertical-align middle
       .icon
-        width 110px
-        height 100px
+        width 220px
+        height 200px
       .text
         text-align center
         padding-left 8px
@@ -194,7 +139,7 @@ export default {
   background-color $theme-green
   color white
   font-size 16px
-  margin 10px auto 10px
+  margin 30px auto 30px
   &::before
     width 20px
     height 20px

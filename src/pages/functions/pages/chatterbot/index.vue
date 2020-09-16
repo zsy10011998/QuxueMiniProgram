@@ -2,16 +2,18 @@
   <div class="chat"
        id="chat"
        :style="{ paddingBottom:'70px' }">
-    <div id="list" @click="loseFocus">
-      <li v-for="(message, index) in messageList" :key="index">
+    <view id="list"
+          @click="loseFocus">
+      <li v-for="(message, index) in messageList"
+          :key="index">
         <div :class="(message.flow === 'out') ? 'item-right' : 'item-left'">
           <div class="content">
             <div class="name">
               <template v-if="message.flow === 'in'">
-                 菲菲
+                {{isChat ? '菲菲' : '加加'}}
               </template>
               <template v-else>
-                {{myInfo.nick || myInfo.userID}}
+                {{name}}
               </template>
             </div>
             <div class="wrapper">
@@ -24,16 +26,28 @@
           </div>
           <div>
             <!-- 自己发的消息头像 -->
-            <i-avatar i-class="avatar" v-if="message.flow === 'out'" :src="myInfo.avatar" shape="square"/>
+            <i-avatar i-class="avatar"
+                      v-if="message.flow === 'out'"
+                      :src="avatarUrl"
+                      shape="square" />
             <!-- 收到的消息头像 -->
-            <i-avatar i-class="avatar" v-else shape="square" src='/static/images/avatar.png'/>
+            <i-avatar i-class="avatar"
+                      v-else
+                      shape="square"
+                      src='/static/images/avatar.png' />
           </div>
         </div>
       </li>
-    </div>
-<!--    输入框及选择框部分-->
+    </view>
+    <!--    输入框及选择框部分-->
     <div class="bottom">
-      <div class="bottom-div" :style="{marginBottom: isFocus ? '10px' : 0}">
+      <div class="bottom-div"
+           :style="{marginBottom: isFocus ? '10px' : 0}">
+        <div class="switch"
+             @click="changeRobot"
+             v-if="!isFocus">
+          切换
+        </div>
         <div style="width: 100%">
           <input type="text"
                  class="input"
@@ -42,10 +56,12 @@
                  :focus="isFocus"
                  @focus="isFocus = true"
                  @blur="isFocus = false"
-                 @confirm='sendMessage'/>
+                 @confirm='sendMessage' />
         </div>
-        <div class="send" @click="sendMessage" v-if="messageContent.length !== 0">
-            发送
+        <div class="send"
+             @click="sendMessage"
+             v-if="messageContent.length !== 0">
+          发送
         </div>
       </div>
     </div>
@@ -60,7 +76,9 @@ export default {
       messageContent: '',
       messageList: [],
       height: 0,
-      isFocus: false
+      isFocus: false,
+      isChat: true
+      // botname: this.isChat ? '菲菲' : '丽丽'
     }
   },
   onLoad (options) {
@@ -81,11 +99,24 @@ export default {
     })
   },
   computed: {
+    // botname: function () { return this.isChat ? '菲菲' : '加加' },
+
     ...mapState({
-      myInfo: state => state.user.myInfo
+      myInfo: state => state.user.myInfo,
+      openid: state => state.student.openid,
+      name: state => state.student.name,
+      avatarUrl: state => state.student.avatarUrl
     })
   },
   methods: {
+    scrollbottom () {
+      wx.createSelectorQuery().select('#list').boundingClientRect(function (rect) {
+        console.log(rect)
+        wx.pageScrollTo({
+          scrollTop: rect.height
+        })
+      }).exec()
+    },
     isnull (content) {
       if (content === '') {
         return true
@@ -97,25 +128,48 @@ export default {
     // 发送text message 包含 emoji
     sendMessage () {
       if (!this.isnull(this.messageContent)) {
-        this.messageList.push({flow: 'out', content: this.messageContent})
+        this.messageList.push({ flow: 'out', content: this.messageContent })
+        this.scrollbottom()
         this.$WXRequest.post({
           url: '/chatrobotapi/',
-          data: {'msg': this.messageContent}
+          data: {
+            'openid': this.openid,
+            'msg': this.messageContent,
+            'isChat': this.isChat
+          }
         }, false).then(
           res => {
             console.log('answer', res)
             var ans = res.replace('{br}', '。')
-            this.messageList.push({flow: 'in', content: ans})
+            this.messageList.push({ flow: 'in', content: ans })
           }
-        )
+        ).then(() => {
+          this.scrollbottom()
+        })
         this.messageContent = ''
       } else {
         this.$store.commit('showToast', { title: '消息不能为空' })
       }
       this.isFocus = false
+    },
+    changeRobot () {
+      // console.log(this.isChat)
+      this.isChat = !this.isChat
+      this.messageList = this.isChat ? ([
+        {
+          flow: 'in',
+          content: 'Hi! 我可以和你聊天，现在开始吧'
+        }
+      ]) : ([
+        {
+          flow: 'in',
+          content: 'Hi! 我可以分析你的情感，说一句话试试吧'
+        }
+      ])
     }
   },
-  destory () {}
+
+  destory () { }
 }
 </script>
 
@@ -189,6 +243,16 @@ export default {
     padding 6px
     margin-left 12rpx
     text-align center
+  .switch
+    font-size 14px
+    background-color $primary
+    color white
+    border-radius 4px
+    width 50px
+    height fit-content
+    padding 6px
+    margin-right 12rpx
+    text-align center
 .bottom-emoji
   position relative
   .emojis
@@ -208,7 +272,6 @@ export default {
       width 20vw
       padding 10px
       box-sizing border-box
-
 .emoji-tab
   box-sizing border-box
   border-bottom 1px solid $border-base
@@ -228,7 +291,7 @@ export default {
       box-sizing border-box
       margin-right 8px
     .choosed
-      background-color rgba(255,255,255,0.7)
+      background-color rgba(255, 255, 255, 0.7)
 .bottom-image
   box-sizing border-box
   .images
@@ -303,11 +366,11 @@ li
   font-size 12px
   border-radius 50%
   cursor pointer
-@-webkit-keyframes load
-  from
-    transform rotate(0deg)
-  to
-    transform rotate(360deg)
+// @-webkit-keyframes load
+// from
+// transform rotate(0deg)
+// to
+// transform rotate(360deg)
 .notice
   display flex
   justify-content center
@@ -455,21 +518,21 @@ li
       opacity 1
       width 20px
       height 8px
-      border-radius: 2px
+      border-radius 2px
       background-color $primary
-      animation loading 2s cubic-bezier(.17,.37,.43,.67) infinite
+      animation loading 2s cubic-bezier(0.17, 0.37, 0.43, 0.67) infinite
   .modal-title
     text-align center
     color white
-@-webkit-keyframes loading
-  0%
-    transform translate(0,0)
-  50%
-    transform translate(30vw,0)
-    background-color #f5634a
-    width 40px
-  100%
-    transform translate(0,0)
+// @-webkit-keyframes loading
+// 0%
+// transform translate(0,0)
+// 50%
+// transform translate(30vw,0)
+// background-color #f5634a
+// width 40px
+// 100%
+// transform translate(0,0)
 .modal-display
   display none
 .avatar

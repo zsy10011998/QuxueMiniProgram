@@ -48,61 +48,46 @@ export default {
       wx.chooseMessageFile({
         count: 1,
         type: 'file',
-        success (res) {
+        success: (res) => {
           const tempFile = res.tempFiles
-          wx.uploadFile({
-            url: 'http://127.0.0.1:8000/upload/', // 仅为示例，非真实的接口地址
+          this.$WXRequest.uploadFile({
+            url: '/upload/',
             filePath: tempFile[0].path,
-            name: 'file',
-            formData: {
-              'user': 'test',
-              'filename': tempFile[0].name
-            },
-            success (res) {
-              console.log(res)
-              wx.showToast({
-                title: res.data,
-                icon: 'none',
-                duration: 1500
-              })
+            filename: tempFile[0].name
 
-              console.log('success')
-            },
-            fail (res) {
-              console.log('fail')
-            },
-            complete (res) {
-              console.log('complete')
-            }
           })
         }
-      })
+        // success: (res) => {
+        //   console.log(res)
+        //   const tempFile = res.tempFiles
+        //   wx.uploadFile({
+        //     url: 'http://127.0.0.1:8000/upload/', // 仅为示例，非真实的接口地址
+        //     filePath: tempFile[0].path,
+        //     name: 'file',
+        //     formData: {
+        //       'user': 'test',
+        //       'filename': tempFile[0].name
+        //     },
+        //     success (res) {
+        //       console.log(res)
+        //       wx.showToast({
+        //         title: res.data,
+        //         icon: 'none',
+        //         duration: 1500
+        //       })
 
-      // wx.chooseMessageFile({
-      //   count: 1,
-      //   type: 'file',
-      //   success (res) {
-      //     const tempFilePaths = res.tempFiles
-      //     console.log(res.tempFiles)
-      //     wx.uploadFile({
-      //       url: 'https://cs.zhouyc.cc/upload/', // 仅为示例，非真实的接口地址
-      //       filePath: tempFilePaths[0],
-      //       name: 'file',
-      //       formData: {
-      //         'user': 'test'
-      //       },
-      //       success (res) {
-      //         console.log('success')
-      //       },
-      //       fail (res) {
-      //         console.log('fail')
-      //       },
-      //       complete (res) {
-      //         console.log('complete')
-      //       }
-      //     })
-      //   }
-      // })
+        //       console.log('success')
+        //     },
+        //     fail (res) {
+        //       console.log('fail')
+        //     },
+        //     complete (res) {
+        //       console.log('complete')
+        //     }
+        //   })
+        // }
+
+      })
     }
   }
 }
