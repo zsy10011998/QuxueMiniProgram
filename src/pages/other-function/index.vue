@@ -9,7 +9,7 @@
       <i-icon type="mine"
               size="30" />
     </view>
-    <i-row>
+    <!-- <i-row>
       <i-col span="12">
         <view class="center">
           <i-icon type="task"
@@ -34,8 +34,8 @@
           <view slot="content"
                 class="text">报名分组</view>
         </i-card>
-      </i-col>
-      <!-- <i-col span="12">
+      </i-col> -->
+    <!-- <i-col span="12">
         <view class="center">
           <i-icon type="editor" size="40" />
         </view>
@@ -48,13 +48,13 @@
       </i-col> -->
     </i-row>
     <i-row>
-      <i-col span="12">
+      <i-col span="12"
+             @click="openBot()">
         <view class="center">
           <i-icon type="customerservice"
                   size="40" />
         </view>
-        <i-card title="聊天机器人"
-                @click="openBot()">
+        <i-card title="聊天机器人">
           <view slot="content"
                 class="text">
             天上清光留此夕
@@ -62,7 +62,7 @@
           </view>
         </i-card>
       </i-col>
-      <i-col span="12">
+      <!-- <i-col span="12">
         <view class="center">
           <i-icon type="group"
                   size="40" />
@@ -72,7 +72,7 @@
           <view slot="content"
                 class="text">课程表可以下拉刷新或在个人资料界面刷新哦~</view>
         </i-card>
-      </i-col>
+      </i-col> -->
     </i-row>
     <!-- <i-row> -->
     <!-- <i-col span="12">
@@ -129,12 +129,6 @@ export default {
         wx.store.commit('setStudentNo', res.studentNo)
       }
       console.log(this.name)
-    })
-    wx.getUserInfo({
-      success: function (res) {
-        console.log('获得头像')
-        wx.store.commit('setAvatarUrl', res.userInfo.avatarUrl)
-      }
     })
   },
 

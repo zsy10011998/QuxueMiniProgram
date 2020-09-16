@@ -27,12 +27,50 @@ function request (url, method, data, loading = true) {
       },
       fail: function (res) {
         wx.hideLoading()
-        // reject(false)
+        wx.showToast({
+          title: '服务器维护',
+          icon: 'none',
+          duration: 1500
+        })
       },
       complete: function () {
         wx.hideLoading()
       }
     })
+  })
+}
+function uploadFile (obj) {
+  console.log(obj)
+  console.log(host + obj.url)
+  wx.uploadFile({
+    url: host + obj.url, // 仅为示例，非真实的接口地址
+    filePath: obj.filePath,
+    name: 'file',
+    formData: {
+      'user': 'test',
+      'filename': obj.filename
+    },
+    success (res) {
+      console.log(res)
+      wx.showToast({
+        title: res.data,
+        icon: 'none',
+        duration: 1500
+      })
+
+      console.log('success')
+    },
+    fail (res) {
+      console.log('fail')
+      wx.showToast({
+        title: '服务器维护',
+        icon: 'none',
+        duration: 1500
+      })
+    },
+    complete (res) {
+      console.log('complete')
+    }
   })
 }
 
@@ -129,6 +167,7 @@ function getSessionId () {
 
 export default {
   request,
+  uploadFile,
   get,
   post,
   put,
