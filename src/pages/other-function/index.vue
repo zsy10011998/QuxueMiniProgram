@@ -9,6 +9,8 @@
       <i-icon type="mine"
               size="30" />
     </view>
+    <i-row>
+      <!-- <i-col span="12">
     <view class="self-row">
       <view class="self-row-item" @click="openBot()">
         <view class="center">
@@ -21,6 +23,10 @@
             天上清光留此夕
             <br />人间和气阁春阴
           </view>
+        </i-card>
+      </i-col> -->
+
+      <!-- <i-col span="12">
         </view>
       </view>
       <view class="self-row-item">
@@ -46,6 +52,45 @@
           </view>
         </i-card>
       </i-col> -->
+    </i-row>
+    <i-row>
+      <i-col span="12"
+             @click="openBot()">
+        <view class="center">
+          <i-icon type="customerservice"
+                  size="40" />
+        </view>
+        <i-card title="聊天机器人">
+          <view slot="content"
+                class="text">
+            天上清光留此夕
+            <br />人间和气阁春阴
+          </view>
+        </i-card>
+      </i-col>
+      <i-col span="12"
+             @click="openGroup()">
+        <view class="center">
+          <i-icon type="createtask"
+                  size="40" />
+        </view>
+        <i-card title="报名分组">
+          <view slot="content"
+                class="text">报名分组</view>
+        </i-card>
+      </i-col>
+      <!-- <i-col span="12">
+        <view class="center">
+          <i-icon type="group"
+                  size="40" />
+        </view>
+        <i-card title="课程表"
+                @click="openCourse()">
+          <view slot="content"
+                class="text">课程表可以下拉刷新或在个人资料界面刷新哦~</view>
+        </i-card>
+      </i-col> -->
+    </i-row>
     <!-- <i-row> -->
     <!-- <i-col span="12">
         <view class="center">
@@ -87,6 +132,12 @@ export default {
     return {}
   },
   beforeMount: function () {
+    // wx.getUserInfo({
+    //   success: function (res) {
+    //     console.log('获得头像')
+    //     wx.store.commit('setAvatarUrl', res.userInfo.avatarUrl)
+    //   }
+    // })
     this.$WXRequest.post({
       url: '/getInformation/',
       data: {
@@ -109,7 +160,6 @@ export default {
       openid: state => state.student.openid,
       name: state => state.student.name,
       studentNo: state => state.student.studentNo,
-      myInfo: state => state.user.myInfo,
       avatarUrl: state => state.student.avatarUrl
     })
   },

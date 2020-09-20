@@ -38,7 +38,8 @@
       "pages/chatterbot/main",
       "pages/videos/main",
       "pages/onevideo/main",
-      "pages/group/main"
+      "pages/group/main",
+      "pages/groupmembers/main"
     ]
   }],
   "window": {
