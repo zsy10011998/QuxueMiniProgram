@@ -9,32 +9,32 @@
       <i-icon type="mine"
               size="30" />
     </view>
-    <!-- <i-row>
-      <i-col span="12">
+    <view class="self-row">
+      <view class="self-row-item" @click="openBot()">
         <view class="center">
-          <i-icon type="task"
+          <i-icon type="customerservice"
                   size="40" />
         </view>
-        <i-card title="日程"
-                @click="calendar()">
-          <view slot="content"
-                class="text">
-            须知少时凌云志
-            <br />曾许人间第一流
+        <view class="self-card">
+          <view class="self-card-header">聊天机器人</view>
+          <view class="self-card-content">
+            天上清光留此夕
+            <br />人间和气阁春阴
           </view>
-        </i-card>
-      </i-col>
-      <i-col span="12">
-        <view class="center">
-          <i-icon type="createtask"
-                  size="40" />
         </view>
-        <i-card title="报名分组"
-                @click="openGroup()">
-          <view slot="content"
-                class="text">报名分组</view>
-        </i-card>
-      </i-col> -->
+      </view>
+      <view class="self-row-item">
+        <view class="center">
+          <i-icon type="editor" size="40" />
+        </view>
+        <view class="self-card" @click="openCourse()">
+          <view class="self-card-header">课程表</view>
+          <view class="self-card-content">
+            课程表可以下拉刷新或在个人资料界面刷新哦~
+          </view>
+        </view>
+      </view>
+    </view>
     <!-- <i-col span="12">
         <view class="center">
           <i-icon type="editor" size="40" />
@@ -46,34 +46,6 @@
           </view>
         </i-card>
       </i-col> -->
-    </i-row>
-    <i-row>
-      <i-col span="12"
-             @click="openBot()">
-        <view class="center">
-          <i-icon type="customerservice"
-                  size="40" />
-        </view>
-        <i-card title="聊天机器人">
-          <view slot="content"
-                class="text">
-            天上清光留此夕
-            <br />人间和气阁春阴
-          </view>
-        </i-card>
-      </i-col>
-      <!-- <i-col span="12">
-        <view class="center">
-          <i-icon type="group"
-                  size="40" />
-        </view>
-        <i-card title="课程表"
-                @click="openCourse()">
-          <view slot="content"
-                class="text">课程表可以下拉刷新或在个人资料界面刷新哦~</view>
-        </i-card>
-      </i-col> -->
-    </i-row>
     <!-- <i-row> -->
     <!-- <i-col span="12">
         <view class="center">
@@ -107,7 +79,7 @@
     <!-- </i-row> -->
   </i-panel>
 </template>
- 
+
 <script>
 import { mapState } from 'vuex'
 export default {
@@ -180,4 +152,35 @@ export default {
 .text
   color #80848f
   font-size 15px
+
+.item-col
+  color: red
+
+.self-row
+  display flex
+  flex-wrap wrap
+  justify-content center
+  >>> .self-row-item
+    width 50%
+    flex 1
+    display flex
+    flex-flow column
+
+.self-card
+  display flex
+  flex-flow column
+  margin 0 16rpx
+  background-color #ffffff
+  flex 1
+  border-radius 5rpx
+  border 1rpx solid #dddee1
+  >>> .self-card-header
+    font-size 14rpx
+    padding 0 16rpx
+    line-height 32rpx
+    border-bottom 1rpx #eee solid
+  >>> .self-card-content
+    color #80848f
+    font-size 30rpx
+    padding 0 16rpx
 </style>
