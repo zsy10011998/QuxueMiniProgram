@@ -45,44 +45,47 @@ export default {
   methods: {
     login () {
       // let that = this
-      wx.login({
+      wx.getSetting({
         success: (res) => {
-          if (res.code) {
-            // 发起网络请求
-            this.$WXRequest.post({
-              url: '/onLogin/',
-              data: {
-                code: res.code
-              }
-            }).then(res => {
-              if (res.repCode === 200) {
-                wx.store.commit('setOpenId', res.openid)
-                console.log(res)
-                if (res.isRegister === false) {
-                  wx.navigateTo({ url: '../signUp/main' })
-                } else {
-                  wx.getUserInfo({
-                    success: function (res) {
-                      console.log('获得头像')
-                      wx.store.commit('setAvatarUrl', res.userInfo.avatarUrl)
-                      console.log(1)
-                      wx.switchTab({ url: '../other-function/main' })
+          console.log('res', res)
+          if (res.authSetting['scope.userInfo']) {
+            wx.login({
+              success: (res) => {
+                if (res.code) {
+                  this.$WXRequest.post({
+                    url: '/onLogin/',
+                    data: {
+                      code: res.code
                     }
-                  }).then(() => {
-
-                  }
-                  )
+                  }).then(res => {
+                    if (res.repCode === 200) {
+                      wx.store.commit('setOpenId', res.openid)
+                      console.log(res)
+                      wx.getUserInfo({
+                        success: function (res) {
+                          console.log('获得头像')
+                          wx.store.commit('setAvatarUrl', res.userInfo.avatarUrl)
+                          console.log(1)
+                        }
+                      })
+                      if (res.isRegister === false) {
+                        wx.navigateTo({ url: '../signUp/main' })
+                      } else {
+                        wx.switchTab({ url: '../other-function/main' })
+                      }
+                    } else {
+                      wx.showToast({
+                        title: '请重试',
+                        icon: 'none',
+                        duration: 1500
+                      })
+                    }
+                  })
+                } else {
+                  console.log('登录失败！' + res.errMsg)
                 }
-              } else {
-                wx.showToast({
-                  title: '请重试',
-                  icon: 'none',
-                  duration: 1500
-                })
               }
             })
-          } else {
-            console.log('登录失败！' + res.errMsg)
           }
         }
       })

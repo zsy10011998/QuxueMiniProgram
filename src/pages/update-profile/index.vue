@@ -214,7 +214,7 @@ export default {
           console.log(res)
           wx.showToast({
 
-            title: res.errmsg,
+            title: res.errMSsg,
             duration: 600
           })
         }

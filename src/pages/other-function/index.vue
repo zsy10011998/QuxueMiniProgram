@@ -9,8 +9,8 @@
       <i-icon type="mine"
               size="30" />
     </view>
-    <!-- <i-row>
-      <i-col span="12">
+    <i-row>
+      <!-- <i-col span="12">
         <view class="center">
           <i-icon type="task"
                   size="40" />
@@ -23,19 +23,9 @@
             <br />曾许人间第一流
           </view>
         </i-card>
-      </i-col>
-      <i-col span="12">
-        <view class="center">
-          <i-icon type="createtask"
-                  size="40" />
-        </view>
-        <i-card title="报名分组"
-                @click="openGroup()">
-          <view slot="content"
-                class="text">报名分组</view>
-        </i-card>
       </i-col> -->
-    <!-- <i-col span="12">
+
+      <!-- <i-col span="12">
         <view class="center">
           <i-icon type="editor" size="40" />
         </view>
@@ -60,6 +50,17 @@
             天上清光留此夕
             <br />人间和气阁春阴
           </view>
+        </i-card>
+      </i-col>
+      <i-col span="12"
+             @click="openGroup()">
+        <view class="center">
+          <i-icon type="createtask"
+                  size="40" />
+        </view>
+        <i-card title="报名分组">
+          <view slot="content"
+                class="text">报名分组</view>
         </i-card>
       </i-col>
       <!-- <i-col span="12">
@@ -115,6 +116,12 @@ export default {
     return {}
   },
   beforeMount: function () {
+    // wx.getUserInfo({
+    //   success: function (res) {
+    //     console.log('获得头像')
+    //     wx.store.commit('setAvatarUrl', res.userInfo.avatarUrl)
+    //   }
+    // })
     this.$WXRequest.post({
       url: '/getInformation/',
       data: {
@@ -137,7 +144,6 @@ export default {
       openid: state => state.student.openid,
       name: state => state.student.name,
       studentNo: state => state.student.studentNo,
-      myInfo: state => state.user.myInfo,
       avatarUrl: state => state.student.avatarUrl
     })
   },

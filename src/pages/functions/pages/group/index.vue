@@ -1,34 +1,18 @@
 <template>
   <div>
-    <!-- <div class="user-id">学号：{{$store.state.studentNo}}</div> -->
-    <i-panel i-class="login-table">
-      <i-input type="text"
-               v-model="groupinformation.studentNo"
-               title="学号"
-               :placeholder="studentNo"
-               maxlength="20"
-               i-class="input"
-               disabled=true
-               @change="updatestudetNo" />
-      <i-input type="text"
-               v-model="groupinformation.information1"
-               title="信息1"
-               placeholder="请输入信息1"
-               maxlength="20"
-               i-class="input"
-               @change="updateUsername" />
-
-      <i-input type="text"
-               v-model="groupinformation.information2"
-               title="信息2"
-               placeholder="请输入信息2"
-               maxlength="20"
-               i-class="input"
-               @change="updatePassword" />
-    </i-panel>
     <button hover-class="clicked"
             class="login-button"
-            @click="login">提交</button>
+            v-if="hasGroup===false"
+            @click="create">创建分组</button>
+    <button hover-class="clickedcheck"
+            class="login-button"
+            v-if="hasGroup==true"
+            @click="check">查看分组</button>
+    <button hover-class="clicked"
+            class="login-button"
+            v-if="isInvited==true"
+            @click="invite">分组邀请</button>
+
   </div>
 
 </template>
@@ -38,67 +22,122 @@ import { mapState } from 'vuex'
 export default {
   data () {
     return {
-      groupinformation: {
-        studentNo: '',
-        information1: '',
-        information2: ''
-
-      }
+      // openid: 'oGiID5Wj7iPUhQ1eQGRZAaNc8jHw',
+      hasGroup: '',
+      isCaptain: '',
+      isInvited: '',
+      groupNo: ''
     }
   },
   computed: {
     ...mapState({
-      myInfo: state => state.user.myInfo,
-      studentNo: state => state.user.studentNo
+      openid: state => state.student.openid,
+      name: state => state.student.name,
+      studentNo: state => state.student.studentNo
     })
   },
-  mounted () {
-    this.studentNo = wx.store.state.user.studentNo
-    this.groupinformation.studentNo = wx.store.state.user.studentNo
+  beforeMount () {
+    console.log(this.openid)
+    this.$WXRequest.post({
+      url: '/groupinf/',
+      data: {
+        openid: this.openid,
+        op: 'getselfinfo'
+      }
+    }).then(res => {
+      console.log(res)
+      this.$set(this, 'hasGroup', res.hasGroup)
+      this.$set(this, 'isCaptain', res.isCaptain)
+      this.$set(this, 'isInvited', res.isInvited)
+    })
   },
   methods: {
-    updateUsername (event) {
-      let title = event.mp.detail.detail.value
-      this.$set(this.groupinformation, 'information1', title)
-    },
-    updatePassword (event) {
-      let title = event.mp.detail.detail.value
-      this.$set(this.groupinformation, 'information2', title)
-      console.log(this.groupinformation)
-    },
-    login () {
-      console.log(this.groupinformation)
+    create () {
       this.$WXRequest.post({
         url: '/groupinf/',
         data: {
-          studentNo: this.groupinformation.studentNo,
-          groupinformation: this.groupinformation
+          openid: this.openid,
+          op: 'creategroup'
         }
       }).then(res => {
-        if (res.repCode === 700) {
+        if (res.repCode === 200) {
+          wx.showToast({
+            title: '创建分组成功',
+            duration: 1500,
+            icon: 'none'
+          }).then(res => {
+            this.$set(this, 'hasGroup', true)
+            this.$set(this, 'isCaptain', true)
+            wx.redirectTo({ url: '../groupmembers/main' })
+          }
+          )
+        } else if (res.repCode === 700) {
           wx.showToast({
             title: res.errMsg,
-            icon: 'none',
-            duration: 1500
-          })
-        } else {
-          wx.showToast({
-            title: '提交成功',
-            icon: 'none',
-            duration: 1500
+            duration: 1500,
+            icon: 'none'
           })
         }
-        // if (res.repCode === 200 || res.repCode === 300) {
-        // } else {
-        //   wx.switchTab({ url: '../../../other-function/main' })
-        //   wx.showToast({
-        //     title: res.errMsg,
-        //     icon: 'none',
-        //     duration: 1500
-        //   })
-        // }
+      })
+    },
+    check () {
+      wx.redirectTo({ url: '../groupmembers/main' })
+    },
+    invite () {
+      this.$WXRequest.post({
+        url: '/groupinf/',
+        data: {
+          openid: this.openid,
+          op: 'getinvitation'
+        }
+      }).then(res => {
+        console.log(res)
+        if (res.repCode === 700) {
+          this.showinf(res.errMsg)
+        } else {
+          wx.showModal({
+            title: '邀请',
+            content: '是否接受来自' + res.captainMsg + '的加入小组邀请',
+            success: (res) => {
+              if (res.confirm) {
+                this.$WXRequest.post({
+                  url: '/groupinf/',
+                  data: {
+                    openid: this.openid,
+                    op: 'allowinvitation'
+                  }
+                }).then(res => {
+                  if (res.repCode === 200) {
+                    this.$set(this, 'hasGroup', true)
+                    this.$set(this, 'isInvited', false)
+                  }
+                })
+              } else if (res.cancel) {
+                this.$WXRequest.post({
+                  url: '/groupinf/',
+                  data: {
+                    openid: this.openid,
+                    op: 'rejectinvitation'
+                  }
+                }).then(res => {
+                  if (res.repCode === 200) {
+                    this.$set(this, 'isInvited', false)
+                  }
+                })
+              }
+            }
+          })
+        }
+      })
+    },
+    showinf (msg) {
+      wx.showToast({
+        title: msg,
+        duration: 1500,
+        icon: 'none'
       })
     }
+
   }
 
 }
@@ -114,16 +153,17 @@ export default {
 .title2
   font-size 35rpx
   padding 10rpx
-.login-button
-  width 80vw
+button
+  width 60vw
   background-color $theme-green
   color white
-  font-size 16px
-  margin 10px auto 10px
-  &::before
-    width 20px
-    height 20px
-    margin 0 6px 2px 0
+  font-size 20px
+  margin 50px auto
+  padding 30px auto
+  // &::before
+  // width 20px
+  // height 20px
+  // margin 0 6px 2px 0
 .clicked
   background-color $dark-green
 </style>
