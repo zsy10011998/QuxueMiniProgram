@@ -66,7 +66,7 @@ export default {
                       console.log('获得头像')
                       wx.store.commit('setAvatarUrl', res.userInfo.avatarUrl)
                       console.log(1)
-                      wx.switchTab({ url: '../other-function/main' })
+                      wx.switchTab({ url: '../lecture-profile/main' })
                     }
                   }).then(() => {
 
