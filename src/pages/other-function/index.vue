@@ -5,10 +5,9 @@
                 i-class="avatar"
                 shape="square"
                 :src="avatarUrl || '/static/images/avatar.png'" />
-      <br />
-      <i-icon type="mine"
-              size="30" />
     </view>
+
+    <!-- First Row start -->
     <view class="self-row">
       <view class="self-row-item" @click="openBot()">
         <view class="center">
@@ -35,6 +34,26 @@
         </view>
       </view>
     </view>
+    <!-- First Row end -->
+    <!-- Second Row start -->
+    <view class="self-row">
+      <view class="self-row-item" @click="openGroup()">
+        <view class="center">
+          <i-icon type="createtask"
+                  size="40" />
+        </view>
+        <view class="self-card">
+          <view class="self-card-header">报名分组</view>
+          <view class="self-card-content">
+            报名分组
+          </view>
+        </view>
+      </view>
+      <view class="self-row-item">
+        <!-- 当某一行只有一个card时，加上这个空元素作为 placeholder -->
+      </view>
+    </view>
+    <!-- Second Row end -->
     <!-- <i-col span="12">
         <view class="center">
           <i-icon type="editor" size="40" />
@@ -160,6 +179,7 @@ export default {
   display flex
   flex-wrap wrap
   justify-content center
+  margin-bottom 30rpx
   >>> .self-row-item
     width 50%
     flex 1
