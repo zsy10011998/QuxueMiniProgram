@@ -170,17 +170,19 @@ export default {
   display flex
   flex-flow column
   margin 0 16rpx
+  padding 0 10rpx
   background-color #ffffff
   flex 1
-  border-radius 5rpx
+  border-radius 10rpx
   border 1rpx solid #dddee1
   >>> .self-card-header
-    font-size 14rpx
+    font-size 28rpx
     padding 0 16rpx
-    line-height 32rpx
+    line-height 60rpx
     border-bottom 1rpx #eee solid
   >>> .self-card-content
     color #80848f
     font-size 30rpx
-    padding 0 16rpx
+    padding 16rpx
+    padding-bottom 36rpx
 </style>
