@@ -9,7 +9,8 @@
 
     <!-- First Row start -->
     <view class="self-row">
-      <view class="self-row-item" @click="openBot()">
+      <view class="self-row-item"
+            @click="openBot()">
         <view class="center">
           <i-icon type="customerservice"
                   size="40" />
@@ -24,9 +25,11 @@
       </view>
       <view class="self-row-item">
         <view class="center">
-          <i-icon type="editor" size="40" />
+          <i-icon type="editor"
+                  size="40" />
         </view>
-        <view class="self-card" @click="openCourse()">
+        <view class="self-card"
+              @click="openCourse()">
           <view class="self-card-header">课程表</view>
           <view class="self-card-content">
             课程表可以下拉刷新或在个人资料界面刷新哦~
@@ -37,7 +40,8 @@
     <!-- First Row end -->
     <!-- Second Row start -->
     <view class="self-row">
-      <view class="self-row-item" @click="openGroup()">
+      <view class="self-row-item"
+            @click="openGroup()">
         <view class="center">
           <i-icon type="createtask"
                   size="40" />
@@ -122,7 +126,6 @@ export default {
       console.log(this.name)
     })
   },
-
   computed: {
     ...mapState({
       openid: state => state.student.openid,
@@ -171,10 +174,8 @@ export default {
 .text
   color #80848f
   font-size 15px
-
 .item-col
-  color: red
-
+  color red
 .self-row
   display flex
   flex-wrap wrap
@@ -185,7 +186,6 @@ export default {
     flex 1
     display flex
     flex-flow column
-
 .self-card
   display flex
   flex-flow column

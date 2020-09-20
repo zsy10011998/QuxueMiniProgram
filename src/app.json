@@ -2,25 +2,14 @@
   "pages": [
     "pages/login/main",
     "pages/signUp/main",
-    "pages/index/main",
-    "pages/contact/main",
     "pages/own/main",
-    "pages/chat/main",
-    "pages/call/main",
-    "pages/search/main",
-    "pages/create/main",
-    "pages/members/main",
-    "pages/system/main",
-    "pages/user-profile/main",
-    "pages/group-profile/main",
-    "pages/groups/main",
-    "pages/blacklist/main",
     "pages/profile/main",
     "pages/update-profile/main",
     "pages/calendar/main",
     "pages/other-function/main",
     "pages/uploadfile/main",
-    "pages/introduction/main"
+    "pages/introduction/main",
+    "pages/lecture-profile/main"
   ],
   "subPackages": [{
     "root": "pages/functions/",
@@ -29,15 +18,11 @@
       "pages/course-schedule/main",
       "pages/schedule-update/main",
       "pages/schedule-index/main",
-      "pages/module-index/main",
-      "pages/module-detail/main",
-      "pages/module-edit/main",
-      "pages/block-edit/main",
-      "pages/block-detail/main",
       "pages/chatterbot/main",
       "pages/videos/main",
       "pages/onevideo/main",
-      "pages/group/main"
+      "pages/group/main",
+      "pages/groupmembers/main"
     ]
   }],
   "window": {
@@ -53,6 +38,12 @@
     "selectedColor": "#1aad16",
     "borderStyle": "white",
     "list": [{
+        "text": "课程",
+        "pagePath": "pages/lecture-profile/main",
+        "iconPath": "static/theme/chat.png",
+        "selectedIconPath": "static/theme/chat-theme.png"
+      },
+      {
         "text": "功能",
         "pagePath": "pages/other-function/main",
         "iconPath": "static/theme/setting.png",
