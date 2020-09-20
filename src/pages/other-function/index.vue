@@ -5,14 +5,12 @@
                 i-class="avatar"
                 shape="square"
                 :src="avatarUrl || '/static/images/avatar.png'" />
-      <br />
-      <i-icon type="mine"
-              size="30" />
     </view>
-    <i-row>
-      <!-- <i-col span="12">
+
+    <!-- First Row start -->
     <view class="self-row">
-      <view class="self-row-item" @click="openBot()">
+      <view class="self-row-item"
+            @click="openBot()">
         <view class="center">
           <i-icon type="customerservice"
                   size="40" />
@@ -23,17 +21,15 @@
             天上清光留此夕
             <br />人间和气阁春阴
           </view>
-        </i-card>
-      </i-col> -->
-
-      <!-- <i-col span="12">
         </view>
       </view>
       <view class="self-row-item">
         <view class="center">
-          <i-icon type="editor" size="40" />
+          <i-icon type="editor"
+                  size="40" />
         </view>
-        <view class="self-card" @click="openCourse()">
+        <view class="self-card"
+              @click="openCourse()">
           <view class="self-card-header">课程表</view>
           <view class="self-card-content">
             课程表可以下拉刷新或在个人资料界面刷新哦~
@@ -41,6 +37,27 @@
         </view>
       </view>
     </view>
+    <!-- First Row end -->
+    <!-- Second Row start -->
+    <view class="self-row">
+      <view class="self-row-item"
+            @click="openGroup()">
+        <view class="center">
+          <i-icon type="createtask"
+                  size="40" />
+        </view>
+        <view class="self-card">
+          <view class="self-card-header">报名分组</view>
+          <view class="self-card-content">
+            报名分组
+          </view>
+        </view>
+      </view>
+      <view class="self-row-item">
+        <!-- 当某一行只有一个card时，加上这个空元素作为 placeholder -->
+      </view>
+    </view>
+    <!-- Second Row end -->
     <!-- <i-col span="12">
         <view class="center">
           <i-icon type="editor" size="40" />
@@ -52,45 +69,6 @@
           </view>
         </i-card>
       </i-col> -->
-    </i-row>
-    <i-row>
-      <i-col span="12"
-             @click="openBot()">
-        <view class="center">
-          <i-icon type="customerservice"
-                  size="40" />
-        </view>
-        <i-card title="聊天机器人">
-          <view slot="content"
-                class="text">
-            天上清光留此夕
-            <br />人间和气阁春阴
-          </view>
-        </i-card>
-      </i-col>
-      <i-col span="12"
-             @click="openGroup()">
-        <view class="center">
-          <i-icon type="createtask"
-                  size="40" />
-        </view>
-        <i-card title="报名分组">
-          <view slot="content"
-                class="text">报名分组</view>
-        </i-card>
-      </i-col>
-      <!-- <i-col span="12">
-        <view class="center">
-          <i-icon type="group"
-                  size="40" />
-        </view>
-        <i-card title="课程表"
-                @click="openCourse()">
-          <view slot="content"
-                class="text">课程表可以下拉刷新或在个人资料界面刷新哦~</view>
-        </i-card>
-      </i-col> -->
-    </i-row>
     <!-- <i-row> -->
     <!-- <i-col span="12">
         <view class="center">
@@ -132,12 +110,6 @@ export default {
     return {}
   },
   beforeMount: function () {
-    // wx.getUserInfo({
-    //   success: function (res) {
-    //     console.log('获得头像')
-    //     wx.store.commit('setAvatarUrl', res.userInfo.avatarUrl)
-    //   }
-    // })
     this.$WXRequest.post({
       url: '/getInformation/',
       data: {
@@ -154,12 +126,12 @@ export default {
       console.log(this.name)
     })
   },
-
   computed: {
     ...mapState({
       openid: state => state.student.openid,
       name: state => state.student.name,
       studentNo: state => state.student.studentNo,
+      myInfo: state => state.user.myInfo,
       avatarUrl: state => state.student.avatarUrl
     })
   },
@@ -202,20 +174,18 @@ export default {
 .text
   color #80848f
   font-size 15px
-
 .item-col
-  color: red
-
+  color red
 .self-row
   display flex
   flex-wrap wrap
   justify-content center
+  margin-bottom 30rpx
   >>> .self-row-item
     width 50%
     flex 1
     display flex
     flex-flow column
-
 .self-card
   display flex
   flex-flow column

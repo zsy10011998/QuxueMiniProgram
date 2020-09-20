@@ -1,5 +1,5 @@
 {
-  "navigationBarTitleText": "功能",
+  "navigationBarTitleText": "课程信息",
   "disableScroll": false,
   "usingComponents": {
     "i-input": "../../../static/iview/input/index",
