@@ -56,6 +56,21 @@ export default {
                     url: '/onLogin/',
                     data: {
                       code: res.code
+
+            }).then(res => {
+              if (res.repCode === 200) {
+                wx.store.commit('setOpenId', res.openid)
+                console.log(res)
+                if (res.isRegister === false) {
+                  wx.navigateTo({ url: '../signUp/main' })
+                } else {
+                  wx.getUserInfo({
+                    success: function (res) {
+                      console.log('获得头像')
+                      wx.store.commit('setAvatarUrl', res.userInfo.avatarUrl)
+                      console.log(1)
+                      wx.switchTab({ url: '../lecture-profile/main' })
+
                     }
                   }).then(res => {
                     if (res.repCode === 200) {

@@ -20,7 +20,8 @@
     "pages/calendar/main",
     "pages/other-function/main",
     "pages/uploadfile/main",
-    "pages/introduction/main"
+    "pages/introduction/main",
+    "pages/lecture-profile/main"
   ],
   "subPackages": [{
     "root": "pages/functions/",
@@ -53,7 +54,14 @@
     "backgroundColor": "#fff",
     "selectedColor": "#1aad16",
     "borderStyle": "white",
-    "list": [{
+    "list": [
+      {
+        "text": "课程",
+        "pagePath": "pages/lecture-profile/main",
+        "iconPath": "static/theme/chat.png",
+        "selectedIconPath": "static/theme/chat-theme.png"
+      },
+      {
         "text": "功能",
         "pagePath": "pages/other-function/main",
         "iconPath": "static/theme/setting.png",
