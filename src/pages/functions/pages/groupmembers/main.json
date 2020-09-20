@@ -2,8 +2,8 @@
   "navigationBarTitleText": "小组成员",
   "disableScroll": false,
   "usingComponents": {
-    "i-input": "../../../static/iview/input/index",
-    "i-button": "../../../static/iview/button/index",
-    "i-panel": "../../static/iview/panel/index"
+    "i-input": "../../../../../static/iview/input/index",
+    "i-button": "../../../../../static/iview/button/index",
+    "i-panel": "../../../../../static/iview/panel/index"
   }
 }
