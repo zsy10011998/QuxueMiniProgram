@@ -1,5 +1,5 @@
 <template>
-  <i-panel>
+  <view class="main-container">
     <!-- <view class="header">
       <i-avatar slot="footer"
                 i-class="avatar"
@@ -24,7 +24,7 @@
 
     <h1 class="menu-title">课程工具</h1>
     <view class="function-card-list">
-      <view class="function-card">
+      <view class="function-card" @click="openGroup()">
         <view class="image-container">
           <image src="/static/utils/work.png"></image>
         </view>
@@ -35,7 +35,7 @@
         <image class="feature-icon" src="/static/images/coming.png" />
       </view>
     </view>
-  </i-panel>
+  </view>
 </template>
 
 <script>
@@ -96,6 +96,10 @@ export default {
 </script>
 
 <style scoped>
+.main-container {
+  min-height: 100vh;
+  position: absolute;
+}
 .menu-title {
   color: rgb(28, 133, 185);
   letter-spacing: 1px;
