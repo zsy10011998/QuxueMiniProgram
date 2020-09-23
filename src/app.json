@@ -28,14 +28,14 @@
   "window": {
     "backgroundColor": "#ededed",
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#3cc16e",
+    "navigationBarBackgroundColor": "#3c6ec1",
     "navigationBarTitleText": "趣学FUN",
     "navigationBarTextStyle": "white"
   },
   "tabBar": {
     "color": "#999",
     "backgroundColor": "#fff",
-    "selectedColor": "#1aad16",
+    "selectedColor": "#1a16ad",
     "borderStyle": "white",
     "list": [
       {

@@ -43,7 +43,7 @@ export default {
     this.loading = false
   },
   mounted () {
-    this.login()
+    // this.login()
   },
   methods: {
     login () {
@@ -123,7 +123,7 @@ export default {
   .header
     height 80%
     padding 30px 40px
-    background-color $theme-green
+    background-color $theme-blue
     color white
     .header-content
       display inline-block
@@ -159,7 +159,7 @@ export default {
   margin-right auto
 .login-button
   width 80vw
-  background-color $theme-green
+  background-color $theme-blue
   color white
   font-size 16px
   margin 30px auto 30px
@@ -168,5 +168,5 @@ export default {
     height 20px
     margin 0 6px 2px 0
 .clicked
-  background-color $dark-green
+  background-color $dark-blue
 </style>

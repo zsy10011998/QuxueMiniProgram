@@ -58,7 +58,7 @@ export default {
   text-align center
 .login-button
   width 80vw
-  background-color $theme-green
+  background-color $theme-blue
   color white
   font-size 16px
   margin 10px auto 10px
@@ -67,5 +67,5 @@ export default {
     height 20px
     margin 0 6px 2px 0
 .clicked
-  background-color $dark-green
+  background-color $dark-blue
 </style>
