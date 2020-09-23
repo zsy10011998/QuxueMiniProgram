@@ -10,7 +10,7 @@
     <h1 class="menu-title">应用功能</h1>
     <view class="function-card-list">
 
-      <view class="function-card" @click="openBot()">
+      <view class="function-card" hover-class="hover" @click="openBot()">
         <view class="image-container">
           <image src="/static/utils/customer-service.png"></image>
         </view>
@@ -24,7 +24,7 @@
 
     <h1 class="menu-title">课程工具</h1>
     <view class="function-card-list">
-      <view class="function-card" @click="openGroup()">
+      <view class="function-card" hover-class="hover" @click="openGroup()">
         <view class="image-container">
           <image src="/static/utils/work.png"></image>
         </view>
@@ -106,7 +106,6 @@ export default {
   font-size: 30rpx;
   font-weight: bolder;
   margin: 30rpx 0 30rpx 10rpx;
-  /* font-family:  'PingFang SC'; */
 }
 .function-card-list {
   box-sizing: border-box;
@@ -119,6 +118,11 @@ export default {
   display: flex;
   position: relative;
   background-color: rgb(246, 247, 251);
+  box-shadow: rgb(225, 227, 230) 0rpx 0rpx 10rpx 5rpx;
+  transition: box-shadow 0.5s;
+}
+.function-card.hover {
+  box-shadow: rgb(225, 227, 230) 0rpx 0rpx 20rpx 10rpx;
 }
 .function-card:first-of-type {
   border-top-left-radius: 20rpx;
