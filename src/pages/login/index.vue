@@ -42,6 +42,9 @@ export default {
   onUnload () {
     this.loading = false
   },
+  mounted () {
+    // this.login()
+  },
   methods: {
     login () {
       // let that = this
@@ -69,7 +72,7 @@ export default {
                             console.log('获得头像')
                             wx.store.commit('setAvatarUrl', res.userInfo.avatarUrl)
                             console.log(1)
-                            wx.switchTab({ url: '../lecture-profile/main' })
+                            wx.switchTab({ url: '../other-function/main' })
                           }
                         }).then(res => {
                           if (res.repCode === 200) {
@@ -120,7 +123,7 @@ export default {
   .header
     height 80%
     padding 30px 40px
-    background-color $theme-green
+    background-color $theme-blue
     color white
     .header-content
       display inline-block
@@ -156,7 +159,7 @@ export default {
   margin-right auto
 .login-button
   width 80vw
-  background-color $theme-green
+  background-color $theme-blue
   color white
   font-size 16px
   margin 30px auto 30px
@@ -165,5 +168,5 @@ export default {
     height 20px
     margin 0 6px 2px 0
 .clicked
-  background-color $dark-green
+  background-color $dark-blue
 </style>
