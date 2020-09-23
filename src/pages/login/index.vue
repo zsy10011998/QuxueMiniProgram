@@ -42,6 +42,9 @@ export default {
   onUnload () {
     this.loading = false
   },
+  mounted () {
+    this.login()
+  },
   methods: {
     login () {
       // let that = this

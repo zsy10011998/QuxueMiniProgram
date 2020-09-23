@@ -1,105 +1,40 @@
 <template>
   <i-panel>
-    <view class="header">
+    <!-- <view class="header">
       <i-avatar slot="footer"
                 i-class="avatar"
                 shape="square"
                 :src="avatarUrl || '/static/images/avatar.png'" />
+    </view>-->
+
+    <h1 class="menu-title">应用功能</h1>
+    <view class="function-card-list">
+
+      <view class="function-card" @click="openBot()">
+        <view class="image-container">
+          <image src="/static/utils/customer-service.png"></image>
+        </view>
+        <view class="content">
+          <h1 class="title">聊天机器人</h1>
+          <view class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</view>
+        </view>
+        <image class="feature-icon" src="/static/images/featured.png" />
+      </view>
     </view>
 
-    <!-- First Row start -->
-    <view class="self-row">
-      <view class="self-row-item"
-            @click="openBot()">
-        <view class="center">
-          <i-icon type="customerservice"
-                  size="40" />
+    <h1 class="menu-title">课程工具</h1>
+    <view class="function-card-list">
+      <view class="function-card">
+        <view class="image-container">
+          <image src="/static/utils/work.png"></image>
         </view>
-        <view class="self-card">
-          <view class="self-card-header">聊天机器人</view>
-          <view class="self-card-content">
-            天上清光留此夕
-            <br />人间和气阁春阴
-          </view>
+        <view class="content">
+          <h1 class="title">分组管理</h1>
+          <view class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</view>
         </view>
-      </view>
-      <view class="self-row-item">
-        <view class="center">
-          <i-icon type="editor"
-                  size="40" />
-        </view>
-        <view class="self-card"
-              @click="openCourse()">
-          <view class="self-card-header">课程表</view>
-          <view class="self-card-content">
-            课程表可以下拉刷新或在个人资料界面刷新哦~
-          </view>
-        </view>
+        <image class="feature-icon" src="/static/images/coming.png" />
       </view>
     </view>
-    <!-- First Row end -->
-    <!-- Second Row start -->
-    <view class="self-row">
-      <view class="self-row-item"
-            @click="openGroup()">
-        <view class="center">
-          <i-icon type="createtask"
-                  size="40" />
-        </view>
-        <view class="self-card">
-          <view class="self-card-header">报名分组</view>
-          <view class="self-card-content">
-            报名分组
-          </view>
-        </view>
-      </view>
-      <view class="self-row-item">
-        <!-- 当某一行只有一个card时，加上这个空元素作为 placeholder -->
-      </view>
-    </view>
-    <!-- Second Row end -->
-    <!-- <i-col span="12">
-        <view class="center">
-          <i-icon type="editor" size="40" />
-        </view>
-        <i-card title="知识分享" @click="openModule()">
-          <view slot="content" class="text">
-            正是江南好风景
-            <br />落花时节又逢君
-          </view>
-        </i-card>
-      </i-col> -->
-    <!-- <i-row> -->
-    <!-- <i-col span="12">
-        <view class="center">
-          <i-icon type="video" size="40" />
-        </view>
-        <i-card title="视频" @click="openvideolist()">
-          <view slot="content" class="text">点击查看学习视频</view>
-        </i-card>
-      </i-col> -->
-    <!-- <i-col span="12">
-        <view class="center">
-          <i-icon type="createtask"
-                  size="40" />
-        </view>
-        <i-card title="报名分组"
-                @click="openGroup()">
-          <view slot="content"
-                class="text">报名分组</view>
-        </i-card>
-      </i-col>
-    </i-row> -->
-    <!-- <i-row> -->
-    <!-- <i-col span="12" > -->
-    <!-- <view class="center" > -->
-    <!-- <i-icon type="customerservice" size=40 /> -->
-    <!-- </view> -->
-    <!-- <i-card title="聊天机器人"> -->
-    <!-- <view slot="content" class="text">快来调戏小趣吧~</view> -->
-    <!-- </i-card> -->
-    <!-- </i-col> -->
-    <!-- </i-row> -->
   </i-panel>
 </template>
 
@@ -160,49 +95,73 @@ export default {
 }
 </script>
 
-<style lang="stylus" scoped>
-.header
-  text-align center
-  margin 45px auto 25px
-  >>> .avatar
-    width 100px
-    height 100px
-    border-radius 3px
-    margin 0 auto 20px
-.center
-  text-align center
-.text
-  color #80848f
-  font-size 15px
-.item-col
-  color red
-.self-row
-  display flex
-  flex-wrap wrap
-  justify-content center
-  margin-bottom 30rpx
-  >>> .self-row-item
-    width 50%
-    flex 1
-    display flex
-    flex-flow column
-.self-card
-  display flex
-  flex-flow column
-  margin 0 16rpx
-  padding 0 10rpx
-  background-color #ffffff
-  flex 1
-  border-radius 10rpx
-  border 1rpx solid #dddee1
-  >>> .self-card-header
-    font-size 28rpx
-    padding 0 16rpx
-    line-height 60rpx
-    border-bottom 1rpx #eee solid
-  >>> .self-card-content
-    color #80848f
-    font-size 30rpx
-    padding 16rpx
-    padding-bottom 36rpx
+<style scoped>
+.menu-title {
+  color: rgb(28, 133, 185);
+  letter-spacing: 1px;
+  font-size: 30rpx;
+  font-weight: bolder;
+  margin: 30rpx 0 30rpx 10rpx;
+  /* font-family:  'PingFang SC'; */
+}
+.function-card-list {
+  box-sizing: border-box;
+  width: 100vw;
+  padding: 0 15px;
+}
+.function-card {
+  padding: 36rpx 15rpx;
+  margin: 10rpx 0;
+  display: flex;
+  position: relative;
+  background-color: rgb(246, 247, 251);
+}
+.function-card:first-of-type {
+  border-top-left-radius: 20rpx;
+  border-top-right-radius: 20rpx;
+  margin-top: 0;
+}
+.function-card:last-of-type {
+  border-bottom-left-radius: 20rpx;
+  border-bottom-right-radius: 20rpx;
+  margin-bottom: 0;
+}
+.function-card .image-container {
+  width: 120rpx;
+  height: 120rpx;
+  background: #bbdced;
+  border-radius: 50%;
+  position: relative;
+}
+.function-card .image-container>image {
+  width: 70rpx;
+  height: 70rpx;
+  left: 50%;
+  top: 50%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
+.function-card>.content {
+  width: 500rpx;
+  padding-left: 32rpx;
+  box-sizing: border-box;
+}
+.function-card>.content>.title {
+  font-size: 32rpx;
+  padding: 12rpx 0;
+  font-family: "Microsoft YaHei";
+  font-weight: bolder;
+  letter-spacing: 0.5px;
+}
+.function-card>.content>.description {
+  font-size: 24rpx;
+  color: #666;
+}
+.function-card .feature-icon {
+  width: 180rpx;
+  height: 50rpx;
+  position: absolute;
+  right: 36rpx;
+  top: 24rpx;
+}
 </style>
