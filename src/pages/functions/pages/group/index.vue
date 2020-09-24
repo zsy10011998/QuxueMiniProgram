@@ -155,7 +155,7 @@ export default {
   padding 10rpx
 button
   width 60vw
-  background-color $theme-green
+  background-color $theme-blue
   color white
   font-size 20px
   margin 50px auto
@@ -165,5 +165,5 @@ button
   // height 20px
   // margin 0 6px 2px 0
 .clicked
-  background-color $dark-green
+  background-color $dark-blue
 </style>
