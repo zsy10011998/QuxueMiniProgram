@@ -7,20 +7,26 @@
                 :src="avatarUrl || '/static/images/avatar.png'" />
     </view>-->
     <h1 class="menu-title">应用功能</h1>
-    <entry picSrc="/static/utils/customer-service.png"
-           entryName="聊天机器人"
-           entryText="Lorem ipsum dolor sit amet, consectetur adipisicing elit."
-           stateSrc="/static/images/featured.png"
-           @click="openBot()"
-           />
+    <view class="function-card-list">
+      <entry
+        picSrc="/static/utils/customer-service.png"
+        entryName="聊天机器人"
+        entryText="Lorem ipsum dolor sit amet, consectetur adipisicing elit."
+        stateSrc="/static/images/featured.png"
+        @click="openBot()"
+      />
+    </view>
 
     <h1 class="menu-title">课程工具</h1>
-    <entry picSrc="/static/utils/work.png"
-           entryName="分组管理"
-           entryText="Lorem ipsum dolor sit amet, consectetur adipisicing elit."
-           stateSrc="/static/images/coming.png"
-           @click="openGroup()"
-           />
+    <view class="function-card-list">
+      <entry
+        picSrc="/static/utils/work.png"
+        entryName="分组管理"
+        entryText="Lorem ipsum dolor sit amet, consectetur adipisicing elit."
+        stateSrc="/static/images/coming.png"
+        @click="openGroup()"
+      />
+    </view>
   </view>
 </template>
 
@@ -92,5 +98,10 @@ export default {
   font-size: 30rpx;
   font-weight: bolder;
   margin: 30rpx 0 30rpx 10rpx;
+}
+.function-card-list {
+  box-sizing: border-box;
+  width: 100vw;
+  padding: 0 15px;
 }
 </style>

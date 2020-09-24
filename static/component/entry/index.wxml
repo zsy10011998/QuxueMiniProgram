@@ -1,6 +1,5 @@
 <div>
   <!--<h1 class="menu-title">{{entryTitle}}</h1>-->
-  <view class="function-card-list">
     <view class="function-card" hover-class="hover" v-click="openProfile()">
       <view class="image-container">
         <image src="{{picSrc}}"></image>
@@ -17,5 +16,4 @@
         <image class="feature-icon" src="{{featured}}" />
       </div> -->
     </view>
-  </view>
 </div>
