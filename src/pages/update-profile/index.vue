@@ -9,46 +9,7 @@
            :focus="focus"
            @blur="focus = false"
            @focus="focus = true">
-    <!-- <input v-if="key==='buaa'"
-           class="input"
-           :class="focus2 ? 'input-focus' : ''"
-           type="text"
-           placeholder="请输入密码"
-           password
-           v-model="password"
-           :focus="focus2"
-           @blur="focus2 = false"
-           @focus="focus2 = true">
-    <input v-if="key==='password'"
-           class="input"
-           :class="focus3 ? 'input-focus' : ''"
-           type="text"
-           placeholder="请输入原始密码"
-           password
-           v-model="originPassword"
-           :focus="focus3"
-           @blur="focus3 = false"
-           @focus="focus3 = true">
-    <input v-if="key==='password'"
-           class="input"
-           :class="focus4 ? 'input-focus' : ''"
-           type="text"
-           placeholder="请输入新密码"
-           password
-           v-model="newPassword"
-           :focus="focus4"
-           @blur="focus4 = false"
-           @focus="focus4 = true">
-    <input v-if="key==='password'"
-           class="input"
-           :class="focus5 ? 'input-focus' : ''"
-           type="text"
-           placeholder="请确认新密码"
-           password
-           v-model="newPasswordConfirm"
-           :focus="focus5"
-           @blur="focus5 = false"
-           @focus="focus5 = true"> -->
+
     <button :class="{'button-disabled' : disabled}"
             :disabled="disabled"
             @click="handleClick()">确认修改</button>
@@ -57,7 +18,6 @@
 
 <script>
 import { mapState } from 'vuex'
-import md5 from 'js-md5'
 
 // 修改资料页，支持修改个人资料和群组相关资料
 export default {
@@ -77,8 +37,6 @@ export default {
   },
   computed: {
     ...mapState({
-      myInfo: state => state.user.myInfo,
-      groupProfile: state => state.conversation.currentConversation.groupProfile,
       openid: state => state.student.openid,
       name: state => state.student.name,
       stutNo: state => state.student.studentNo
@@ -123,39 +81,9 @@ export default {
     }
     let title = ''
     switch (key) {
-      case 'nick':
-        title = '修改昵称'
-        this.value = this.myInfo.nick
-        break
-      case 'signature':
-        title = '修改个性签名'
-        this.value = this.myInfo.selfSignature
-        break
-      case 'nameCard':
-        title = '修改群名片'
-        this.value = this.groupProfile.selfInfo.nameCard
-        break
-      // case 'name':
-      //   title = '修改群名称'
-      //   this.value = this.groupProfile.name
-      //   break
-      case 'notification':
-        title = '修改群公告'
-        this.value = this.groupProfile.notification
-        break
-      case 'buaa':
-        title = '修改统一账号'
-        this.value = ''
-        this.password = ''
-        break
       case 'studentNo':
         title = '修改学号'
         this.value = this.studentNo
-        break
-      case 'password':
-        title = '重置密码'
-        this.originPassword = ''
-        this.newPassword = ''
         break
       case 'name':
         title = '修改姓名'
@@ -255,60 +183,7 @@ export default {
         }
       })
     },
-    resetPassword () {
-      if (this.newPassword !== this.newPasswordConfirm) {
-        wx.showToast({
-          title: '两次密码输入不匹配，请确认密码输入正确',
-          icon: 'none',
-          duration: 2000
-        })
-        return
-      } else if (this.originPassword === this.newPassword) {
-        wx.showToast({
-          title: '新密码不能与原始密码相同',
-          icon: 'none',
-          duration: 1000
-        })
-        return
-      } else if (this.newPassword.length < 6) {
-        wx.showToast({
-          title: '密码强度不够，密码长度至少为6位',
-          icon: 'none',
-          duration: 1000
-        })
-        return
-      }
-      console.log('In reset password!')
-      console.log(this.myInfo.userID)
-      console.log(this.originPassword)
-      this.$WXRequest.post({
-        url: '/passwordcheck/',
-        data: {
-          username: this.myInfo.userID,
-          password_digest: md5(this.originPassword)
-        }
-      }).then(res => {
-        console.log(res)
-        if (res.repCode === 200) {
-          console.log('原始密码正确！')
-          let id = wx.store.state.user.userId
-          this.$WXRequest.put({
-            url: '/users/' + id + '/',
-            data: {
-              password_digest: md5(this.newPassword)
-            }
-          }).then(res => {
-            this.handleResolve()
-          })
-        } else {
-          wx.showToast({
-            title: '原始密码错误',
-            icon: 'none',
-            duration: 1000
-          })
-        }
-      })
-    },
+
     handleResolve () {
       wx.showToast({
         title: '修改成功',

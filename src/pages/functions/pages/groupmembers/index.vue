@@ -5,6 +5,7 @@
     <div v-for="(item, index) in membersinf"
          :key="index">
       <div class="content">{{item.studentNo}} {{item.name}} {{item.status}}</div>
+      <img :src=item.avatarUrl>
     </div>
 
     <i-input type="text"

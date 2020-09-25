@@ -86,6 +86,7 @@ export default {
           openid: this.openid,
           name: this.signUpForm.username,
           studentNo: this.signUpForm.studentNo
+          // avatarUrl: null
         }
       }).then(res => {
         if (res.repCode === 200) {
@@ -96,8 +97,22 @@ export default {
             icon: 'none',
             duration: 1500
           }).then(() => {
-            console.log('login success')
-            wx.switchTab({ url: '../other-function/main' })
+            wx.getUserInfo({
+              success: (res) => {
+                console.log('获得头像')
+                wx.store.commit('setAvatarUrl', res.userInfo.avatarUrl)
+                console.log(1)
+                this.$WXRequest.post({
+                  url: '/changeInfo/',
+                  data: {
+                    openid: this.openid,
+                    avatarUrl: res.userInfo.avatarUrl
+                  }
+                })
+                console.log('login success')
+                wx.switchTab({ url: '../other-function/main' })
+              }
+            })
           })
         } else {
           wx.showToast({
