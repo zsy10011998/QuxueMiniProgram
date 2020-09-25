@@ -68,40 +68,30 @@ export default {
                         wx.navigateTo({ url: '../signUp/main' })
                       } else {
                         wx.getUserInfo({
-                          success: function (res) {
+                          success: (res) => {
                             console.log('获得头像')
                             wx.store.commit('setAvatarUrl', res.userInfo.avatarUrl)
                             console.log(1)
-                            wx.switchTab({ url: '../other-function/main' })
-                          }
-                        }).then(res => {
-                          if (res.repCode === 200) {
-                            wx.store.commit('setOpenId', res.openid)
-                            console.log(res)
-                            wx.getUserInfo({
-                              success: function (res) {
-                                console.log('获得头像')
-                                wx.store.commit('setAvatarUrl', res.userInfo.avatarUrl)
-                                console.log(1)
+                            this.$WXRequest.post({
+                              url: '/changeInfo/',
+                              data: {
+                                openid: this.openid,
+                                avatarUrl: res.userInfo.avatarUrl
                               }
                             })
-                            if (res.isRegister === false) {
-                              wx.navigateTo({ url: '../signUp/main' })
-                            } else {
-                              wx.switchTab({ url: '../other-function/main' })
-                            }
-                          } else {
-                            wx.showToast({
-                              title: '请重试',
-                              icon: 'none',
-                              duration: 1500
-                            })
+                            wx.switchTab({ url: '../other-function/main' })
                           }
                         })
                       }
                     } else {
                       console.log('登录失败！' + res.errMsg)
                     }
+                  })
+                } else {
+                  wx.showToast({
+                    title: '请重试',
+                    icon: 'none',
+                    duration: 1500
                   })
                 }
               }
