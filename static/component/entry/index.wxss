@@ -42,10 +42,12 @@
   }
   .function-card>.content>.title {
     font-size: 32rpx;
-    padding: 12rpx 0;
+    display: block;
+    padding-bottom: 24rpx;
     font-family: "Microsoft YaHei";
     font-weight: bolder;
     letter-spacing: 0.5px;
+    box-sizing: border-box;
   }
   .function-card>.content>.description {
     font-size: 24rpx;
