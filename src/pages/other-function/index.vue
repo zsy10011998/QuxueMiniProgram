@@ -27,28 +27,6 @@
         @click="openGroup()"
       />
     </view>
-
-    <h1 class="menu-title">课程工具</h1>
-    <view class="function-card-list">
-      <entry
-        picSrc="/static/utils/work.png"
-        entryName="分组管理"
-        entryText="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Doloremque, quod cupiditate? Nostrum, distinctio in! Consequatur delectus dolorem possimus maiores porro!"
-        label="coming"
-        @click="openGroup()"
-      />
-    </view>
-
-    <h1 class="menu-title">课程工具</h1>
-    <view class="function-card-list">
-      <entry
-        picSrc="/static/utils/work.png"
-        entryName="分组管理"
-        entryText="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Doloremque, quod cupiditate? Nostrum, distinctio in! Consequatur delectus dolorem possimus maiores porro!"
-        label="coming"
-        @click="openGroup()"
-      />
-    </view>
   </view>
 </template>
 

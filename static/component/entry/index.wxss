@@ -3,12 +3,13 @@
     margin: 10rpx 0;
     display: flex;
     position: relative;
-    background-color: rgb(246, 247, 251);
+    background-color: rgba(246, 247, 251, 0.8);
     box-shadow: rgb(225, 227, 230) 0rpx 0rpx 10rpx 5rpx;
     transition: box-shadow 0.5s;
   }
   .function-card.hover {
     box-shadow: rgb(225, 227, 230) 0rpx 0rpx 20rpx 10rpx;
+    background-color: rgba(246, 247, 251);
   }
   .function-card:first-of-type {
     border-top-left-radius: 20rpx;
