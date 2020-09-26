@@ -194,7 +194,7 @@ export default {
   min-height: 100vh;
   position: absolute;
   background-image: url(https://cs.zhouyc.cc/images/homeProbe.png);
-  background-position: center 50%;
+  background-position: center 65%;
   background-repeat: no-repeat;
   background-size: 100%;
   background-attachment: fixed;
