@@ -27,6 +27,28 @@
         @click="openGroup()"
       />
     </view>
+
+    <h1 class="menu-title">课程工具</h1>
+    <view class="function-card-list">
+      <entry
+        picSrc="/static/utils/work.png"
+        entryName="分组管理"
+        entryText="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Doloremque, quod cupiditate? Nostrum, distinctio in! Consequatur delectus dolorem possimus maiores porro!"
+        label="coming"
+        @click="openGroup()"
+      />
+    </view>
+
+    <h1 class="menu-title">课程工具</h1>
+    <view class="function-card-list">
+      <entry
+        picSrc="/static/utils/work.png"
+        entryName="分组管理"
+        entryText="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Doloremque, quod cupiditate? Nostrum, distinctio in! Consequatur delectus dolorem possimus maiores porro!"
+        label="coming"
+        @click="openGroup()"
+      />
+    </view>
   </view>
 </template>
 
@@ -91,6 +113,11 @@ export default {
 .main-container {
   min-height: 100vh;
   position: absolute;
+  background-image: url(https://cs.zhouyc.cc/images/homeEvaluate.png);
+  background-position: center bottom;
+  background-repeat: no-repeat;
+  background-size: 100%;
+  background-attachment: fixed;
 }
 .menu-title {
   color: rgb(28, 133, 185);
