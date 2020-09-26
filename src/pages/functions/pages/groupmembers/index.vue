@@ -1,35 +1,43 @@
 <template>
   <div>
-
-    <!-- <div class="user-id">学号：{{$store.state.studentNo}}</div> -->
-    <div v-for="(item, index) in membersinf"
-         :key="index">
-      <div class="content">{{item.studentNo}} {{item.name}} {{item.status}}</div>
-      <img :src=item.avatarUrl>
+    <div class="member-list">
+      <div v-for="(item, index) in membersinf" :key="index" class="member-card">
+        <div class="image-container">
+          <image v-if="item.avatarUrl" :src="item.avatarUrl" />
+          <image v-else src="/static/images/avatar.png" />
+        </div>
+        <div class="text-container">
+          <div class="student-name">{{ item.name }}</div>
+          <div class="student-id">{{ item.studentNo}}</div>
+        </div>
+      </div>
+      <!-- <div class="status-icon">{{ item.name }}</div> -->
     </div>
 
-    <i-input type="text"
-             title="学号"
-             placeholder="新成员学号"
-             maxlength="20"
-             i-class="input"
-             @change="updatestudetNo"
-             v-if='addblock' />
+    <i-input
+      type="text"
+      title="学号"
+      placeholder="新成员学号"
+      maxlength="20"
+      i-class="input"
+      @change="updatestudetNo"
+      v-if="addblock"
+    />
 
-    <button hover-class="clicked"
-            class="login-button"
-            @click="addnew"
-            v-if='isCaptain'>{{addblock?'添加':'添加新成员'}}</button>
-    <button hover-class="clicked"
-            class="login-button"
-            @click="disgroup"
-            v-if='isCaptain'>解散分组</button>
-    <button hover-class="clicked"
-            class="login-button"
-            @click="exitgroup"
-            v-if='isCaptain==false'>退出分组</button>
+    <button
+      hover-class="clicked"
+      class="login-button"
+      @click="addnew"
+      v-if="isCaptain"
+    >{{addblock?'添加':'添加新成员'}}</button>
+    <button hover-class="clicked" class="login-button" @click="disgroup" v-if="isCaptain">解散分组</button>
+    <button
+      hover-class="clicked"
+      class="login-button"
+      @click="exitgroup"
+      v-if="isCaptain==false"
+    >退出分组</button>
   </div>
-
 </template>
 
 <script>
@@ -181,27 +189,67 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-.blo
-  padding 10rpx
-.title1
-  font-size 50rpx
-  height 80rpx
-  font-weight 500
-.title2
-  font-size 35rpx
-  padding 10rpx
-button
-  width 60vw
-  background-color $theme-blue
-  color white
-  font-size 16px
-  margin 20px auto
+button {
+  width: 60vw;
+  background-color: $theme-blue;
+  color: white;
+  font-size: 16px;
+  margin: 20px auto;
   // &::before
   // width 20px
   // height 20px
   // margin 0 6px 2px 0
-.clicked
-  background-color $dark-blue
-.content
-  margin 20px 20px
+}
+
+.clicked {
+  background-color: $dark-blue;
+}
+
+.content {
+  margin: 20px 20px;
+}
+
+.member-list {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 25rpx;
+}
+
+.member-list>.member-card {
+  box-sizing: border-box;
+  position: relative;
+  width: 100%;
+  float: left;
+  padding 10rpx
+  display: flex;
+  flex-direction: row;
+  width 100%
+}
+
+.image-container {
+  height: 120rpx;
+  width: 120rpx;
+  border-radius: 50%
+  overflow hidden
+
+  >>>image {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.text-container {
+  max-width: 450rpx;
+  padding-left: 20rpx
+}
+
+.student-name {
+  font-weight: bold
+  font-size: 36rpx
+}
+.student-id {
+  margin-top: 12rpx
+  font-size: 24rpx
+  color: #555
+}
 </style>
