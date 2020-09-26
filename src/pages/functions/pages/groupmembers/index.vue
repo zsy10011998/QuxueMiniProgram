@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="main-container">
     <div class="member-list">
       <div v-for="(item, index) in membersinf" :key="index" class="member-card">
         <div class="image-container">
@@ -189,6 +189,17 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+.main-container {
+  width 100vw
+  min-height: 100vh;
+  position: absolute;
+  background-image: url(https://cs.zhouyc.cc/images/homeProbe.png);
+  background-position: center 65%;
+  background-repeat: no-repeat;
+  background-size: 100%;
+  background-attachment: fixed;
+}
+
 button {
   width: 60vw;
   background-color: $theme-blue;
@@ -223,7 +234,8 @@ button {
   padding 10rpx
   display: flex;
   flex-direction: row;
-  width 100%
+  margin-top: 24rpx;
+  background: rgba(255,255,255,.8);
 }
 
 .image-container {
