@@ -46,6 +46,10 @@ Component({
     url: {
       type: String,
       value: ''
+    },
+    leftSet: {
+      type: Boolean,
+      value: false
     }
   },
 
