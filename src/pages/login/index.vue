@@ -5,8 +5,8 @@
         <img src="../../../static/images/quxue-logo-white.png"
              class="icon" />
         <div class="text">
-          <div class="text-header">趣学 FUN</div>
-          <div class="text-content">疫情期间 学习相伴</div>
+          <div class="text-header">计算机导论与伦理学</div>
+          <div class="text-content">2020年秋季学期</div>
         </div>
       </div>
     </div>

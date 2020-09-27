@@ -1,5 +1,5 @@
 {
-  "navigationBarTitleText": "趣学 FUN",
+  "navigationBarTitleText": "",
   "disableScroll": true,
   "usingComponents": {
     "i-input": "../../../static/iview/input/index",
