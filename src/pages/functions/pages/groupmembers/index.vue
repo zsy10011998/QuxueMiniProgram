@@ -7,11 +7,13 @@
           <image v-else src="/static/images/avatar.png" />
         </div>
         <div class="text-container">
-          <div class="student-name">{{ item.name }}</div>
-          <div class="student-id">{{ item.studentNo}}</div>
+          <div class="student-name">
+            <span>{{ item.name }}</span>
+            <span class="status-icon" :class="item.status"></span>
+          </div>
+          <div class="student-id">{{ item.studentNo }}</div>
         </div>
       </div>
-      <!-- <div class="status-icon">{{ item.name }}</div> -->
     </div>
 
     <i-input
@@ -89,9 +91,6 @@ export default {
   },
   methods: {
     addnew () {
-      // console.log(this.addblock)
-      // console.log(this.membersinf.length)
-      // console.log(this.membersinf.length >= 5)
       if (this.membersinf.length >= 5) {
         wx.showToast({
           title: '最多只能五个成员',
@@ -251,17 +250,62 @@ button {
 }
 
 .text-container {
-  max-width: 450rpx;
+  max-width: 400rpx;
   padding-left: 20rpx
 }
 
 .student-name {
   font-weight: bold
   font-size: 36rpx
+  position relative
 }
 .student-id {
   margin-top: 12rpx
   font-size: 24rpx
   color: #555
 }
+
+.status-icon {
+  font-weight: normal;
+  font-size: 20rpx;
+  margin-left: 24rpx;
+  display: inline-block;
+  bottom: 6rpx;
+  position: relative;
+  padding: 2rpx 8rpx;
+  border: 2rpx #555 solid;
+  border-radius: 6rpx
+  display: none;
+}
+
+.status-icon.leader {
+  display: unset !important;
+  color: #52c41a;
+  background: #f6ffed;
+  border-color: #b7eb8f;
+  &::before {
+    content: "组长";
+  }
+}
+
+.status-icon.member {
+  display: unset !important;
+  color: #1890ff;
+  background: #e6f7ff;
+  border-color: #91d5ff;
+  &::before {
+    content: "成员";
+  }
+}
+
+.status-icon.invited {
+  display: unset !important;
+  color: #faad14;
+  background: #fffbe6;
+  border-color: #ffe58f;
+  &::before {
+    content: "邀请中";
+  }
+}
+
 </style>
