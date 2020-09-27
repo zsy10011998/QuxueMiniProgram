@@ -34,7 +34,7 @@
             <i-avatar i-class="avatar"
                       v-else
                       shape="square"
-                      src='/static/images/avatar.png' />
+                      :src="isChat?'/static/images/avatar1.png':'/static/images/avatar2.png'" />
           </div>
         </div>
       </li>
@@ -46,7 +46,7 @@
         <div class="switch"
              @click="changeRobot"
              v-if="!isFocus">
-          切换
+          {{isChat?"吐槽":"聊天"}}
         </div>
         <div style="width: 100%">
           <input type="text"
@@ -83,14 +83,15 @@ export default {
   },
   onLoad (options) {
     wx.setNavigationBarTitle({
-      title: 'ChatterBot'
+      title: '聊天机器人'
     })
     this.messageList = [
       {
         flow: 'in',
-        content: 'Hi! 请问需要什么帮助？'
+        content: 'Hi! 我可以和你聊天，现在开始吧'
       }
     ]
+    this.getMessgage()
   },
   onUnload () {
     this.messageContent = ''
@@ -111,9 +112,9 @@ export default {
   methods: {
     scrollbottom () {
       wx.createSelectorQuery().select('#list').boundingClientRect(function (rect) {
-        console.log(rect)
         wx.pageScrollTo({
-          scrollTop: rect.height
+          // scrollTop: rect.height
+          scrollTop: 99999999999
         })
       }).exec()
     },
@@ -126,6 +127,26 @@ export default {
       return re.test(content)
     },
     // 发送text message 包含 emoji
+    getMessgage () {
+      this.$WXRequest.post({
+        url: '/chatrobotapi/',
+        data: {
+          'openid': this.openid,
+          'op': 'get',
+          'msg': this.messageContent,
+          'isChat': this.isChat
+        }
+      }).then(res => {
+        for (var i = 0; i < res.length; i++) {
+          this.messageList.push(res[i])
+        }
+        // console.log(this.messageList)
+        // this.messageList.push(...res)
+        // console.log(this.messageList)
+        // setTimeout(this.scrollbottom(), 5000)
+        this.scrollbottom()
+      })
+    },
     sendMessage () {
       if (!this.isnull(this.messageContent)) {
         this.messageList.push({ flow: 'out', content: this.messageContent })
@@ -134,10 +155,11 @@ export default {
           url: '/chatrobotapi/',
           data: {
             'openid': this.openid,
+            'op': 'send',
             'msg': this.messageContent,
             'isChat': this.isChat
           }
-        }, false).then(
+        }).then(
           res => {
             console.log('answer', res)
             var ans = res.replace('{br}', '。')
@@ -166,6 +188,16 @@ export default {
           content: 'Hi! 我可以分析你的情感，说一句话试试吧'
         }
       ])
+      if (this.isChat) {
+        wx.setNavigationBarTitle({
+          title: '聊天机器人'
+        })
+      } else {
+        wx.setNavigationBarTitle({
+          title: '情感分析机器人'
+        })
+      }
+      this.getMessgage()
     }
   },
 
