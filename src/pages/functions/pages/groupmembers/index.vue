@@ -85,8 +85,19 @@ export default {
         op: 'getmembersinfo'
       }
     }).then(res => {
-      console.log(res.members)
-      this.$set(this, 'membersinf', res.members)
+      if (res.members) {
+        const statusCodeOrder = {
+          leader: 3,
+          member: 2,
+          invited: 1
+        }
+        const membersSorted = res.members.sort((a, b) => {
+          const oa = statusCodeOrder[a.status] || 0
+          const ob = statusCodeOrder[b.status] || 0
+          return ob - oa
+        })
+        this.$set(this, 'membersinf', membersSorted)
+      }
     })
   },
   methods: {
@@ -193,7 +204,7 @@ export default {
   min-height: 100vh;
   position: absolute;
   background-image: url(https://cs.zhouyc.cc/images/homeProbe.png);
-  background-position: center 65%;
+  background-position: center 80%;
   background-repeat: no-repeat;
   background-size: 100%;
   background-attachment: fixed;
