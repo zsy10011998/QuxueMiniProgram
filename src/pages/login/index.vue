@@ -10,12 +10,13 @@
         </div>
       </div>
     </div>
-
-    <button hover-class="clicked"
-            open-type="getUserInfo"
-            :loading="loading"
-            class="login-button"
-            @click="login">微信登录</button>
+    <div class="buttondiv">
+      <button hover-class="clicked"
+              open-type="getUserInfo"
+              :loading="loading"
+              class="login-button"
+              @click="login">微信登录</button>
+    </div>
   </div>
 </template>
 
@@ -104,14 +105,18 @@ export default {
 }
 // 1
 </script>
-
+<style lang = "wxss">
+page{
+  height: 100%;
+}
+</style>
 <style lang="stylus" scoped>
 .counter-warp
-  height 800rpx
+  height 100%
   background $white
   text-align center
   .header
-    height 80%
+    height 70%
     padding 30px 40px
     background-color $theme-blue
     color white
@@ -147,16 +152,17 @@ export default {
   margin-bottom 8px
   margin-left auto
   margin-right auto
+.buttondiv
+  height 30%
+  // display table-cell
+  // vertical-align middle
+  // text-align center
 .login-button
   width 80vw
   background-color $theme-blue
   color white
   font-size 16px
   margin 30px auto 30px
-  &::before
-    width 20px
-    height 20px
-    margin 0 6px 2px 0
 .clicked
   background-color $dark-blue
 </style>

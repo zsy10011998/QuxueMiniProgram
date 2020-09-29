@@ -85,14 +85,14 @@ export default {
     wx.setNavigationBarTitle({
       title: '聊天机器人'
     })
-    this.messageList = [
-      {
-        flow: 'in',
-        content: 'Hi! 我可以和你聊天，现在开始吧'
-      }
-    ]
-    this.getMessgage()
+    // this.getMessgage(this.isChat)
   },
+  onShow () {
+    this.getMessgage(this.isChat)
+  },
+  // onReady () {
+  //   this.getMessgage(this.isChat)
+  // },
   onUnload () {
     this.messageContent = ''
     wx.switchTab({
@@ -112,9 +112,10 @@ export default {
   methods: {
     scrollbottom () {
       wx.createSelectorQuery().select('#list').boundingClientRect(function (rect) {
+        console.log(rect.height)
         wx.pageScrollTo({
-          // scrollTop: rect.height
-          scrollTop: 99999999999
+          scrollTop: rect.height
+          // scrollTop: 99999999999
         })
       }).exec()
     },
@@ -127,24 +128,37 @@ export default {
       return re.test(content)
     },
     // 发送text message 包含 emoji
-    getMessgage () {
-      this.$WXRequest.post({
+    getMessgage (type) {
+      console.log(type)
+      return this.$WXRequest.post({
         url: '/chatrobotapi/',
         data: {
           'openid': this.openid,
           'op': 'get',
           'msg': this.messageContent,
-          'isChat': this.isChat
+          'isChat': type
         }
-      }).then(res => {
-        for (var i = 0; i < res.length; i++) {
-          this.messageList.push(res[i])
+      }, false).then(res => {
+        if (type) {
+          this.$set(this, 'messageList', [{
+            flow: 'in',
+            content: 'Hi! 我可以和你聊天，现在开始吧'
+          }])
+        } else {
+          this.$set(this, 'messageList', [{
+            flow: 'in',
+            content: 'Hi! 我可以分析你的情感，说一句话试试吧'
+          }])
         }
-        // console.log(this.messageList)
-        // this.messageList.push(...res)
-        // console.log(this.messageList)
-        // setTimeout(this.scrollbottom(), 5000)
-        this.scrollbottom()
+        // for (var i = 0; i < res.length; i++) {
+        //   this.messageList.push(res[i])
+        // }
+        console.log(this.messageList)
+        this.messageList.push(...res)
+        console.log(this.messageList)
+        setTimeout(() => {
+          this.scrollbottom()
+        }, 500)
       })
     },
     sendMessage () {
@@ -159,7 +173,7 @@ export default {
             'msg': this.messageContent,
             'isChat': this.isChat
           }
-        }).then(
+        }, false).then(
           res => {
             console.log('answer', res)
             var ans = res.replace('{br}', '。')
@@ -176,28 +190,23 @@ export default {
     },
     changeRobot () {
       // console.log(this.isChat)
-      this.isChat = !this.isChat
-      this.messageList = this.isChat ? ([
-        {
-          flow: 'in',
-          content: 'Hi! 我可以和你聊天，现在开始吧'
+
+      wx.setNavigationBarTitle({
+        title: '切换中...'
+      })
+
+      this.getMessgage(!this.isChat).then(() => {
+        this.isChat = !this.isChat
+        if (this.isChat) {
+          wx.setNavigationBarTitle({
+            title: '聊天机器人'
+          })
+        } else {
+          wx.setNavigationBarTitle({
+            title: '情感分析机器人'
+          })
         }
-      ]) : ([
-        {
-          flow: 'in',
-          content: 'Hi! 我可以分析你的情感，说一句话试试吧'
-        }
-      ])
-      if (this.isChat) {
-        wx.setNavigationBarTitle({
-          title: '聊天机器人'
-        })
-      } else {
-        wx.setNavigationBarTitle({
-          title: '情感分析机器人'
-        })
-      }
-      this.getMessgage()
+      })
     }
   },
 
