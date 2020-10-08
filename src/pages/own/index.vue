@@ -9,9 +9,9 @@
       </div>
     </div>
     <i-cell-group i-class="cell-group">
-      <i-cell title="修改资料"
+      <!-- <i-cell title="修改资料"
               is-link
-              url="../profile/main"></i-cell>
+              url="../profile/main"></i-cell> -->
       <i-cell title="课程信息"
               is-link
               url="../profile/lecture-profile/main"></i-cell>
