@@ -23,7 +23,7 @@
         picSrc="/static/utils/work.png"
         entryName="分组管理"
         entryText="道同气合志相感，虽旷百世如同僚。"
-        @click="openGroup()"
+        label="coming"
       />
     </view>
   </view>
