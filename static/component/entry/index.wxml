@@ -1,5 +1,5 @@
 <div>
-    <view class="function-card" hover-class="hover" v-click="openProfile()">
+    <view class="function-card" hover-class="{{label == 'coming' ? '' : 'hover'}}" v-click="openProfile()">
       <view class="image-container">
         <image src="{{picSrc}}"></image>
       </view>
