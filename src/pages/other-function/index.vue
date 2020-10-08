@@ -11,7 +11,7 @@
       <entry
         picSrc="/static/utils/customer-service.png"
         entryName="聊天机器人"
-        entryText="Lorem ipsum dolor sit amet, consectetur adipisicing elit."
+        entryText="虽无丝竹管弦之盛，一觞一咏，亦足以畅叙幽情。"
         label="featured"
         @click="openBot()"
       />
@@ -22,8 +22,7 @@
       <entry
         picSrc="/static/utils/work.png"
         entryName="分组管理"
-        entryText="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Doloremque, quod cupiditate? Nostrum, distinctio in! Consequatur delectus dolorem possimus maiores porro!"
-        label="coming"
+        entryText="道同气合志相感，虽旷百世如同僚。"
         @click="openGroup()"
       />
     </view>
