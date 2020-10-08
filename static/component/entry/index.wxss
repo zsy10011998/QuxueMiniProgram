@@ -53,6 +53,8 @@
   .function-card>.content>.description {
     font-size: 24rpx;
     color: #666;
+    line-height: 1.6;
+    white-space: pre-wrap;
   }
   .function-card .feature-icon {
     width: 180rpx;
