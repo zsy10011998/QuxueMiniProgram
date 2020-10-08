@@ -43,11 +43,11 @@
     <div class="bottom">
       <div class="bottom-div"
            :style="{marginBottom: isFocus ? '10px' : 0}">
-        <div class="switch"
+        <!-- <div class="switch"
              @click="changeRobot"
              v-if="!isFocus">
           {{isChat?"吐槽":"聊天"}}
-        </div>
+        </div> -->
         <div style="width: 100%">
           <input type="text"
                  class="input"
