@@ -240,8 +240,8 @@ export default {
                 openid: $this.openid,
                 removeopenid: item.openid
               }
-            }).then(res => {
-              console.log(res)
+            }).then(_ => {
+              $this.getGroupMembers()
             })
           }
         }
