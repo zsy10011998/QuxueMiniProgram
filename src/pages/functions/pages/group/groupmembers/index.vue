@@ -202,6 +202,10 @@ export default {
     },
     async submitGroup () {
       this.$set(this, 'groupSubmitted', true)
+      wx.showToast({
+        title: '提交成功',
+        during: 1500
+      })
     },
     exitgroup () {
       this.$WXRequest.post({
