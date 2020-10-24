@@ -21,17 +21,17 @@
         picSrc="/static/utils/work.png"
         entryName="分组管理"
         entryText="道同气合志相感，虽旷百世如同僚。"
-        label="coming"
         @click="openGroup()"
       />
-      <entry picSrc="/static/utils/work.png"
+      <!-- <entry picSrc="/static/utils/work.png"
              entryName="成绩查询"
              entryText="春风得意马蹄疾，一日看尽长安花。"
-             @click="openScoreQuery()"/>
+             @click="openScoreQuery()"/> -->
       <entry picSrc="/static/utils/work.png"
-             entryName="课程信息"
-             entryText="道同气合志相感，虽旷百世如同僚。"
-             @click="openCourseSchedule()" />
+            entryName="课程信息"
+            label="coming"
+            entryText="明日复明日，明日何其多。"
+            @click="openCourseSchedule()" />
     </view>
   </view>
 </template>
