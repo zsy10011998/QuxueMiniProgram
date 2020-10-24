@@ -31,13 +31,32 @@
       v-if="addblock"
     />
 
-    <button
-      hover-class="clicked"
-      class="login-button"
-      @click="addnew"
-      v-if="isCaptain"
-    >{{addblock?'添加':'添加新成员'}}</button>
-    <button hover-class="clicked" class="login-button" @click="disgroup" v-if="isCaptain">解散分组</button>
+    <!-- 队长操作button：添加 & 解散 & Submit -->
+    <div v-if="isCaptain && !addblock">
+      <button
+        hover-class="clicked"
+        class="login-button"
+        @click="displayAddBlock"
+      >添加新成员</button>
+
+      <button
+        hover-class="clicked"
+        class="login-button"
+        @click="disgroup"
+      >解散分组</button>
+    </div>
+    <!-- 添加组员操作：确认添加 & 取消 -->
+    <div v-if="isCaptain && addblock">
+      <button
+        hover-class="clicked"
+        class="login-button"
+        @click="addnew">确认添加</button>
+      <button
+        hover-class="clicked"
+        class="login-button"
+        @click="hideAddBlock">取消</button>
+
+    </div>
     <button
       hover-class="clicked"
       class="login-button"
@@ -110,6 +129,13 @@ export default {
         }
       })
     },
+    displayAddBlock () {
+      this.$set(this, 'addblock', true)
+    },
+    hideAddBlock () {
+      this.$set(this, 'studentNo', '')
+      this.$set(this, 'addblock', false)
+    },
     addnew () {
       if (this.membersinf.length >= 5) {
         wx.showToast({
@@ -117,47 +143,33 @@ export default {
           during: 1500,
           icon: 'none'
         })
-      } else {
-        if (this.addblock === false) {
-          this.addblock = true
-          // this.$set(this, 'addblock', true)
-        } else {
-          if (this.membersinf.length >= 5) {
-            wx.showToast({
-              title: '最多只能五个成员',
-              during: 1500,
-              icon: 'none'
-            })
-          } else {
-            this.$WXRequest.post({
-              url: '/groupinf/',
-              data: {
-                openid: this.openid,
-                op: 'addmember',
-                studentNo: this.studentNo
-              }
-            }).then(res => {
-              console.log(res)
-              if (res.repCode === 200) {
-                this.membersinf.push(res.newStu)
-                this.$set(this, 'studentNo', '')
-                this.$set(this, 'addblock', false)
-                wx.showToast({
-                  title: '等待学生确认',
-                  duration: 1500,
-                  icon: 'none'
-                })
-              } else if (res.repCode === 700) {
-                wx.showToast({
-                  title: res.errMsg,
-                  duration: 1500,
-                  icon: 'none'
-                })
-              }
-            })
-          }
-        }
+        return
       }
+      this.$WXRequest.post({
+        url: '/groupinf/',
+        data: {
+          openid: this.openid,
+          op: 'addmember',
+          studentNo: this.studentNo
+        }
+      }).then(res => {
+        console.log(res)
+        if (res.repCode === 200) {
+          this.getGroupMembers()
+          this.hideAddBlock()
+          wx.showToast({
+            title: '等待学生确认',
+            duration: 1500,
+            icon: 'none'
+          })
+        } else if (res.repCode === 700) {
+          wx.showToast({
+            title: res.errMsg,
+            duration: 1500,
+            icon: 'none'
+          })
+        }
+      })
     },
     updatestudetNo (event) {
       let title = event.mp.detail.detail.value
@@ -241,10 +253,10 @@ export default {
 
 <style lang="stylus" scoped>
 .main-container {
-  width 100vw
+  width: 100vw;
   min-height: 100vh;
   position: absolute;
-  background-image: url(https://cs.zhouyc.cc/images/homeProbe.png);
+  background-image: url('https://cs.zhouyc.cc/images/homeProbe.png'); // cs.zhouyc.cc/images/homeProbe.png);
   background-position: center 80%;
   background-repeat: no-repeat;
   background-size: 100%;
@@ -278,17 +290,17 @@ button {
   position: relative;
   width: 100%;
   float: left;
-  padding 0 10rpx
+  padding: 0 10rpx;
   display: flex;
   flex-direction: row;
-  background: rgba(255,255,255,.8);
+  background: rgba(255, 255, 255, 0.8);
 }
 
 .image-container {
   height: 120rpx;
   width: 120rpx;
-  border-radius: 50%
-  overflow hidden
+  border-radius: 50%;
+  overflow: hidden;
 
   >>>image {
     width: 100%;
@@ -298,18 +310,19 @@ button {
 
 .text-container {
   max-width: 400rpx;
-  padding-left: 20rpx
+  padding-left: 20rpx;
 }
 
 .student-name {
-  font-weight: bold
-  font-size: 36rpx
-  position relative
+  font-weight: bold;
+  font-size: 36rpx;
+  position: relative;
 }
+
 .student-id {
-  margin-top: 12rpx
-  font-size: 24rpx
-  color: #555
+  margin-top: 12rpx;
+  font-size: 24rpx;
+  color: #555;
 }
 
 .status-icon {
@@ -321,7 +334,7 @@ button {
   position: relative;
   padding: 2rpx 8rpx;
   border: 2rpx #555 solid;
-  border-radius: 6rpx
+  border-radius: 6rpx;
   display: none;
 }
 
@@ -330,8 +343,9 @@ button {
   color: #52c41a;
   background: #f6ffed;
   border-color: #b7eb8f;
+
   &::before {
-    content: "组长";
+    content: '组长';
   }
 }
 
@@ -340,8 +354,9 @@ button {
   color: #1890ff;
   background: #e6f7ff;
   border-color: #91d5ff;
+
   &::before {
-    content: "成员";
+    content: '成员';
   }
 }
 
@@ -350,23 +365,23 @@ button {
   color: #faad14;
   background: #fffbe6;
   border-color: #ffe58f;
+
   &::before {
-    content: "邀请中";
+    content: '邀请中';
   }
 }
 
 .delete-button {
-  background red
-  color #ffffff
-  height 100%
-  width 100%
-  position absolute
-  top 50%
-  left 50%
-  transform translate(-50%, -50%)
-  display flex
-  align-items center
-  justify-content center
+  background: red;
+  color: #ffffff;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-
 </style>
