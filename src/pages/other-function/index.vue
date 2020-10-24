@@ -25,6 +25,22 @@
         @click="openGroup()"
       />
     </view>
+
+    <view class="function-card-list">
+      <entry picSrc="/static/utils/work.png"
+             entryName="成绩查询"
+             entryText="春风得意马蹄疾，一日看尽长安花"
+             label="featured" 
+             @click="openScoreQuery()"/>
+    </view>
+
+    <view class="function-card-list">
+      <entry picSrc="/static/utils/work.png"
+             entryName="课程信息"
+             entryText="道同气合志相感，虽旷百世如同僚。"
+             label="featured" 
+             @click="openCourseSchedule()" />
+    </view>
   </view>
 </template>
 
@@ -80,6 +96,12 @@ export default {
     // },
     openGroup () {
       wx.navigateTo({ url: '../functions/pages/group/main' })
+    },
+    openScoreQuery () {
+      wx.navigateTo({ url: '../functions/pages/score-query/main' })
+    },
+    openCourseSchedule () {
+      wx.navigateTo({ url: '../functions/pages/course-schedule/main' })
     }
   }
 }

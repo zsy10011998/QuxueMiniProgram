@@ -1,8 +1,8 @@
 <template>
   <view>
-    <view style="background-color: #3cc16e">
+    <view style="background-color: ghostwhite">
       <view class='top'>
-        <view :wx:for="['一','二','三','四','五','六','日']" class="top-text">{{item}}</view>
+        <view :wx:for="['周一','周二','周三','周四','周五','周六','周日']" class="top-text">{{item}}</view>
       </view>
     </view>
     <scroll-view scroll-y="true" class="scroll">
@@ -111,13 +111,14 @@ export default {
   display: flex;
   flex-direction: row;
   margin-left: 35rpx;
-  color: white;
-  background-color: #3cc16e;
+  color:rgb(28, 133, 185);
+  background-color:ghostwhite;
 }
 .top-text{
   width: 100rpx;
   height: 100rpx;
   font-size: 9pt;
+  font-weight: bold;
   justify-content: center;
   display: flex;
   align-items: center;
@@ -126,6 +127,8 @@ export default {
   width: 35rpx;
   height: 100rpx;
   font-size: 10pt;
+  font-weight: bold;
+  color:rgb(28, 133, 185);
   justify-content: center;
   display: flex;
   align-items: center;

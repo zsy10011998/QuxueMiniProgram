@@ -22,7 +22,8 @@
       "pages/videos/main",
       "pages/onevideo/main",
       "pages/group/main",
-      "pages/group/groupmembers/main"
+      "pages/group/groupmembers/main",
+      "pages/score-query/main"
     ]
   }],
   "window": {
