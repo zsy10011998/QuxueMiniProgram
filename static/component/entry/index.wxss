@@ -1,17 +1,17 @@
   .function-card {
     padding: 36rpx 15rpx;
-    margin: 10rpx 0;
+    margin: 30rpx 0;
     display: flex;
     position: relative;
     background-color: rgba(246, 247, 251, 0.8);
     box-shadow: rgb(225, 227, 230) 0rpx 0rpx 10rpx 5rpx;
-    transition: box-shadow 0.5s;
+    transition: box-shadow 0.5s, background-color 0.5s;
   }
   .function-card.hover {
     box-shadow: rgb(225, 227, 230) 0rpx 0rpx 20rpx 10rpx;
     background-color: rgba(246, 247, 251);
   }
-  .function-card:first-of-type {
+  /* .function-card:first-of-type {
     border-top-left-radius: 20rpx;
     border-top-right-radius: 20rpx;
     margin-top: 0;
@@ -20,7 +20,7 @@
     border-bottom-left-radius: 20rpx;
     border-bottom-right-radius: 20rpx;
     margin-bottom: 0;
-  }
+  } */
   .function-card .image-container {
     width: 120rpx;
     height: 120rpx;

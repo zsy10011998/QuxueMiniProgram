@@ -24,21 +24,13 @@
         label="coming"
         @click="openGroup()"
       />
-    </view>
-
-    <view class="function-card-list">
       <entry picSrc="/static/utils/work.png"
              entryName="成绩查询"
-             entryText="春风得意马蹄疾，一日看尽长安花"
-             label="featured" 
+             entryText="春风得意马蹄疾，一日看尽长安花。"
              @click="openScoreQuery()"/>
-    </view>
-
-    <view class="function-card-list">
       <entry picSrc="/static/utils/work.png"
              entryName="课程信息"
              entryText="道同气合志相感，虽旷百世如同僚。"
-             label="featured" 
              @click="openCourseSchedule()" />
     </view>
   </view>
