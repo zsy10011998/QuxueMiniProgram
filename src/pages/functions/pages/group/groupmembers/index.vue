@@ -87,6 +87,9 @@ const sortMemberFn = (a, b) => {
   return ob - oa
 }
 
+const minimumMembers = 4
+const maximumMembers = 5
+
 export default {
   data () {
     return {
@@ -136,6 +139,9 @@ export default {
       }).then(res => {
         if (res.members) {
           const membersSorted = res.members.sort(sortMemberFn)
+          membersSorted.forEach(item => {
+            if (item.studentNo) item.studentNo = item.studentNo.toUpperCase()
+          })
           this.$set(this, 'membersinf', membersSorted)
         }
       })
@@ -188,8 +194,20 @@ export default {
     },
     beforeSubmitGroup () {
       // Check whether the group is valid
+      const members = this.membersinf
+      let errorMessage = ''
+      if (members.length < minimumMembers) errorMessage = `成员数不能少于${minimumMembers}人`
+      if (members.length > maximumMembers) errorMessage = `成员数不能多于${maximumMembers}人`
+      if (members.filter(item => item.status === 'invited').length > 0) errorMessage = '还有成员没有接受邀请'
+      if (errorMessage) {
+        wx.showToast({
+          title: errorMessage,
+          during: 1500,
+          icon: 'none'
+        })
+        return
+      }
       const $this = this
-      console.log(this)
       wx.showModal({
         title: '确定提交分组',
         content: '提交分组后将不能修改',
@@ -424,7 +442,13 @@ button {
 }
 
 .banner {
-  width: 100%
-  background-color: pink
+  font-size: 24rpx;
+  color: #fa541c;
+  background-color: #fff2e8;
+  text-align: center;
+  padding: 8rpx;
+  margin: 10rpx;
+  border: 2rpx solid #ffbb96;
+  border-radius: 14rpx;
 }
 </style>
