@@ -1,19 +1,24 @@
 <template>
   <div class="main-container">
     <div class="member-list">
-      <div v-for="(item, index) in membersinf" :key="index" class="member-card">
-        <div class="image-container">
-          <image v-if="item.avatarUrl" :src="item.avatarUrl" />
-          <image v-else src="/static/images/avatar.png" />
-        </div>
-        <div class="text-container">
-          <div class="student-name">
-            <span>{{ item.name }}</span>
-            <span class="status-icon" :class="item.status"></span>
+      <i-swipeout v-for="(item, index) in membersinf" :operateWidth="isCaptain && item.status !== 'leader' ? 60 : 0" :key="index">
+        <div class="member-card" slot="content">
+          <div class="image-container">
+            <image v-if="item.avatarUrl" :src="item.avatarUrl" />
+            <image v-else src="/static/images/avatar.png" />
           </div>
-          <div class="student-id">{{ item.studentNo }}</div>
+          <div class="text-container">
+            <div class="student-name">
+              <span>{{ item.name }}</span>
+              <span class="status-icon" :class="item.status"></span>
+            </div>
+            <div class="student-id">{{ item.studentNo }}</div>
+          </div>
         </div>
-      </div>
+        <view slot="button" class="i-swipeout-demo-button-group">
+            <view class="i-swipeout-demo-button delete-button" @click="deleteMember(item)">删除</view>
+        </view>
+      </i-swipeout>
     </div>
 
     <i-input
@@ -53,8 +58,8 @@ export default {
       groupNo: '',
       membersinf: [],
       studentNo: '',
-      addblock: false
-
+      addblock: false,
+      visible2: true
     }
   },
   computed: {
@@ -65,6 +70,7 @@ export default {
     })
   },
   beforeMount () {
+    console.log(this)
     this.$set(this, 'addblock', false)
     this.$WXRequest.post({
       url: '/groupinf/',
@@ -78,29 +84,32 @@ export default {
       this.$set(this, 'isCaptain', res.isCaptain)
       this.$set(this, 'isInvited', res.isInvited)
     })
-    this.$WXRequest.post({
-      url: '/groupinf/',
-      data: {
-        openid: this.openid,
-        op: 'getmembersinfo'
-      }
-    }).then(res => {
-      if (res.members) {
-        const statusCodeOrder = {
-          leader: 3,
-          member: 2,
-          invited: 1
-        }
-        const membersSorted = res.members.sort((a, b) => {
-          const oa = statusCodeOrder[a.status] || 0
-          const ob = statusCodeOrder[b.status] || 0
-          return ob - oa
-        })
-        this.$set(this, 'membersinf', membersSorted)
-      }
-    })
+    this.getGroupMembers()
   },
   methods: {
+    getGroupMembers () {
+      this.$WXRequest.post({
+        url: '/groupinf/',
+        data: {
+          openid: this.openid,
+          op: 'getmembersinfo'
+        }
+      }).then(res => {
+        if (res.members) {
+          const statusCodeOrder = {
+            leader: 3,
+            member: 2,
+            invited: 1
+          }
+          const membersSorted = res.members.sort((a, b) => {
+            const oa = statusCodeOrder[a.status] || 0
+            const ob = statusCodeOrder[b.status] || 0
+            return ob - oa
+          })
+          this.$set(this, 'membersinf', membersSorted)
+        }
+      })
+    },
     addnew () {
       if (this.membersinf.length >= 5) {
         wx.showToast({
@@ -191,10 +200,42 @@ export default {
           )
         }
       })
+    },
+    deleteMember (item) {
+      console.log(item)
+      const $this = this
+      let errorMessage = ''
+      if (item.status === 'leader') errorMessage = '无法移除组长'
+      if (!this.isCaptain) errorMessage = '您无权限删除成员'
+
+      if (errorMessage) {
+        wx.showToast({
+          title: errorMessage,
+          during: 1500,
+          icon: 'none'
+        })
+        return
+      }
+      wx.showModal({
+        title: '删除成员',
+        content: `确定删除小组成员"${item.name}"吗`,
+        success (res) {
+          if (res.confirm) {
+            $this.$WXRequest.post({
+              url: '/groupinf/',
+              data: {
+                op: 'removemember',
+                openid: $this.openid,
+                removeopenid: item.openid
+              }
+            }).then(res => {
+              console.log(res)
+            })
+          }
+        }
+      })
     }
-
   }
-
 }
 </script>
 
@@ -216,10 +257,6 @@ button {
   color: white;
   font-size: 16px;
   margin: 20px auto;
-  // &::before
-  // width 20px
-  // height 20px
-  // margin 0 6px 2px 0
 }
 
 .clicked {
@@ -236,15 +273,14 @@ button {
   padding: 25rpx;
 }
 
-.member-list>.member-card {
+.member-list .member-card {
   box-sizing: border-box;
   position: relative;
   width: 100%;
   float: left;
-  padding 10rpx
+  padding 0 10rpx
   display: flex;
   flex-direction: row;
-  margin-top: 24rpx;
   background: rgba(255,255,255,.8);
 }
 
@@ -317,6 +353,20 @@ button {
   &::before {
     content: "邀请中";
   }
+}
+
+.delete-button {
+  background red
+  color #ffffff
+  height 100%
+  width 100%
+  position absolute
+  top 50%
+  left 50%
+  transform translate(-50%, -50%)
+  display flex
+  align-items center
+  justify-content center
 }
 
 </style>

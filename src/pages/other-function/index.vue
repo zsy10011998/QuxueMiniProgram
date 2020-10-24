@@ -17,10 +17,13 @@
 
     <h1 class="menu-title">课程工具</h1>
     <view class="function-card-list">
-      <entry picSrc="/static/utils/work.png"
-             entryName="分组管理"
-             entryText="道同气合志相感，虽旷百世如同僚。"
-             label="coming" />
+      <entry
+        picSrc="/static/utils/work.png"
+        entryName="分组管理"
+        entryText="道同气合志相感，虽旷百世如同僚。"
+        label="coming"
+        @click="openGroup()"
+      />
     </view>
   </view>
 </template>

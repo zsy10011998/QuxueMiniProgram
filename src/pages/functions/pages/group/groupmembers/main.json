@@ -4,6 +4,8 @@
   "usingComponents": {
     "i-input": "../../../../../static/iview/input/index",
     "i-button": "../../../../../static/iview/button/index",
-    "i-panel": "../../../../../static/iview/panel/index"
+    "i-panel": "../../../../../static/iview/panel/index",
+    "i-action-sheet": "../../../../../static/iview/action-sheet/index",
+    "i-swipeout": "../../../../../static/iview/swipeout/index"
   }
 }

@@ -19,8 +19,10 @@
       "pages/schedule-update/main",
       "pages/schedule-index/main",
       "pages/chatterbot/main",
+      "pages/videos/main",
+      "pages/onevideo/main",
       "pages/group/main",
-      "pages/groupmembers/main"
+      "pages/group/groupmembers/main"
     ]
   }],
   "window": {
@@ -35,7 +37,8 @@
     "backgroundColor": "#fff",
     "selectedColor": "#1a16ad",
     "borderStyle": "white",
-    "list": [{
+    "list": [
+      {
         "text": "功能",
         "pagePath": "pages/other-function/main",
         "iconPath": "static/theme/setting.png",
