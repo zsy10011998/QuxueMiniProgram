@@ -1,7 +1,8 @@
 <template>
   <div class="main-container">
+    <div class="banner" v-if="groupSubmitted === false">组长尚未提交当前分组</div>
     <div class="member-list">
-      <i-swipeout v-for="(item, index) in membersinf" :operateWidth="isCaptain && item.status !== 'leader' ? 60 : 0" :key="index">
+      <i-swipeout v-for="(item, index) in membersinf" :operateWidth="!groupSubmitted && isCaptain && item.status !== 'leader' ? 60 : 0" :key="index">
         <div class="member-card" slot="content">
           <div class="image-container">
             <image v-if="item.avatarUrl" :src="item.avatarUrl" />
@@ -32,17 +33,22 @@
     />
 
     <!-- 队长操作button：添加 & 解散 & Submit -->
-    <div v-if="isCaptain && !addblock">
+    <div v-if="isCaptain && !addblock && !groupSubmitted">
       <button
         hover-class="clicked"
         class="login-button"
         @click="displayAddBlock"
       >添加新成员</button>
-
       <button
         hover-class="clicked"
         class="login-button"
-        @click="disgroup"
+        v-if="groupSubmitted === false"
+        @click="beforeSubmitGroup"
+      >提交分组</button>
+      <button
+        hover-class="clicked"
+        class="login-button"
+        @click="disGroup"
       >解散分组</button>
     </div>
     <!-- 添加组员操作：确认添加 & 取消 -->
@@ -68,6 +74,19 @@
 
 <script>
 import { mapState } from 'vuex'
+
+const statusCodeOrder = {
+  leader: 3,
+  member: 2,
+  invited: 1
+}
+
+const sortMemberFn = (a, b) => {
+  const oa = statusCodeOrder[a.status] || 0
+  const ob = statusCodeOrder[b.status] || 0
+  return ob - oa
+}
+
 export default {
   data () {
     return {
@@ -78,7 +97,7 @@ export default {
       membersinf: [],
       studentNo: '',
       addblock: false,
-      visible2: true
+      groupSubmitted: undefined
     }
   },
   computed: {
@@ -102,6 +121,7 @@ export default {
       this.$set(this, 'hasGroup', res.hasGroup)
       this.$set(this, 'isCaptain', res.isCaptain)
       this.$set(this, 'isInvited', res.isInvited)
+      this.$set(this, 'groupSubmitted', res.isInvited || false)
     })
     this.getGroupMembers()
   },
@@ -115,16 +135,7 @@ export default {
         }
       }).then(res => {
         if (res.members) {
-          const statusCodeOrder = {
-            leader: 3,
-            member: 2,
-            invited: 1
-          }
-          const membersSorted = res.members.sort((a, b) => {
-            const oa = statusCodeOrder[a.status] || 0
-            const ob = statusCodeOrder[b.status] || 0
-            return ob - oa
-          })
+          const membersSorted = res.members.sort(sortMemberFn)
           this.$set(this, 'membersinf', membersSorted)
         }
       })
@@ -175,6 +186,23 @@ export default {
       let title = event.mp.detail.detail.value
       this.$set(this, 'studentNo', title)
     },
+    beforeSubmitGroup () {
+      // Check whether the group is valid
+      const $this = this
+      console.log(this)
+      wx.showModal({
+        title: '确定提交分组',
+        content: '提交分组后将不能修改',
+        success (res) {
+          if (res.confirm) {
+            $this.submitGroup()
+          }
+        }
+      })
+    },
+    async submitGroup () {
+      this.$set(this, 'groupSubmitted', true)
+    },
     exitgroup () {
       this.$WXRequest.post({
         url: '/groupinf/',
@@ -189,12 +217,19 @@ export default {
             during: 1500,
             icon: 'none'
           }).then(
-            wx.redirectTo({ url: '../group/main' })
+            wx.redirectTo({ url: '../main' })
           )
         }
       })
     },
-    disgroup () {
+    beforeDisGroup () {
+      wx.showModal({
+        title: '解散分组',
+        content: '是否解散分组',
+        success: this.disGroup
+      })
+    },
+    disGroup () {
       this.$WXRequest.post({
         url: '/groupinf/',
         data: {
@@ -205,16 +240,15 @@ export default {
         if (res.repCode === 200) {
           wx.showToast({
             title: '解散成功',
-            during: 1500,
-            icon: 'none'
-          }).then(
-            wx.redirectTo({ url: '../group/main' })
-          )
+            during: 1500
+          })
+          setTimeout(() => {
+            wx.redirectTo({ url: '../main' })
+          }, 1500)
         }
       })
     },
     deleteMember (item) {
-      console.log(item)
       const $this = this
       let errorMessage = ''
       if (item.status === 'leader') errorMessage = '无法移除组长'
@@ -383,5 +417,10 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.banner {
+  width: 100%
+  background-color: pink
 }
 </style>
