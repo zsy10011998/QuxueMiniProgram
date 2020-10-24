@@ -1,12 +1,10 @@
-<div>
-    <view class="function-card" hover-class="{{label == 'coming' ? '' : 'hover'}}" v-click="openProfile()">
-      <view class="image-container">
-        <image src="{{picSrc}}"></image>
-      </view>
-      <view class="content">
-        <h1 class="title">{{entryName}}</h1>
-        <view class="description">{{entryText}}</view>
-      </view>
-      <image wx:if="{{stateSrc}}" class="feature-icon" src="{{stateSrc}}" />
-    </view>
-</div>
+<view class="function-card" hover-class="{{label == 'coming' ? '' : 'hover'}}" v-click="openProfile()">
+  <view class="image-container">
+    <image src="{{picSrc}}"></image>
+  </view>
+  <view class="content">
+    <h1 class="title">{{entryName}}</h1>
+    <view class="description">{{entryText}}</view>
+  </view>
+  <image wx:if="{{stateSrc}}" class="feature-icon" src="{{stateSrc}}" />
+</view>
