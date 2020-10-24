@@ -24,6 +24,7 @@
         entryName="分组管理"
         entryText="道同气合志相感，虽旷百世如同僚。"
         label="coming"
+        @click="openGroup()"
       />
     </view>
   </view>

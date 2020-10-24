@@ -68,7 +68,7 @@ export default {
           }).then(res => {
             this.$set(this, 'hasGroup', true)
             this.$set(this, 'isCaptain', true)
-            wx.redirectTo({ url: '../groupmembers/main' })
+            wx.redirectTo({ url: '../group/groupmembers/main' })
           }
           )
         } else if (res.repCode === 700) {
@@ -81,7 +81,7 @@ export default {
       })
     },
     check () {
-      wx.redirectTo({ url: '../groupmembers/main' })
+      wx.redirectTo({ url: '../group/groupmembers/main' })
     },
     invite () {
       this.$WXRequest.post({
