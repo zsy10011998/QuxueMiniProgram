@@ -20,7 +20,8 @@
       "pages/schedule-index/main",
       "pages/chatterbot/main",
       "pages/group/main",
-      "pages/groupmembers/main"
+      "pages/groupmembers/main",
+      "pages/score-query/main"
     ]
   }],
   "window": {
