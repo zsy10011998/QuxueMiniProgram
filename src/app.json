@@ -22,7 +22,7 @@
       "pages/videos/main",
       "pages/onevideo/main",
       "pages/group/main",
-      "pages/groupmembers/main"
+      "pages/group/groupmembers/main"
     ]
   }],
   "window": {

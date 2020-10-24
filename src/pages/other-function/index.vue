@@ -8,13 +8,11 @@
     </view>-->
     <h1 class="menu-title">应用功能</h1>
     <view class="function-card-list">
-      <entry
-        picSrc="/static/utils/customer-service.png"
-        entryName="聊天机器人"
-        entryText="虽无丝竹管弦之盛，一觞一咏，亦足以畅叙幽情。"
-        label="featured"
-        @click="openBot()"
-      />
+      <entry picSrc="/static/utils/customer-service.png"
+             entryName="聊天机器人"
+             entryText="虽无丝竹管弦之盛，一觞一咏，亦足以畅叙幽情。"
+             label="featured"
+             @click="openBot()" />
     </view>
 
     <h1 class="menu-title">课程工具</h1>
@@ -76,10 +74,10 @@ export default {
     openBot () {
       wx.navigateTo({ url: '../functions/pages/chatterbot/main' })
     },
-    openvideolist () {
-      console.log('videlList')
-      wx.navigateTo({ url: '../functions/pages/videos/main' })
-    },
+    // openvideolist () {
+    //   console.log('videlList')
+    //   wx.navigateTo({ url: '../functions/pages/videos/main' })
+    // },
     openGroup () {
       wx.navigateTo({ url: '../functions/pages/group/main' })
     }
