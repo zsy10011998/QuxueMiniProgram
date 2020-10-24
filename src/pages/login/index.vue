@@ -44,7 +44,7 @@ export default {
     this.loading = false
   },
   mounted () {
-    // this.login()
+    this.login()
   },
   methods: {
     login () {
