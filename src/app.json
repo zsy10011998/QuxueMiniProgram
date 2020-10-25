@@ -23,6 +23,7 @@
       "pages/onevideo/main",
       "pages/group/main",
       "pages/group/groupmembers/main",
+      "pages/group/invitations/main",
       "pages/score-query/main"
     ]
   }],

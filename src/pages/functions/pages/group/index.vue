@@ -19,6 +19,8 @@
 
 <script>
 import { mapState } from 'vuex'
+import { GetSelfInfoAPI, CreateGroupAPI, GetInvitation } from './api'
+
 export default {
   data () {
     return {
@@ -35,28 +37,21 @@ export default {
     })
   },
   beforeMount () {
-    console.log(this.openid)
-    this.$WXRequest.post({
-      url: '/groupinf/',
-      data: {
-        openid: this.openid,
-        op: 'getselfinfo'
-      }
-    }).then(res => {
+    const param = {openid: this.openid}
+    GetSelfInfoAPI(param).then(res => {
       console.log(res)
       this.$set(this, 'hasGroup', res.hasGroup)
-      this.$set(this, 'isInvited', res.isInvited)
+    })
+    GetInvitation(param).then(res => {
+      const invitations = res.invitedinf
+      if (invitations && invitations.length) {
+        this.$set(this, 'isInvited', true)
+      }
     })
   },
   methods: {
     create () {
-      this.$WXRequest.post({
-        url: '/groupinf/',
-        data: {
-          openid: this.openid,
-          op: 'creategroup'
-        }
-      }).then(res => {
+      CreateGroupAPI({openid: this.openid}).then(res => {
         if (res.repCode === 200) {
           wx.showToast({
             title: '创建分组成功',
@@ -80,51 +75,7 @@ export default {
       wx.redirectTo({ url: '../group/groupmembers/main' })
     },
     invite () {
-      this.$WXRequest.post({
-        url: '/groupinf/',
-        data: {
-          openid: this.openid,
-          op: 'getinvitation'
-        }
-      }).then(res => {
-        console.log(res)
-        if (res.repCode === 700) {
-          this.showinf(res.errMsg)
-        } else {
-          wx.showModal({
-            title: '邀请',
-            content: '是否接受来自' + res.captainMsg + '的加入小组邀请',
-            success: (res) => {
-              if (res.confirm) {
-                this.$WXRequest.post({
-                  url: '/groupinf/',
-                  data: {
-                    openid: this.openid,
-                    op: 'allowinvitation'
-                  }
-                }).then(res => {
-                  if (res.repCode === 200) {
-                    this.$set(this, 'hasGroup', true)
-                    this.$set(this, 'isInvited', false)
-                  }
-                })
-              } else if (res.cancel) {
-                this.$WXRequest.post({
-                  url: '/groupinf/',
-                  data: {
-                    openid: this.openid,
-                    op: 'rejectinvitation'
-                  }
-                }).then(res => {
-                  if (res.repCode === 200) {
-                    this.$set(this, 'isInvited', false)
-                  }
-                })
-              }
-            }
-          })
-        }
-      })
+      wx.redirectTo({ url: '../group/invitations/main' })
     },
     showinf (msg) {
       wx.showToast({
