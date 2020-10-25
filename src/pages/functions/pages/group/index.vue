@@ -19,7 +19,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import { GetSelfInfoAPI, CreateGroupAPI, GetInvitationAPI } from './api'
+import { GetSelfGroupInfoAPI, CreateGroupAPI, GetInvitationAPI } from './api'
 
 export default {
   data () {
@@ -38,7 +38,7 @@ export default {
   },
   beforeMount () {
     const param = {openid: this.openid}
-    GetSelfInfoAPI(param).then(res => {
+    GetSelfGroupInfoAPI(param).then(res => {
       console.log(res)
       this.$set(this, 'hasGroup', res.hasGroup)
     })

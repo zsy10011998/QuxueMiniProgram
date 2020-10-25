@@ -11,7 +11,7 @@ function WXPostWithUrlAndOp (url, op = '', data = '') {
 
 const APIURL_GROUP = '/groupinf/'
 
-export const GetSelfInfoAPI = (data) => {
+export const GetSelfGroupInfoAPI = (data) => {
   const ret = WXPostWithUrlAndOp(APIURL_GROUP, 'getselfinfo', data)
   return ret
 }
