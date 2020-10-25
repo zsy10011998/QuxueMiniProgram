@@ -22,9 +22,7 @@ import { mapState } from 'vuex'
 export default {
   data () {
     return {
-      // openid: 'oGiID5Wj7iPUhQ1eQGRZAaNc8jHw',
       hasGroup: '',
-      isCaptain: '',
       isInvited: '',
       groupNo: ''
     }
@@ -47,7 +45,6 @@ export default {
     }).then(res => {
       console.log(res)
       this.$set(this, 'hasGroup', res.hasGroup)
-      this.$set(this, 'isCaptain', res.isCaptain)
       this.$set(this, 'isInvited', res.isInvited)
     })
   },
@@ -67,7 +64,6 @@ export default {
             icon: 'none'
           }).then(res => {
             this.$set(this, 'hasGroup', true)
-            this.$set(this, 'isCaptain', true)
             wx.redirectTo({ url: '../group/groupmembers/main' })
           }
           )

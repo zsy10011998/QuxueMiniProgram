@@ -96,7 +96,6 @@ export default {
     return {
       hasGroup: '',
       isCaptain: '',
-      isInvited: '',
       groupNo: '',
       membersinf: [],
       studentNo: '',
@@ -124,8 +123,7 @@ export default {
       console.log(res)
       this.$set(this, 'hasGroup', res.hasGroup)
       this.$set(this, 'isCaptain', res.isCaptain)
-      this.$set(this, 'isInvited', res.isInvited)
-      this.$set(this, 'groupSubmitted', res.isInvited || false)
+      this.$set(this, 'groupSubmitted', res.isSubmit || false)
     })
     this.getGroupMembers()
   },
