@@ -2,7 +2,7 @@
   <div class="main-container">
     <div class="banner" v-if="invitations.length">您有{{invitations.length}}条分组邀请</div>
     <div class="member-list">
-      <i-swipeout v-for="(item, index) in invitations" :operateWidth="60" :key="index">
+      <i-swipeout v-for="(item, index) in invitations" :operateWidth="180" :key="index">
         <div class="member-card" slot="content">
           <!-- <div class="image-container">
             <image v-if="item.avatarUrl" :src="item.avatarUrl" />
@@ -10,13 +10,14 @@
           </div> -->
           <div class="text-container">
             <div class="student-name">
-              <span>{{ item.captainName }}</span>
+              <span>{{ item.captainName }}的小组</span>
             </div>
             <div class="student-id">{{ item.captainNo }}</div>
           </div>
         </div>
-        <view slot="button" class="i-swipeout-demo-button-group">
-            <view class="i-swipeout-demo-button delete-button">删除</view>
+        <view slot="button" class="i-swipeout-button-group">
+          <view class="i-swipeout-demo-button confirm-button" @click="acceptInvitation(item.groupNo)">接受</view>
+          <view class="i-swipeout-demo-button delete-button" @click="rejectInvitation(item.groupNo)">删除</view>
         </view>
       </i-swipeout>
     </div>
@@ -25,7 +26,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import { GetInvitation } from '../api'
+import { GetInvitationAPI, AcceptInvitationAPI, RejectInvitationAPI } from '../api'
 
 export default {
   data () {
@@ -41,13 +42,38 @@ export default {
     })
   },
   beforeMount () {
-    const param = {openid: this.openid}
-    GetInvitation(param).then(res => {
-      const invitations = res.invitedinf
-      this.$set(this, 'invitations', invitations)
-    })
+    this.fetchInvitations()
   },
-  methods: {}
+  methods: {
+    fetchInvitations: function () {
+      const param = {openid: this.openid}
+      GetInvitationAPI(param).then(res => {
+        const invitations = res.invitedinf
+        this.$set(this, 'invitations', invitations)
+      })
+    },
+    acceptInvitation: function (groupNo) {
+      const params = {openid: this.openid, groupNo}
+      AcceptInvitationAPI(params).then(res => {
+        this.fetchInvitations()
+        wx.showToast({
+          title: '成功加入该小组',
+          duration: 1500
+        })
+      })
+    },
+    rejectInvitation: function (groupNo) {
+      const params = {openid: this.openid, groupNo}
+      RejectInvitationAPI(params).then(res => {
+        this.fetchInvitations()
+        wx.showToast({
+          title: '删除成功',
+          icon: 'none',
+          duration: 1500
+        })
+      })
+    }
+  }
 }
 </script>
 
@@ -171,15 +197,26 @@ button {
   }
 }
 
-.delete-button {
-  background: red;
-  color: #ffffff;
+.i-swipeout-button-group {
+  display: flex;
   height: 100%;
-  width: 100%;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+}
+
+.confirm-button {
+  color: #e6f7ff;
+  background: #2f54eb;
+  border-color: #91d5ff;
+}
+.delete-button {
+  color: #fff2e8;
+  background: #ff4000;
+  border-color: #ffbb96;
+}
+
+.confirm-button,
+.delete-button {
+  height: 100%;
+  width: 180rpx;
   display: flex;
   align-items: center;
   justify-content: center;

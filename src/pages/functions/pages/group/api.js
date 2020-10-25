@@ -21,7 +21,17 @@ export const CreateGroupAPI = (data) => {
   return ret
 }
 
-export const GetInvitation = (data) => {
+export const GetInvitationAPI = (data) => {
   const ret = WXPostWithUrlAndOp(APIURL_GROUP, 'getinvitation', data)
+  return ret
+}
+
+export const AcceptInvitationAPI = (data) => {
+  const ret = WXPostWithUrlAndOp(APIURL_GROUP, 'allowinvitation', data)
+  return ret
+}
+
+export const RejectInvitationAPI = (data) => {
+  const ret = WXPostWithUrlAndOp(APIURL_GROUP, 'rejectinvitation', data)
   return ret
 }

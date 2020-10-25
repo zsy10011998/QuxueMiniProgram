@@ -19,7 +19,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import { GetSelfInfoAPI, CreateGroupAPI, GetInvitation } from './api'
+import { GetSelfInfoAPI, CreateGroupAPI, GetInvitationAPI } from './api'
 
 export default {
   data () {
@@ -42,7 +42,7 @@ export default {
       console.log(res)
       this.$set(this, 'hasGroup', res.hasGroup)
     })
-    GetInvitation(param).then(res => {
+    GetInvitationAPI(param).then(res => {
       const invitations = res.invitedinf
       if (invitations && invitations.length) {
         this.$set(this, 'isInvited', true)
