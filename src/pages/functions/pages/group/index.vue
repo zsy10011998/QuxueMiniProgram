@@ -38,15 +38,22 @@ export default {
   },
   beforeMount () {
     const param = {openid: this.openid}
-    GetSelfGroupInfoAPI(param).then(res => {
-      console.log(res)
+    const promiseSelfInfo = GetSelfGroupInfoAPI(param).then(res => {
       this.$set(this, 'hasGroup', res.hasGroup)
     })
-    GetInvitationAPI(param).then(res => {
+    const promiseGroupInfo = GetInvitationAPI(param).then(res => {
       const invitations = res.invitedinf
       if (invitations && invitations.length) {
         this.$set(this, 'isInvited', true)
       }
+    })
+
+    Promise.all([promiseSelfInfo, promiseGroupInfo]).then(() => {
+      // if (this.hasGroup) {
+      //   this.check()
+      // } else if (this.isInvited) {
+      //   this.invite()
+      // }
     })
   },
   methods: {

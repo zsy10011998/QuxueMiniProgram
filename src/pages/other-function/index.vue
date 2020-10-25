@@ -87,7 +87,6 @@ export default {
     //   wx.navigateTo({ url: '../functions/pages/videos/main' })
     // },
     openGroup () {
-      console.log('Open group')
       wx.navigateTo({ url: '../functions/pages/group/main' })
     },
     openScoreQuery () {
