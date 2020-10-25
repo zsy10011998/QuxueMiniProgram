@@ -2,7 +2,7 @@
   <div class="main-container">
     <div class="banner" v-if="groupSubmitted === false">组长尚未提交当前分组</div>
     <div class="member-list">
-      <i-swipeout v-for="(item, index) in membersinf" :operateWidth="!groupSubmitted && isCaptain && item.status !== 'leader' ? 60 : 0" :key="index">
+      <i-swipeout v-for="(item, index) in membersinf" :operateWidth="!groupSubmitted && isCaptain && item.status !== STATUS_LEADER ? 60 : 0" :key="index">
         <div class="member-card" slot="content">
           <div class="image-container">
             <image v-if="item.avatarUrl" :src="item.avatarUrl" />
@@ -74,11 +74,12 @@
 
 <script>
 import { mapState } from 'vuex'
+import { STATUS_LEADER, STATUS_MEMBER, STATUS_INVITED } from '../const'
 
 const statusCodeOrder = {
-  leader: 3,
-  member: 2,
-  invited: 1
+  [STATUS_LEADER]: 3,
+  [STATUS_MEMBER]: 2,
+  [STATUS_INVITED]: 1
 }
 
 const sortMemberFn = (a, b) => {
@@ -198,7 +199,7 @@ export default {
       let errorMessage = ''
       if (members.length < minimumMembers) errorMessage = `成员数不能少于${minimumMembers}人`
       if (members.length > maximumMembers) errorMessage = `成员数不能多于${maximumMembers}人`
-      if (members.filter(item => item.status === 'invited').length > 0) errorMessage = '还有成员没有接受邀请'
+      if (members.filter(item => item.status === STATUS_INVITED).length > 0) errorMessage = '还有成员没有接受邀请'
       if (errorMessage) {
         wx.showToast({
           title: errorMessage,
@@ -273,7 +274,7 @@ export default {
     deleteMember (item) {
       const $this = this
       let errorMessage = ''
-      if (item.status === 'leader') errorMessage = '无法移除组长'
+      if (item.status === STATUS_LEADER) errorMessage = '无法移除组长'
       if (!this.isCaptain) errorMessage = '您无权限删除成员'
 
       if (errorMessage) {
