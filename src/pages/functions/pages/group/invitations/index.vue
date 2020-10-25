@@ -2,22 +2,21 @@
   <div class="main-container">
     <div class="banner" v-if="invitations.length">您有{{invitations.length}}条分组邀请</div>
     <div class="member-list">
-      <i-swipeout v-for="(item, index) in membersinf" :operateWidth="!groupSubmitted && isCaptain && item.status !== STATUS_LEADER ? 60 : 0" :key="index">
+      <i-swipeout v-for="(item, index) in invitations" :operateWidth="60" :key="index">
         <div class="member-card" slot="content">
-          <div class="image-container">
+          <!-- <div class="image-container">
             <image v-if="item.avatarUrl" :src="item.avatarUrl" />
             <image v-else src="/static/images/avatar.png" />
-          </div>
+          </div> -->
           <div class="text-container">
             <div class="student-name">
-              <span>{{ item.name }}</span>
-              <span class="status-icon" :class="item.status"></span>
+              <span>{{ item.captainName }}</span>
             </div>
-            <div class="student-id">{{ item.studentNo }}</div>
+            <div class="student-id">{{ item.captainNo }}</div>
           </div>
         </div>
         <view slot="button" class="i-swipeout-demo-button-group">
-            <view class="i-swipeout-demo-button delete-button" @click="deleteMember(item)">删除</view>
+            <view class="i-swipeout-demo-button delete-button">删除</view>
         </view>
       </i-swipeout>
     </div>
