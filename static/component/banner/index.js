@@ -35,14 +35,7 @@ Component({
     display: true
   },
 
-  observers: {
-    texts: function (newTexts) {
-
-    }
-  },
-
   attached: function () {
-    console.log(this.data)
     this.setCurrentInterval()
   },
 
