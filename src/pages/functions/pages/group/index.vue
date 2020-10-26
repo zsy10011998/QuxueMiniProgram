@@ -49,11 +49,11 @@ export default {
     })
 
     Promise.all([promiseSelfInfo, promiseGroupInfo]).then(() => {
-      // if (this.hasGroup) {
-      //   this.check()
-      // } else if (this.isInvited) {
-      //   this.invite()
-      // }
+      if (this.hasGroup) {
+        this.check()
+      } else if (this.isInvited) {
+        this.invite()
+      }
     })
   },
   methods: {
