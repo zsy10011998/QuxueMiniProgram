@@ -1,6 +1,11 @@
 <template>
   <div class="main-container">
-    <div class="banner" v-if="invitations.length">您有{{invitations.length}}条分组邀请</div>
+    <!-- <div class="banner" v-if="invitations.length">您有{{invitations.length}}条分组邀请</div> -->
+    <loop-banner
+      v-if="invitations.length"
+      :texts="bannerTexts"
+      :color="openid"
+    />
     <div class="member-list">
       <i-swipeout v-for="(item, index) in invitations" :operateWidth="180" :key="index">
         <div class="member-card" slot="content">
@@ -31,7 +36,8 @@ import { GetInvitationAPI, AcceptInvitationAPI, RejectInvitationAPI } from '../a
 export default {
   data () {
     return {
-      invitations: []
+      invitations: [],
+      bannerTexts: []
     }
   },
   computed: {
@@ -50,6 +56,10 @@ export default {
       GetInvitationAPI(param).then(res => {
         const invitations = res.invitedinf
         this.$set(this, 'invitations', invitations)
+        if (invitations && invitations.length) {
+          const texts = [`您有${invitations.length}条分组邀请`, '左划以处理邀请']
+          this.$set(this, 'bannerTexts', texts)
+        }
       })
     },
     acceptInvitation: function (groupNo) {

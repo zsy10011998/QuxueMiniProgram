@@ -1,0 +1,13 @@
+.banner {
+  font-size: 24rpx;
+  color: #fa541c;
+  background-color: #fff2e8;
+  text-align: center;
+  padding: 8rpx;
+  margin: 10rpx;
+  border: 2rpx solid #ffbb96;
+  border-radius: 14rpx;
+}
+.banner span {
+  transition: opacity 0.5s;
+}
