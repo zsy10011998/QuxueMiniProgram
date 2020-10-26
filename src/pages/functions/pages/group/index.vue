@@ -49,9 +49,9 @@ export default {
     })
 
     Promise.all([promiseSelfInfo, promiseGroupInfo]).then(() => {
-      if (this.hasGroup) {
-        this.check()
-      }
+      // if (this.hasGroup) {
+      //   this.check()
+      // }
     })
   },
   methods: {
