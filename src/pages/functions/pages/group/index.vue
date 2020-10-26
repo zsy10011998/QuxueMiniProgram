@@ -3,7 +3,7 @@
     <button hover-class="clicked"
             class="login-button"
             v-if="hasGroup===false"
-            @click="create">创建分组</button>
+            @click="create()">创建分组</button>
     <button hover-class="clickedcheck"
             class="login-button"
             v-if="hasGroup==true"
@@ -51,8 +51,6 @@ export default {
     Promise.all([promiseSelfInfo, promiseGroupInfo]).then(() => {
       if (this.hasGroup) {
         this.check()
-      } else if (this.isInvited) {
-        this.invite()
       }
     })
   },
@@ -83,15 +81,7 @@ export default {
     },
     invite () {
       wx.redirectTo({ url: '../group/invitations/main' })
-    },
-    showinf (msg) {
-      wx.showToast({
-        title: msg,
-        duration: 1500,
-        icon: 'none'
-      })
     }
-
   }
 
 }
