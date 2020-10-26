@@ -28,7 +28,7 @@
              entryText="春风得意马蹄疾，一日看尽长安花。"
              @click="openScoreQuery()"/> -->
       <entry picSrc="/static/utils/work.png"
-            entryName="课程信息"
+            entryName="我的课程表"
             label="coming"
             entryText="明日复明日，明日何其多。"
             @click="openCourseSchedule()" />

@@ -3,7 +3,7 @@
     <button hover-class="clicked"
             class="login-button"
             v-if="hasGroup===false"
-            @click="create">创建分组</button>
+            @click="create()">创建分组</button>
     <button hover-class="clickedcheck"
             class="login-button"
             v-if="hasGroup==true"
@@ -19,12 +19,12 @@
 
 <script>
 import { mapState } from 'vuex'
+import { GetSelfGroupInfoAPI, CreateGroupAPI, GetInvitationAPI } from './api'
+
 export default {
   data () {
     return {
-      // openid: 'oGiID5Wj7iPUhQ1eQGRZAaNc8jHw',
       hasGroup: '',
-      isCaptain: '',
       isInvited: '',
       groupNo: ''
     }
@@ -37,29 +37,26 @@ export default {
     })
   },
   beforeMount () {
-    console.log(this.openid)
-    this.$WXRequest.post({
-      url: '/groupinf/',
-      data: {
-        openid: this.openid,
-        op: 'getselfinfo'
-      }
-    }).then(res => {
-      console.log(res)
+    const param = {openid: this.openid}
+    const promiseSelfInfo = GetSelfGroupInfoAPI(param).then(res => {
       this.$set(this, 'hasGroup', res.hasGroup)
-      this.$set(this, 'isCaptain', res.isCaptain)
-      this.$set(this, 'isInvited', res.isInvited)
+    })
+    const promiseGroupInfo = GetInvitationAPI(param).then(res => {
+      const invitations = res.invitedinf
+      if (invitations && invitations.length) {
+        this.$set(this, 'isInvited', true)
+      }
+    })
+
+    Promise.all([promiseSelfInfo, promiseGroupInfo]).then(() => {
+      // if (this.hasGroup) {
+      //   this.check()
+      // }
     })
   },
   methods: {
     create () {
-      this.$WXRequest.post({
-        url: '/groupinf/',
-        data: {
-          openid: this.openid,
-          op: 'creategroup'
-        }
-      }).then(res => {
+      CreateGroupAPI({openid: this.openid}).then(res => {
         if (res.repCode === 200) {
           wx.showToast({
             title: '创建分组成功',
@@ -67,7 +64,6 @@ export default {
             icon: 'none'
           }).then(res => {
             this.$set(this, 'hasGroup', true)
-            this.$set(this, 'isCaptain', true)
             wx.redirectTo({ url: '../group/groupmembers/main' })
           }
           )
@@ -84,60 +80,8 @@ export default {
       wx.redirectTo({ url: '../group/groupmembers/main' })
     },
     invite () {
-      this.$WXRequest.post({
-        url: '/groupinf/',
-        data: {
-          openid: this.openid,
-          op: 'getinvitation'
-        }
-      }).then(res => {
-        console.log(res)
-        if (res.repCode === 700) {
-          this.showinf(res.errMsg)
-        } else {
-          wx.showModal({
-            title: '邀请',
-            content: '是否接受来自' + res.captainMsg + '的加入小组邀请',
-            success: (res) => {
-              if (res.confirm) {
-                this.$WXRequest.post({
-                  url: '/groupinf/',
-                  data: {
-                    openid: this.openid,
-                    op: 'allowinvitation'
-                  }
-                }).then(res => {
-                  if (res.repCode === 200) {
-                    this.$set(this, 'hasGroup', true)
-                    this.$set(this, 'isInvited', false)
-                  }
-                })
-              } else if (res.cancel) {
-                this.$WXRequest.post({
-                  url: '/groupinf/',
-                  data: {
-                    openid: this.openid,
-                    op: 'rejectinvitation'
-                  }
-                }).then(res => {
-                  if (res.repCode === 200) {
-                    this.$set(this, 'isInvited', false)
-                  }
-                })
-              }
-            }
-          })
-        }
-      })
-    },
-    showinf (msg) {
-      wx.showToast({
-        title: msg,
-        duration: 1500,
-        icon: 'none'
-      })
+      wx.redirectTo({ url: '../group/invitations/main' })
     }
-
   }
 
 }

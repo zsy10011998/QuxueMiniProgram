@@ -1,2 +1,2 @@
-Remove-Item ./dist/*
+Remove-Item -Force -Recurse ./dist/*
 npm run dev
