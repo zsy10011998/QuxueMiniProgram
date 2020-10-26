@@ -23,11 +23,11 @@
         entryText="道同气合志相感，虽旷百世如同僚。"
         @click="openGroup()"
       />
-      <!-- <entry picSrc="/static/utils/work.png"
+      <!-- <entry picSrc="/static/utils/grade.png"
              entryName="成绩查询"
              entryText="春风得意马蹄疾，一日看尽长安花。"
              @click="openScoreQuery()"/> -->
-      <entry picSrc="/static/utils/work.png"
+      <entry picSrc="/static/utils/schedule.png"
             entryName="我的课程表"
             label="coming"
             entryText="明日复明日，明日何其多。"
