@@ -2,7 +2,7 @@
   <div class="main-container">
     <div class="banner" v-if="groupSubmitted === false">组长尚未提交当前分组</div>
     <div class="member-list">
-      <i-swipeout v-for="(item, index) in membersinf" :operateWidth="!groupSubmitted && isCaptain && item.status !== STATUS_LEADER ? 60 : 0" :key="index">
+      <i-swipeout v-for="(item, index) in membersinf" :operateWidth="(!groupSubmitted && isCaptain && (item.status !== 'leader')) ? 120 : 0" :key="index">
         <div class="member-card" slot="content">
           <div class="image-container">
             <image v-if="item.avatarUrl" :src="item.avatarUrl" />
