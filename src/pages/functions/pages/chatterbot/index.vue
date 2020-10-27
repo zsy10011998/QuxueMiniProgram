@@ -17,7 +17,7 @@
               </template>
             </div>
             <div class="wrapper">
-              <div class="message">
+              <div class="message" :class="message.sentiment || ''">
                 <div class="text-message">
                   <span>{{message.content}}</span>
                 </div>
@@ -70,6 +70,12 @@
 
 <script>
 import { mapState } from 'vuex'
+
+const sentimentMap = {
+  '-1': 'negative',
+  '0': 'neutral',
+  '1': 'positive'
+}
 export default {
   data () {
     return {
@@ -163,8 +169,16 @@ export default {
     },
     sendMessage () {
       if (!this.isnull(this.messageContent)) {
-        this.messageList.push({ flow: 'out', content: this.messageContent })
+        const { messageList } = this
+        const id = `${messageList.length}${(Math.random() * 97) << 0}`
+        this.messageList.push({
+          flow: 'out',
+          content: this.messageContent,
+          id,
+          sentiment: 'neutral'
+        })
         this.scrollbottom()
+
         this.$WXRequest.post({
           url: '/chatrobotapi/',
           data: {
@@ -175,9 +189,16 @@ export default {
           }
         }, false).then(
           res => {
-            console.log('answer', res)
-            var ans = res.replace('{br}', '。')
-            this.messageList.push({ flow: 'in', content: ans })
+            const { text, score } = res
+            const ans = text.replace('{br}', '。')
+            const sentiment = sentimentMap[score]
+            console.log(id, messageList, res)
+            messageList.push({ flow: 'in', content: ans })
+            if (Number.isInteger(score) && sentiment) {
+              const [lastOutMessage] = messageList.filter(x => x.id === id)
+              if (lastOutMessage) lastOutMessage.sentiment = sentiment
+              console.log(lastOutMessage)
+            }
           }
         ).then(() => {
           this.scrollbottom()
