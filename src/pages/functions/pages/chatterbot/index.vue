@@ -499,6 +499,13 @@ li
         background-color $primary-10
         border 1px solid $primary-30
         border-radius 8px 2px 8px 8px
+        transition background-color 0.2s ease-out, border-color 0.2s ease-out
+      .message.positive
+        background-color #d9f7be
+        border-color #52c41c
+      .message.negative
+        background-color #fbceca
+        border-color #ff7774
 .survey
   padding 20px
   background-color white
