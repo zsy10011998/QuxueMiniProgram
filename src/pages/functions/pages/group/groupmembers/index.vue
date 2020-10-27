@@ -2,7 +2,7 @@
   <div class="main-container">
     <div class="banner" v-if="groupSubmitted === false">组长尚未提交当前分组</div>
     <div class="member-list">
-      <i-swipeout v-for="(item, index) in membersinf" :operateWidth="!groupSubmitted && isCaptain && item.status !== STATUS_LEADER ? 60 : 0" :key="index">
+      <i-swipeout v-for="(item, index) in membersinf" :operateWidth="!groupSubmitted && isCaptain && item.status !== 'leader' ? 120 : 0" :key="index">
         <div class="member-card" slot="content">
           <div class="image-container">
             <image v-if="item.avatarUrl" :src="item.avatarUrl" />
@@ -17,7 +17,9 @@
           </div>
         </div>
         <view slot="button" class="i-swipeout-demo-button-group">
-            <view class="i-swipeout-demo-button delete-button" @click="deleteMember(item)">删除</view>
+          <view class="i-swipeout-demo-button delete-button" @click="deleteMember(item)">
+            <i-icon size="32" type="delete_fill"></i-icon>
+          </view>
         </view>
       </i-swipeout>
     </div>
@@ -427,7 +429,7 @@ button {
 }
 
 .delete-button {
-  background: red;
+  background: #ff5252;
   color: #ffffff;
   height: 100%;
   width: 100%;

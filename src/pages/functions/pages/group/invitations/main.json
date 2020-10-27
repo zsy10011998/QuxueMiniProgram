@@ -3,6 +3,7 @@
   "disableScroll": false,
   "usingComponents": {
     "i-input": "../../../../../static/iview/input/index",
+    "i-icon": "../../../../../static/iview/icon/index",
     "i-button": "../../../../../static/iview/button/index",
     "i-panel": "../../../../../static/iview/panel/index",
     "i-swipeout": "../../../../../static/iview/swipeout/index",
