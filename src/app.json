@@ -19,8 +19,6 @@
       "pages/schedule-update/main",
       "pages/schedule-index/main",
       "pages/chatterbot/main",
-      "pages/videos/main",
-      "pages/onevideo/main",
       "pages/group/main",
       "pages/group/groupmembers/main",
       "pages/group/invitations/main",
