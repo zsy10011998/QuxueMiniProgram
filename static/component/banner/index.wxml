@@ -1,0 +1,3 @@
+<view class="banner" wx:if="{{display}}" bindtap="close">
+  <span style="opacity: {{opacity}}">{{texts && texts.length ? texts[displayIndex] : ''}}</span>
+</view>

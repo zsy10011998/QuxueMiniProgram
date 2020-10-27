@@ -17,26 +17,21 @@
 
     <h1 class="menu-title">课程工具</h1>
     <view class="function-card-list">
-      <entry picSrc="/static/utils/work.png"
-             entryName="分组管理"
-             entryText="道同气合志相感，虽旷百世如同僚。"
-             label="coming" />
-    </view>
-
-    <view class="function-card-list">
-      <entry picSrc="/static/utils/work.png"
+      <entry
+        picSrc="/static/utils/work.png"
+        entryName="分组管理"
+        entryText="道同气合志相感，虽旷百世如同僚。"
+        @click="openGroup()"
+      />
+      <!-- <entry picSrc="/static/utils/grade.png"
              entryName="成绩查询"
-             entryText="春风得意马蹄疾，一日看尽长安花"
-             label="featured" 
-             @click="openScoreQuery()"/>
-    </view>
-
-    <view class="function-card-list">
-      <entry picSrc="/static/utils/work.png"
-             entryName="课程信息"
-             entryText="道同气合志相感，虽旷百世如同僚。"
-             label="featured" 
-             @click="openCourseSchedule()" />
+             entryText="春风得意马蹄疾，一日看尽长安花。"
+             @click="openScoreQuery()"/> -->
+      <entry picSrc="/static/utils/schedule.png"
+            entryName="我的课程表"
+            label="coming"
+            entryText="明日复明日，明日何其多。"
+            @click="openCourseSchedule()" />
     </view>
   </view>
 </template>
