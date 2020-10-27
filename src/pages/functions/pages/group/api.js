@@ -1,13 +1,4 @@
-import WXRequest from '../../../../utils/wx-request'
-
-function WXPostWithUrlAndOp (url, op = '', data = '') {
-  data = { ...data }
-  if (data && op) {
-    data.op = op
-  }
-  const ret = WXRequest.post({ url, data })
-  return ret
-}
+import { WXPostWithUrlAndOp } from '../../../../utils/request'
 
 const APIURL_GROUP = '/groupinf/'
 
