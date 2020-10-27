@@ -35,3 +35,28 @@ export const RejectInvitationAPI = (data) => {
   const ret = WXPostWithUrlAndOp(APIURL_GROUP, 'rejectinvitation', data)
   return ret
 }
+
+export const GetGroupMembersAPI = (data) => {
+  const ret = WXPostWithUrlAndOp(APIURL_GROUP, 'getmembersinfo', data)
+  return ret
+}
+
+export const AddGroupMemberAPI = (data) => {
+  const ret = WXPostWithUrlAndOp(APIURL_GROUP, 'addmember', data)
+  return ret
+}
+
+export const ExitGroupAPI = (data) => {
+  const ret = WXPostWithUrlAndOp(APIURL_GROUP, 'exitgroup', data)
+  return ret
+}
+
+export const RemoveMemberAPI = (data) => {
+  const ret = WXPostWithUrlAndOp(APIURL_GROUP, 'removemember', data)
+  return ret
+}
+
+export const DisGroupAPI = (data) => {
+  const ret = WXPostWithUrlAndOp(APIURL_GROUP, 'disgroup', data)
+  return ret
+}
