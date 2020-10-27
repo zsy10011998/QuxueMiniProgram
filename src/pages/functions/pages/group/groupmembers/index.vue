@@ -50,7 +50,7 @@
       <button
         hover-class="clicked"
         class="login-button"
-        @click="disGroup"
+        @click="beforeDisGroup"
       >解散分组</button>
     </div>
     <!-- 添加组员操作：确认添加 & 取消 -->
