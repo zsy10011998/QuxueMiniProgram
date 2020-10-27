@@ -21,8 +21,12 @@
           </div>
         </div>
         <view slot="button" class="i-swipeout-button-group">
-          <view class="i-swipeout-demo-button confirm-button" @click="acceptInvitation(item.groupNo)">接受</view>
-          <view class="i-swipeout-demo-button delete-button" @click="rejectInvitation(item.groupNo)">删除</view>
+          <view class="i-swipeout-demo-button confirm-button" @click="acceptInvitation(item.groupNo)">
+            <i-icon size="32" type="right"></i-icon>
+          </view>
+          <view class="i-swipeout-demo-button delete-button" @click="rejectInvitation(item.groupNo)">
+            <i-icon size="32" type="trash"></i-icon>
+          </view>
         </view>
       </i-swipeout>
     </div>
@@ -214,13 +218,11 @@ button {
 
 .confirm-button {
   color: #e6f7ff;
-  background: #2f54eb;
-  border-color: #91d5ff;
+  background: #56beff;
 }
 .delete-button {
   color: #fff2e8;
-  background: #ff4000;
-  border-color: #ffbb96;
+  background: #ff5252;
 }
 
 .confirm-button,

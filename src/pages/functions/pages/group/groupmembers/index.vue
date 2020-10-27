@@ -2,7 +2,7 @@
   <div class="main-container">
     <div class="banner" v-if="groupSubmitted === false">组长尚未提交当前分组</div>
     <div class="member-list">
-      <i-swipeout v-for="(item, index) in membersinf" :operateWidth="!groupSubmitted && isCaptain && item.status !== STATUS_LEADER ? 60 : 0" :key="index">
+      <i-swipeout v-for="(item, index) in membersinf" :operateWidth="!groupSubmitted && isCaptain && item.status !== 'leader' ? 120 : 0" :key="index">
         <div class="member-card" slot="content">
           <div class="image-container">
             <image v-if="item.avatarUrl" :src="item.avatarUrl" />
@@ -17,7 +17,9 @@
           </div>
         </div>
         <view slot="button" class="i-swipeout-demo-button-group">
-            <view class="i-swipeout-demo-button delete-button" @click="deleteMember(item)">删除</view>
+          <view class="i-swipeout-demo-button delete-button" @click="deleteMember(item)">
+            <i-icon size="32" type="delete_fill"></i-icon>
+          </view>
         </view>
       </i-swipeout>
     </div>
@@ -48,7 +50,7 @@
       <button
         hover-class="clicked"
         class="login-button"
-        @click="disGroup"
+        @click="beforeDisGroup"
       >解散分组</button>
     </div>
     <!-- 添加组员操作：确认添加 & 取消 -->
@@ -74,6 +76,14 @@
 
 <script>
 import { mapState } from 'vuex'
+import {
+  GetGroupMembersAPI,
+  AddGroupMemberAPI,
+  ExitGroupAPI,
+  RemoveMemberAPI,
+  GetSelfGroupInfoAPI,
+  DisGroupAPI
+} from '../api'
 import { STATUS_LEADER, STATUS_MEMBER, STATUS_INVITED } from '../const'
 
 const statusCodeOrder = {
@@ -111,16 +121,8 @@ export default {
     })
   },
   beforeMount () {
-    console.log(this)
-    this.$set(this, 'addblock', false)
-    this.$WXRequest.post({
-      url: '/groupinf/',
-      data: {
-        openid: this.openid,
-        op: 'getselfinfo'
-      }
-    }).then(res => {
-      console.log(res)
+    const param = { openid: this.openid }
+    GetSelfGroupInfoAPI(param).then(res => {
       this.$set(this, 'hasGroup', res.hasGroup)
       this.$set(this, 'isCaptain', res.isCaptain)
       this.$set(this, 'groupSubmitted', res.isSubmit || false)
@@ -129,13 +131,8 @@ export default {
   },
   methods: {
     getGroupMembers () {
-      this.$WXRequest.post({
-        url: '/groupinf/',
-        data: {
-          openid: this.openid,
-          op: 'getmembersinfo'
-        }
-      }).then(res => {
+      const param = { openid: this.openid }
+      GetGroupMembersAPI(param).then(res => {
         if (res.members) {
           const membersSorted = res.members.sort(sortMemberFn)
           membersSorted.forEach(item => {
@@ -161,18 +158,13 @@ export default {
         })
         return
       }
-      this.$WXRequest.post({
-        url: '/groupinf/',
-        data: {
-          openid: this.openid,
-          op: 'addmember',
-          studentNo: this.studentNo
-        }
-      }).then(res => {
-        console.log(res)
+      const { openid, studentNo } = this
+      const params = { openid, studentNo }
+      AddGroupMemberAPI(params).then(res => {
         if (res.repCode === 200) {
           this.getGroupMembers()
           this.hideAddBlock()
+
           wx.showToast({
             title: '等待学生确认',
             duration: 1500,
@@ -225,13 +217,8 @@ export default {
       })
     },
     exitgroup () {
-      this.$WXRequest.post({
-        url: '/groupinf/',
-        data: {
-          openid: this.openid,
-          op: 'exitgroup'
-        }
-      }).then(res => {
+      const param = { openid: this.openid}
+      ExitGroupAPI(param).then(res => {
         if (res.repCode === 200) {
           wx.showToast({
             title: '退出成功',
@@ -244,20 +231,19 @@ export default {
       })
     },
     beforeDisGroup () {
+      const $this = this
       wx.showModal({
         title: '解散分组',
         content: '是否解散分组',
-        success: this.disGroup
+        success: function (result) {
+          if (result.confirm)
+          $this.disGroup()
+        }
       })
     },
     disGroup () {
-      this.$WXRequest.post({
-        url: '/groupinf/',
-        data: {
-          openid: this.openid,
-          op: 'disgroup'
-        }
-      }).then(res => {
+      const param = { openid: this.openid }
+      DisGroupAPI(param).then(res => {
         if (res.repCode === 200) {
           wx.showToast({
             title: '解散成功',
@@ -288,14 +274,11 @@ export default {
         content: `确定删除小组成员"${item.name}"吗`,
         success (res) {
           if (res.confirm) {
-            $this.$WXRequest.post({
-              url: '/groupinf/',
-              data: {
-                op: 'removemember',
-                openid: $this.openid,
-                removeopenid: item.openid
-              }
-            }).then(_ => {
+            const params = {
+              openid: $this.openid,
+              removeopenid: item.openid
+            }
+            RemoveMemberAPI(params).then(_ => {
               $this.getGroupMembers()
             })
           }
@@ -427,7 +410,7 @@ button {
 }
 
 .delete-button {
-  background: red;
+  background: #ff5252;
   color: #ffffff;
   height: 100%;
   width: 100%;
