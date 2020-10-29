@@ -65,6 +65,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import { isnull } from './logics'
 
 const sentimentMap = {
   '-1': 'negative',
@@ -112,14 +113,6 @@ export default {
         })
       }).exec()
     },
-    isnull (content) {
-      if (content === '') {
-        return true
-      }
-      const reg = '^[ ]+$'
-      const re = new RegExp(reg)
-      return re.test(content)
-    },
     // 发送text message 包含 emoji
     getMessgage () {
       return this.$WXRequest.post({
@@ -143,7 +136,7 @@ export default {
       })
     },
     sendMessage () {
-      if (!this.isnull(this.messageContent)) {
+      if (!isnull(this.messageContent)) {
         const { messageList } = this
         const id = `${messageList.length}${(Math.random() * 97) << 0}`
         this.messageList.push({
