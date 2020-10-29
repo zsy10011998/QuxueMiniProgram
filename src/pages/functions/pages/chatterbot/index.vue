@@ -135,7 +135,6 @@ export default {
     },
     // 发送text message 包含 emoji
     getMessgage (type) {
-      console.log(type)
       return this.$WXRequest.post({
         url: '/chatrobotapi/',
         data: {
@@ -145,23 +144,12 @@ export default {
           'isChat': type
         }
       }, false).then(res => {
-        if (type) {
-          this.$set(this, 'messageList', [{
-            flow: 'in',
-            content: 'Hi! 我可以和你聊天，现在开始吧'
-          }])
-        } else {
-          this.$set(this, 'messageList', [{
-            flow: 'in',
-            content: 'Hi! 我可以分析你的情感，说一句话试试吧'
-          }])
-        }
-        // for (var i = 0; i < res.length; i++) {
-        //   this.messageList.push(res[i])
-        // }
-        console.log(this.messageList)
-        this.messageList.push(...res)
-        console.log(this.messageList)
+        const messageList = [{
+          flow: 'in',
+          content: 'Hi! 我可以和你聊天，现在开始吧'
+        }].concat(res.map(message => ({ ...message, sentiment: sentimentMap[message.score]})))
+        console.log(messageList)
+        this.$set(this, 'messageList', messageList)
         setTimeout(() => {
           this.scrollbottom()
         }, 500)
