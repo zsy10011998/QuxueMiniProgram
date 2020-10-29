@@ -10,7 +10,7 @@
           <div class="content">
             <div class="name">
               <template v-if="message.flow === 'in'">
-                {{isChat ? '菲菲' : '加加'}}
+                菲菲
               </template>
               <template v-else>
                 {{name}}
@@ -34,7 +34,7 @@
             <i-avatar i-class="avatar"
                       v-else
                       shape="square"
-                      :src="isChat?'/static/images/avatar1.png':'/static/images/avatar2.png'" />
+                      src="/static/images/avatar1.png" />
           </div>
         </div>
       </li>
@@ -43,11 +43,6 @@
     <div class="bottom">
       <div class="bottom-div"
            :style="{marginBottom: isFocus ? '10px' : 0}">
-        <!-- <div class="switch"
-             @click="changeRobot"
-             v-if="!isFocus">
-          {{isChat?"吐槽":"聊天"}}
-        </div> -->
         <div style="width: 100%">
           <input type="text"
                  class="input"
@@ -82,23 +77,17 @@ export default {
       messageContent: '',
       messageList: [],
       height: 0,
-      isFocus: false,
-      isChat: true
-      // botname: this.isChat ? '菲菲' : '丽丽'
+      isFocus: false
     }
   },
   onLoad (options) {
     wx.setNavigationBarTitle({
       title: '聊天机器人'
     })
-    // this.getMessgage(this.isChat)
   },
   onShow () {
-    this.getMessgage(this.isChat)
+    this.getMessgage()
   },
-  // onReady () {
-  //   this.getMessgage(this.isChat)
-  // },
   onUnload () {
     this.messageContent = ''
     wx.switchTab({
@@ -106,8 +95,6 @@ export default {
     })
   },
   computed: {
-    // botname: function () { return this.isChat ? '菲菲' : '加加' },
-
     ...mapState({
       myInfo: state => state.user.myInfo,
       openid: state => state.student.openid,
@@ -134,14 +121,14 @@ export default {
       return re.test(content)
     },
     // 发送text message 包含 emoji
-    getMessgage (type) {
+    getMessgage () {
       return this.$WXRequest.post({
         url: '/chatrobotapi/',
         data: {
           'openid': this.openid,
           'op': 'get',
           'msg': this.messageContent,
-          'isChat': type
+          'isChat': true
         }
       }, false).then(res => {
         const messageList = [{
@@ -173,7 +160,7 @@ export default {
             'openid': this.openid,
             'op': 'send',
             'msg': this.messageContent,
-            'isChat': this.isChat
+            'isChat': true
           }
         }, false).then(
           res => {
@@ -196,30 +183,8 @@ export default {
         this.$store.commit('showToast', { title: '消息不能为空' })
       }
       this.isFocus = false
-    },
-    changeRobot () {
-      // console.log(this.isChat)
-
-      wx.setNavigationBarTitle({
-        title: '切换中...'
-      })
-
-      this.getMessgage(!this.isChat).then(() => {
-        this.isChat = !this.isChat
-        if (this.isChat) {
-          wx.setNavigationBarTitle({
-            title: '聊天机器人'
-          })
-        } else {
-          wx.setNavigationBarTitle({
-            title: '情感分析机器人'
-          })
-        }
-      })
     }
-  },
-
-  destory () { }
+  }
 }
 </script>
 
