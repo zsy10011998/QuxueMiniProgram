@@ -65,7 +65,8 @@
 
 <script>
 import { mapState } from 'vuex'
-import { isnull } from './logics'
+import { GetMessageHistoryAPI, SendMessageAPI } from './api'
+import { isnull, scrollbottom } from './logics'
 
 const sentimentMap = {
   '-1': 'negative',
@@ -104,34 +105,20 @@ export default {
     })
   },
   methods: {
-    scrollbottom () {
-      wx.createSelectorQuery().select('#list').boundingClientRect(function (rect) {
-        console.log(rect.height)
-        wx.pageScrollTo({
-          scrollTop: rect.height
-          // scrollTop: 99999999999
-        })
-      }).exec()
-    },
     // 发送text message 包含 emoji
     getMessgage () {
-      return this.$WXRequest.post({
-        url: '/chatrobotapi/',
-        data: {
-          'openid': this.openid,
-          'op': 'get',
-          'msg': this.messageContent,
-          'isChat': true
-        }
-      }, false).then(res => {
+      const params = {
+        openid: this.openid,
+        isChat: true
+      }
+      return GetMessageHistoryAPI(params).then(res => {
         const messageList = [{
           flow: 'in',
           content: 'Hi! 我可以和你聊天，现在开始吧'
         }].concat(res.map(message => ({ ...message, sentiment: sentimentMap[message.score]})))
-        console.log(messageList)
         this.$set(this, 'messageList', messageList)
         setTimeout(() => {
-          this.scrollbottom()
+          scrollbottom()
         }, 500)
       })
     },
@@ -139,23 +126,20 @@ export default {
       if (!isnull(this.messageContent)) {
         const { messageList } = this
         const id = `${messageList.length}${(Math.random() * 97) << 0}`
+        const params = {
+          openid: this.openid,
+          msg: this.messageContent,
+          isChat: true
+        }
         this.messageList.push({
           flow: 'out',
           content: this.messageContent,
           id,
           sentiment: 'neutral'
         })
-        this.scrollbottom()
+        scrollbottom()
 
-        this.$WXRequest.post({
-          url: '/chatrobotapi/',
-          data: {
-            'openid': this.openid,
-            'op': 'send',
-            'msg': this.messageContent,
-            'isChat': true
-          }
-        }, false).then(
+        SendMessageAPI(params).then(
           res => {
             const { text, score } = res
             const ans = text.replace('{br}', '。')
@@ -169,7 +153,7 @@ export default {
             }
           }
         ).then(() => {
-          this.scrollbottom()
+          scrollbottom()
         })
         this.messageContent = ''
       } else {
