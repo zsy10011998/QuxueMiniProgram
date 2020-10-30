@@ -11,8 +11,8 @@
       <entry picSrc="/static/utils/customer-service.png"
              entryName="聊天机器人"
              entryText="虽无丝竹管弦之盛，一觞一咏，亦足以畅叙幽情。"
-             label="featured"
-             @click="openBot()" />
+             label="coming" />
+             <!-- @click="openBot()" /> -->
     </view>
 
     <h1 class="menu-title">课程工具</h1>
@@ -21,6 +21,7 @@
         picSrc="/static/utils/work.png"
         entryName="分组管理"
         entryText="道同气合志相感，虽旷百世如同僚。"
+        label="featured"
         @click="openGroup()"
       />
       <!-- <entry picSrc="/static/utils/grade.png"
