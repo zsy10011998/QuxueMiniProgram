@@ -51,3 +51,8 @@ export const DisGroupAPI = (data) => {
   const ret = WXPostWithUrlAndOp(APIURL_GROUP, 'disgroup', data)
   return ret
 }
+
+export const SubmitGroupAPI = (data) => {
+  const ret = WXPostWithUrlAndOp(APIURL_GROUP, 'submitgroup', data)
+  return ret
+}

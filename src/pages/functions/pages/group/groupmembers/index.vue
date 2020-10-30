@@ -82,7 +82,8 @@ import {
   ExitGroupAPI,
   RemoveMemberAPI,
   GetSelfGroupInfoAPI,
-  DisGroupAPI
+  DisGroupAPI,
+  SubmitGroupAPI
 } from '../api'
 import { STATUS_LEADER, STATUS_MEMBER, STATUS_INVITED } from '../const'
 
@@ -210,10 +211,22 @@ export default {
       })
     },
     async submitGroup () {
-      this.$set(this, 'groupSubmitted', true)
-      wx.showToast({
-        title: '提交成功',
-        during: 1500
+      const param = { openid: this.openid }
+      SubmitGroupAPI(param).then(res => {
+        const { repCode, errMsg } = res
+        if (repCode === 200) {
+          this.$set(this, 'groupSubmitted', true)
+          wx.showToast({
+            title: '提交成功',
+            during: 1500
+          })
+        } else {
+          wx.showToast({
+            title: errMsg,
+            during: 1500,
+            icon: 'none'
+          })
+        }
       })
     },
     exitgroup () {
