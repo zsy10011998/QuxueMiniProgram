@@ -1,13 +1,4 @@
-import WXRequest from '../../../../utils/wx-request'
-
-function WXPostWithUrlAndOp (url, op = '', data = '') {
-  data = { ...data }
-  if (data && op) {
-    data.op = op
-  }
-  const ret = WXRequest.post({ url, data })
-  return ret
-}
+import { WXPostWithUrlAndOp } from '../../../../utils/request'
 
 const APIURL_GROUP = '/groupinf/'
 
@@ -33,5 +24,30 @@ export const AcceptInvitationAPI = (data) => {
 
 export const RejectInvitationAPI = (data) => {
   const ret = WXPostWithUrlAndOp(APIURL_GROUP, 'rejectinvitation', data)
+  return ret
+}
+
+export const GetGroupMembersAPI = (data) => {
+  const ret = WXPostWithUrlAndOp(APIURL_GROUP, 'getmembersinfo', data)
+  return ret
+}
+
+export const AddGroupMemberAPI = (data) => {
+  const ret = WXPostWithUrlAndOp(APIURL_GROUP, 'addmember', data)
+  return ret
+}
+
+export const ExitGroupAPI = (data) => {
+  const ret = WXPostWithUrlAndOp(APIURL_GROUP, 'exitgroup', data)
+  return ret
+}
+
+export const RemoveMemberAPI = (data) => {
+  const ret = WXPostWithUrlAndOp(APIURL_GROUP, 'removemember', data)
+  return ret
+}
+
+export const DisGroupAPI = (data) => {
+  const ret = WXPostWithUrlAndOp(APIURL_GROUP, 'disgroup', data)
   return ret
 }
