@@ -8,22 +8,29 @@
     <scroll-view scroll-y="true" class="scroll">
       <view style="height:1450rpx;width:730rpx;display:flex;">
         <view style="color:#8e968c">
-          <view :wx:for="[1,2,3,4,6,7,8,9,11,12,13,14]" class="left">{{item}}</view>
+          <view :wx:for="[1,2,3,4,5,6,7,8,9,10,11,12,13,14]" class="left">{{item}}</view>
         </view>
-        <view :wx:for="[1,2,3,4,6,7,8,9,11,12,13,14]">
+        <view :wx:for="[1,2,3,4,5,6,7,8,9,11,12,13,14]">
           <view :style="{width: '750rpx', 'margin-top': (index+1)*100 +'rpx', position: 'absolute', 
-            'border-bottom': '1rpx solid '+index==4?'red':'lightgray'}">
+            'border-bottom-style': 'solid',
+            'border-bottom-width': (index)%3 == 1?'0.7px':'0.5px',
+            'border-bottom-color': '#C0C0C0',
+            }">
           </view>
         </view>
-        <!--课表-->
+        <!--课s表-->
         <view :wx:for="lessons" wx:for-item="lesson" wx:for-index="index" wx:key="id">
           <view class="flex-item kcb-item" id='0' data-statu="open" :data-index="index" 
             :style="{'margin-left': (lesson.weekDay-1)*100+'rpx', 
-            'margin-top': (lesson.time-1)*200+5+'rpx', 
-            height: '195rpx', 
-            'background-color': colors[lesson.weekDay%2]}">
+            'margin-top': (lesson.time-1)*100+'rpx', 
+            height:  lesson.skcd * 100 + 'rpx',
+            'background-color': colors[index%7]}">
           <!-- weekDay代表星期几上课，time是上课时间，skcd上课长度，information课程信息-->
-            <view class="smalltext">{{lesson.information}}</view>
+            <view class="smalltext"
+              :style="{'display': '-webkit-box',
+              '-webkit-box-orient': 'vertical',
+              '-webkit-line-clamp': lesson.skcd > 2? 8:6}">
+              {{lesson.information}}</view>
           </view>
         </view>
         <!-- <i-button @click="refresh()" style="margin-top:1200rpx;margin-left:auto;margin-right:auto" 
@@ -38,9 +45,39 @@
 export default {
   data () {
     return {
+      lessons: [
+        {weekDay: 1, time: 1, information: '计算机工程中最优化的方法\n冷 彪[1-17]周(一)201 第1，2节', skcd: 2},
+        {weekDay: 3, time: 1, information: '数据库系统原理\n郎 波[1-13]周(一)304 第1，2节', skcd: 2},
+        {weekDay: 4, time: 1, information: 'MATLAB基础及其应用\n张永飞[1-13]周主南305 第1，2节', skcd: 2},
+        {weekDay: 5, time: 1, information: '信号处理与信息推断\n刘雪峰[1-17]周(一)204 第1，2节', skcd: 2},
+        {weekDay: 7, time: 1, information: '芭蕾艺术鉴赏\n李爱华[6-13]周 第1，2节', skcd: 2},
+        {weekDay: 2, time: 3, information: '编译技术\n史晓华[2]周\n主M302 第3，4，5节，史晓华[3-17]周\n机房 第3，4，5节，杨海燕[2]周\n主M302 第3，4，5节，杨海燕[3-17]周\n机房 第3，4，5节', skcd: 3},
+        {weekDay: 3, time: 3, information: '具体数学\n赵启阳[1-13]周(一)301 第3，4节', skcd: 3},
+        {weekDay: 4, time: 3, information: '编译技术\n史晓华[1-13]周E207 第3，4节', skcd: 3},
+        {weekDay: 5, time: 3, information: '数据库系统原理\n郎 波[1-13]周(一)304 第3，4节', skcd: 3},
+        {weekDay: 7, time: 3, information: '芭蕾艺术鉴赏\n李爱华[6-13]周 第3，4节', skcd: 3},
+        {weekDay: 1, time: 6, information: '算法设计与分析\n童咏昕[1-17]周主南210 第6，7节', skcd: 2},
+        {weekDay: 2, time: 6, information: '编译技术\n史晓华[1-13]周E207 第6，7节', skcd: 2},
+        {weekDay: 5, time: 6, information: '体育（5）(散打1)\n张立臣[1-17]周 第6节', skcd: 2},
+        {weekDay: 1, time: 8, information: '数学建模入门\n郑 锦[1-13]周(一)212 第8，9节', skcd: 3},
+        {weekDay: 2, time: 8, information: 'MATLAB 应用\n杨继平[10-14]周（五）203 第8，9，10节\nMATLAB 应用\n杨继平[15]周（五）203 第8，9节', skcd: 3},
+        {weekDay: 4, time: 8, information: 'MATLAB 应用\n杨继平[10-14]周（五）203 第8，9，10节', skcd: 3},
+        {weekDay: 5, time: 8, information: '诗歌与中国文化\n罗 旻[3-17]周（五）303 第8，9节', skcd: 3},
+        {weekDay: 7, time: 13, information: '探索心理学的奥秘\n智慧树[6-14]周 第13，14节', skcd: 2}],
+      setUp: true,
+      colors: ['#ff7772', '#99CC33', '#6ca6ff', '#deb887', '#dda0dd', '#ff8c00', '#708090']
+    }
+  }
+}
+</script>
+<!--
+<script>
+export default {
+  data () {
+    return {
       lessons: [],
       setUp: true,
-      colors: ['#6ca6ff', '#ff7772']
+      colors: ['#ff7772', '#99CC33', '#6ca6ff', '#deb887', '#dda0dd', '#ff8c00', '#708090']
     }
   },
   onShow: function () {
@@ -105,6 +142,7 @@ export default {
   }
 }
 </script>
+-->
 
 <style scoped>
 .top{
@@ -149,10 +187,11 @@ export default {
 .smalltext {
   font-size: 8pt;
   color: #fff;
-  padding-left: 2px;
+  padding-left: 4px;
 }
+
 .scroll {
-  height: 1170rpx;
+  height: 1120rpx;
   z-index: 101;
   position: fixed;
 }
@@ -191,5 +230,4 @@ export default {
 .font-color{
   color:#a9a9a9;
 }
-
 </style>
