@@ -151,6 +151,8 @@ export default {
       this.$set(this, 'addblock', false)
     },
     addnew () {
+      const { openid, studentNo } = this
+      if (!studentNo) return
       if (this.membersinf.length >= 5) {
         wx.showToast({
           title: '最多只能五个成员',
@@ -159,7 +161,6 @@ export default {
         })
         return
       }
-      const { openid, studentNo } = this
       const params = { openid, studentNo }
       AddGroupMemberAPI(params).then(res => {
         if (res.repCode === 200) {
