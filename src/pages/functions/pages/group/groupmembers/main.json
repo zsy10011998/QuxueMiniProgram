@@ -6,6 +6,7 @@
     "i-button": "../../../../../static/iview/button/index",
     "i-panel": "../../../../../static/iview/panel/index",
     "i-icon": "../../../../../static/iview/icon/index",
-    "i-swipeout": "../../../../../static/iview/swipeout/index"
+    "i-swipeout": "../../../../../static/iview/swipeout/index",
+    "loop-banner": "../../../../../static/component/banner/index"
   }
 }
