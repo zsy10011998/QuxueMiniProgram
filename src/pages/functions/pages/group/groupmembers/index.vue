@@ -22,9 +22,14 @@
           <div class="text-container">
             <div class="student-name">
               <span>{{ item.name }}</span>
-              <span class="status-icon" :class="item.status"></span>
+              <color-tag :text="item.text" :theme="item.theme" />
             </div>
-            <div class="student-id">{{ item.studentNo }}</div>
+            <div class="student-id">
+              {{ item.studentNo }}
+              <span v-for="(timespan, _) in item.myTimes" :key="timespan">
+                <color-tag :text="timespanMap[timespan]" theme="purple" />
+              </span>
+            </div>
           </div>
         </div>
         <view slot="button" class="i-swipeout-demo-button-group">
@@ -96,7 +101,7 @@ import {
   DisGroupAPI,
   SubmitGroupAPI
 } from '../api'
-import { STATUS_LEADER, STATUS_MEMBER, STATUS_INVITED, TIMESPAN_MAP } from '../const'
+import { STATUS_LEADER, STATUS_MEMBER, STATUS_INVITED, TIMESPAN_MAP, TIMESPAN_SHORT_MAP } from '../const'
 
 const statusCodeOrder = {
   [STATUS_LEADER]: 3,
@@ -113,6 +118,12 @@ const sortMemberFn = (a, b) => {
 const minimumMembers = 4
 const maximumMembers = 5
 
+const statusMap = {
+  leader: ['green', '组长'],
+  member: ['blue', '成员'],
+  invited: ['yellow', '邀请中']
+}
+
 export default {
   data () {
     return {
@@ -124,7 +135,8 @@ export default {
       groupSubmitted: undefined,
       allowTime: null,
       allowTimeBanner: [],
-      submitBanner: []
+      submitBanner: [],
+      timespanMap: TIMESPAN_SHORT_MAP
     }
   },
   computed: {
@@ -144,7 +156,7 @@ export default {
       this.$set(this, 'allowTime', allowTime)
 
       if (!isSubmit) submitBanner.push('组长尚未提交当前分组')
-      if (isCaptain) submitBanner.push('组长可以左划以管理成员')
+      if (isCaptain) submitBanner.push('组长可左划管理成员')
 
       const allowTimeBanner = [`当前分组环节所属课时: ${TIMESPAN_MAP[allowTime]}`]
       this.$set(this, 'allowTimeBanner', allowTimeBanner)
@@ -158,7 +170,13 @@ export default {
         if (res.members) {
           const membersSorted = res.members.sort(sortMemberFn)
           membersSorted.forEach(item => {
-            if (item.studentNo) item.studentNo = item.studentNo.toUpperCase()
+            const { studentNo, status } = item
+            if (studentNo) item.studentNo = studentNo.toUpperCase()
+            if (status in statusMap) {
+              const [theme, text] = statusMap[status]
+              item.theme = theme
+              item.text = text
+            }
           })
           this.$set(this, 'membersinf', membersSorted)
         }
@@ -396,52 +414,6 @@ button {
   margin-top: 12rpx;
   font-size: 24rpx;
   color: #555;
-}
-
-.status-icon {
-  font-weight: normal;
-  font-size: 20rpx;
-  margin-left: 24rpx;
-  display: inline-block;
-  bottom: 6rpx;
-  position: relative;
-  padding: 2rpx 8rpx;
-  border: 2rpx #555 solid;
-  border-radius: 6rpx;
-  display: none;
-}
-
-.status-icon.leader {
-  display: unset !important;
-  color: #52c41a;
-  background: #f6ffed;
-  border-color: #b7eb8f;
-
-  &::before {
-    content: '组长';
-  }
-}
-
-.status-icon.member {
-  display: unset !important;
-  color: #1890ff;
-  background: #e6f7ff;
-  border-color: #91d5ff;
-
-  &::before {
-    content: '成员';
-  }
-}
-
-.status-icon.invited {
-  display: unset !important;
-  color: #faad14;
-  background: #fffbe6;
-  border-color: #ffe58f;
-
-  &::before {
-    content: '邀请中';
-  }
 }
 
 .delete-button {

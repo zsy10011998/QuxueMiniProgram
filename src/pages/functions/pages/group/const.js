@@ -14,3 +14,9 @@ export const TIMESPAN_MAP = {
     [TIMESPAN_89]: '第8-9小节',
     [TIMESPAN_BC]: '第11-12小节'
 }
+
+export const TIMESPAN_SHORT_MAP = {
+    [TIMESPAN_67]: '6-7',
+    [TIMESPAN_89]: '8-9',
+    [TIMESPAN_BC]: '11-12'
+}
