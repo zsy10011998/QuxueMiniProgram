@@ -1,0 +1,29 @@
+.tag-component {
+  font-weight: normal;
+  font-size: 20rpx;
+  margin-left: 24rpx;
+  display: inline-block;
+  bottom: 6rpx;
+  position: relative;
+  padding: 2rpx 8rpx;
+  border: 2rpx #555 solid;
+  border-radius: 6rpx;
+}
+
+.tag-component.green {
+  color: #52c41a;
+  background: #f6ffed;
+  border-color: #b7eb8f;
+}
+
+.tag-component.blue {
+  color: #1890ff;
+  background: #e6f7ff;
+  border-color: #91d5ff;
+}
+
+.tag-component.yellow {
+  color: #faad14;
+  background: #fffbe6;
+  border-color: #ffe58f;
+}
