@@ -1,6 +1,17 @@
 <template>
   <div class="main-container">
-    <div class="banner" v-if="groupSubmitted === false">组长尚未提交当前分组</div>
+    <loop-banner
+      :texts="submitBanner"
+      :v-if="submitBanner.length"
+    />
+    <loop-banner
+      v-if="allowTimeBanner.length"
+      :texts="allowTimeBanner"
+      backgroundColor="#e6f7ff"
+      borderColor="#91d5ff"
+      color="#1890ff"
+      :hidable="false"
+    />
     <div class="member-list">
       <i-swipeout v-for="(item, index) in membersinf" :operateWidth="!groupSubmitted && isCaptain && item.status !== 'leader' ? 120 : 0" :key="index">
         <div class="member-card" slot="content">
@@ -85,7 +96,7 @@ import {
   DisGroupAPI,
   SubmitGroupAPI
 } from '../api'
-import { STATUS_LEADER, STATUS_MEMBER, STATUS_INVITED } from '../const'
+import { STATUS_LEADER, STATUS_MEMBER, STATUS_INVITED, TIMESPAN_MAP } from '../const'
 
 const statusCodeOrder = {
   [STATUS_LEADER]: 3,
@@ -105,13 +116,15 @@ const maximumMembers = 5
 export default {
   data () {
     return {
-      hasGroup: '',
       isCaptain: '',
       groupNo: '',
       membersinf: [],
       studentNo: '',
       addblock: false,
-      groupSubmitted: undefined
+      groupSubmitted: undefined,
+      allowTime: null,
+      allowTimeBanner: [],
+      submitBanner: []
     }
   },
   computed: {
@@ -122,11 +135,19 @@ export default {
     })
   },
   beforeMount () {
-    const param = { openid: this.openid }
+    const { submitBanner, openid } = this
+    const param = { openid }
     GetSelfGroupInfoAPI(param).then(res => {
-      this.$set(this, 'hasGroup', res.hasGroup)
-      this.$set(this, 'isCaptain', res.isCaptain)
-      this.$set(this, 'groupSubmitted', res.isSubmit || false)
+      const { isCaptain, isSubmit, allowTime } = res
+      this.$set(this, 'isCaptain', isCaptain)
+      this.$set(this, 'groupSubmitted', isSubmit || false)
+      this.$set(this, 'allowTime', allowTime)
+
+      if (!isSubmit) submitBanner.push('组长尚未提交当前分组')
+      if (isCaptain) submitBanner.push('组长可以左划以管理成员')
+
+      const allowTimeBanner = [`当前分组环节所属课时: ${TIMESPAN_MAP[allowTime]}`]
+      this.$set(this, 'allowTimeBanner', allowTimeBanner)
     })
     this.getGroupMembers()
   },
@@ -435,16 +456,5 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.banner {
-  font-size: 24rpx;
-  color: #fa541c;
-  background-color: #fff2e8;
-  text-align: center;
-  padding: 8rpx;
-  margin: 10rpx;
-  border: 2rpx solid #ffbb96;
-  border-radius: 14rpx;
 }
 </style>
