@@ -24,7 +24,12 @@
               <span>{{ item.name }}</span>
               <color-tag :text="item.text" :theme="item.theme" />
             </div>
-            <div class="student-id">{{ item.studentNo }}</div>
+            <div class="student-id">
+              {{ item.studentNo }}
+              <span v-for="(timespan, _) in item.myTimes" :key="timespan">
+                <color-tag :text="timespanMap[timespan]" theme="purple" />
+              </span>
+            </div>
           </div>
         </div>
         <view slot="button" class="i-swipeout-demo-button-group">
@@ -96,7 +101,7 @@ import {
   DisGroupAPI,
   SubmitGroupAPI
 } from '../api'
-import { STATUS_LEADER, STATUS_MEMBER, STATUS_INVITED, TIMESPAN_MAP } from '../const'
+import { STATUS_LEADER, STATUS_MEMBER, STATUS_INVITED, TIMESPAN_MAP, TIMESPAN_SHORT_MAP } from '../const'
 
 const statusCodeOrder = {
   [STATUS_LEADER]: 3,
@@ -130,7 +135,8 @@ export default {
       groupSubmitted: undefined,
       allowTime: null,
       allowTimeBanner: [],
-      submitBanner: []
+      submitBanner: [],
+      timespanMap: TIMESPAN_SHORT_MAP
     }
   },
   computed: {
