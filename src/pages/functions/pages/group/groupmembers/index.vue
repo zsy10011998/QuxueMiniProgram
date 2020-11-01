@@ -296,11 +296,13 @@ export default {
       })
     },
     beforeRemoveMember (item) {
-      const $this = this
-      let errorMessage = ''
-      if (item.status === STATUS_LEADER) errorMessage = FEErrorMsg.CANNOT_REMOVE_LEADER
-      if (!this.isCaptain) errorMessage = FEErrorMsg.CANNOT_REMOVE_BY_NON_LEADER
-      if (!this.isAllTimespanValid()) errorMessage = FEErrorMsg.INVALID_TIMESPAN
+      const errorMessage = !this.isAllTimespanValid()
+        ? FEErrorMsg.INVALID_TIMESPAN
+        : !this.isCaptain
+        ? FEErrorMsg.CANNOT_REMOVE_BY_NON_LEADER
+        : item.status === STATUS_LEADER
+        ? FEErrorMsg.CANNOT_REMOVE_LEADER
+        : undefined
 
       if (errorMessage) {
         showToast(errorMessage)
