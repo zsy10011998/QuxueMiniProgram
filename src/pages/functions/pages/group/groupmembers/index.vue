@@ -13,7 +13,12 @@
       :hidable="false"
     />
     <div class="member-list">
-      <i-swipeout v-for="(item, index) in membersinf" :operateWidth="!groupSubmitted && isCaptain && item.status !== 'leader' ? 120 : 0" :key="index">
+      <i-swipeout
+        v-for="(item, index) in membersinf"
+        :operateWidth="!groupSubmitted && isCaptain && item.status !== 'leader' ? 120 : 0"
+        :key="index"
+        class="member-item"
+      >
         <div class="member-card" slot="content">
           <div class="image-container">
             <image v-if="item.avatarUrl" :src="item.avatarUrl" />
@@ -25,7 +30,7 @@
               <color-tag :text="item.text" :theme="item.theme" />
             </div>
             <div class="student-id">
-              {{ item.studentNo }}
+              <span>{{ item.studentNo }}</span>
               <span v-for="(timespan, _) in item.myTimes" :key="timespan">
                 <color-tag :text="timespanMap[timespan]" theme="purple" />
               </span>
