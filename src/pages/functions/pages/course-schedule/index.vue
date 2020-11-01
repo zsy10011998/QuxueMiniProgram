@@ -18,18 +18,20 @@
             }">
           </view>
         </view>
-        <!--课s表-->
-        <view :wx:for="lessons" wx:for-item="lesson" wx:for-index="index" wx:key="id">
+        <!--课s表-->        
+        <view v-for="(lesson, index) in lessons" wx:key="id">
           <view class="flex-item kcb-item" id='0' data-statu="open" :data-index="index" 
             :style="{'margin-left': (lesson.weekDay-1)*100+'rpx', 
             'margin-top': (lesson.time-1)*100+'rpx', 
             height:  lesson.skcd * 100 + 'rpx',
-            'background-color': colors[index%7]}">
-          <!-- weekDay代表星期几上课，time是上课时间，skcd上课长度，information课程信息-->
-            <view class="smalltext"
+            'background-color': colors[index%7]}"
+            @click='showDetail(lesson.detail)'>
+          <!-- weekDay代表星期几上课，time是上课时间，skcd上课长度，information课程名 ,detail课程具体信息-->
+            <view class="smalltext" 
               :style="{'display': '-webkit-box',
               '-webkit-box-orient': 'vertical',
-              '-webkit-line-clamp': lesson.skcd > 2? 8:6}">
+              '-webkit-line-clamp': lesson.skcd > 2? 8:6,
+              'overflow':'hidden'}">
               {{lesson.information}}</view>
           </view>
         </view>
@@ -41,7 +43,7 @@
   </view>
 </template>
 
-<script>
+<!--<script>
 export default {
   data () {
     return {
@@ -67,10 +69,25 @@ export default {
       setUp: true,
       colors: ['#ff7772', '#99CC33', '#6ca6ff', '#deb887', '#dda0dd', '#ff8c00', '#708090']
     }
+  },
+  methods: {
+    showDetail (information) {
+      wx.showModal({  
+        title: '课程详细信息',  
+        content: information,  
+        success: function(res) {  
+          if (res.confirm) {  
+            console.log('用户点击确定')  
+          } else if (res.cancel) {  
+            console.log('用户点击取消')  
+          }  
+        }  
+      })
+    }
   }
 }
-</script>
-<!--
+</script>-->
+
 <script>
 export default {
   data () {
@@ -129,6 +146,12 @@ export default {
           })
         }
       })
+    },
+    showDetail (detail) {
+      wx.showModal({  
+        title: '课程详细信息',  
+        content: detail  
+      })
     }
   },
   onPullDownRefresh () {
@@ -142,7 +165,6 @@ export default {
   }
 }
 </script>
--->
 
 <style scoped>
 .top{
