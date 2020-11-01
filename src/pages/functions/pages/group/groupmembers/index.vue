@@ -158,18 +158,21 @@ export default {
     const { submitBanner, openid } = this
     const param = { openid }
     GetSelfGroupInfoAPI(param).then(res => {
-      const { isCaptain, isSubmit, allowTime } = res
+      const { isCaptain, isSubmit} = res
       this.$set(this, 'isCaptain', isCaptain)
       this.$set(this, 'groupSubmitted', isSubmit || false)
-      this.$set(this, 'allowTime', allowTime)
 
       if (!isSubmit) submitBanner.push('组长尚未提交当前分组')
       if (isCaptain) submitBanner.push('组长可左划管理成员')
+    })
+    GetGroupsInfoAPI({}).then(res => {
+      const { Max4, Max5, allowTime } = res
+      this.$set(this, 'allowTime', allowTime)
+      console.log(res)
 
       const allowTimeBanner = [`当前分组环节所属课时: ${TIMESPAN_MAP[allowTime]}`]
       this.$set(this, 'allowTimeBanner', allowTimeBanner)
-    })
-    GetGroupsInfoAPI({}).then(res => {
+    }).catch(res => {
       console.log(res)
     })
     this.getGroupMembers()
@@ -211,22 +214,20 @@ export default {
       }
       const params = { openid, studentNo }
       AddGroupMemberAPI(params).then(res => {
-        if (res.repCode === 200) {
-          this.getGroupMembers()
-          this.hideAddBlock()
+        this.getGroupMembers()
+        this.hideAddBlock()
 
-          wx.showToast({
-            title: '等待学生确认',
-            duration: 1500,
-            icon: 'none'
-          })
-        } else if (res.repCode === 700) {
-          wx.showToast({
-            title: res.errMsg,
-            duration: 1500,
-            icon: 'none'
-          })
-        }
+        wx.showToast({
+          title: '等待学生确认',
+          duration: 1500,
+          icon: 'none'
+        })
+      }).catch(res =>{
+        wx.showToast({
+          title: res.errMsg,
+          duration: 1500,
+          icon: 'none'
+        })
       })
     },
     updatestudetNo (event) {
