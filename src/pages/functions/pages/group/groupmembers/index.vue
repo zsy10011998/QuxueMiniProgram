@@ -32,7 +32,7 @@
             <div class="student-id">
               <span>{{ item.studentNo }}</span>
               <span v-for="(timespan, _) in item.myTimes" :key="timespan">
-                <color-tag :text="timespanMap[timespan]" theme="purple" />
+                <color-tag :text="timespanMap[timespan]" :theme="timespan === allowTime ? 'purple': 'grey'" />
               </span>
             </div>
           </div>
@@ -104,7 +104,8 @@ import {
   RemoveMemberAPI,
   GetSelfGroupInfoAPI,
   DisGroupAPI,
-  SubmitGroupAPI
+  SubmitGroupAPI,
+  GetGroupsInfoAPI
 } from '../api'
 import { STATUS_LEADER, STATUS_MEMBER, STATUS_INVITED, TIMESPAN_MAP, TIMESPAN_SHORT_MAP } from '../const'
 
@@ -138,10 +139,12 @@ export default {
       studentNo: '',
       addblock: false,
       groupSubmitted: undefined,
-      allowTime: null,
+      allowTime: null,  // 'BC'
       allowTimeBanner: [],
       submitBanner: [],
-      timespanMap: TIMESPAN_SHORT_MAP
+      timespanMap: TIMESPAN_SHORT_MAP,
+      max4: null,
+      max5: null
     }
   },
   computed: {
@@ -166,6 +169,9 @@ export default {
       const allowTimeBanner = [`当前分组环节所属课时: ${TIMESPAN_MAP[allowTime]}`]
       this.$set(this, 'allowTimeBanner', allowTimeBanner)
     })
+    GetGroupsInfoAPI({}).then(res => {
+      console.log(res)
+    })
     this.getGroupMembers()
   },
   methods: {
@@ -177,11 +183,9 @@ export default {
           membersSorted.forEach(item => {
             const { studentNo, status } = item
             if (studentNo) item.studentNo = studentNo.toUpperCase()
-            if (status in statusMap) {
-              const [theme, text] = statusMap[status]
-              item.theme = theme
-              item.text = text
-            }
+            const [theme, text] = statusMap[status]
+            item.theme = theme
+            item.text = text
           })
           this.$set(this, 'membersinf', membersSorted)
         }

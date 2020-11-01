@@ -56,3 +56,8 @@ export const SubmitGroupAPI = (data) => {
   const ret = WXPostWithUrlAndOp(APIURL_GROUP, 'submitgroup', data)
   return ret
 }
+
+export const GetGroupsInfoAPI = (data) => {
+  const ret = WXPostWithUrlAndOp(APIURL_GROUP, 'getgroupsinfo', data)
+  return ret
+}
