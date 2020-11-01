@@ -1,8 +1,24 @@
 <template>
   <div class="main-container">
-    <div class="banner" v-if="groupSubmitted === false">组长尚未提交当前分组</div>
+    <loop-banner
+      :texts="submitBanner"
+      :v-if="submitBanner.length"
+    />
+    <loop-banner
+      v-if="allowTimeBanner.length"
+      :texts="allowTimeBanner"
+      backgroundColor="#e6f7ff"
+      borderColor="#91d5ff"
+      color="#1890ff"
+      :hidable="false"
+    />
     <div class="member-list">
-      <i-swipeout v-for="(item, index) in membersinf" :operateWidth="!groupSubmitted && isCaptain && item.status !== 'leader' ? 120 : 0" :key="index">
+      <i-swipeout
+        v-for="(item, index) in membersinf"
+        :operateWidth="!groupSubmitted && isCaptain && item.status !== 'leader' ? 120 : 0"
+        :key="index"
+        class="member-item"
+      >
         <div class="member-card" slot="content">
           <div class="image-container">
             <image v-if="item.avatarUrl" :src="item.avatarUrl" />
@@ -11,9 +27,14 @@
           <div class="text-container">
             <div class="student-name">
               <span>{{ item.name }}</span>
-              <span class="status-icon" :class="item.status"></span>
+              <color-tag :text="item.text" :theme="item.theme" />
             </div>
-            <div class="student-id">{{ item.studentNo }}</div>
+            <div class="student-id">
+              <span>{{ item.studentNo }}</span>
+              <span v-for="(timespan, _) in item.myTimes" :key="timespan">
+                <color-tag :text="timespanMap[timespan]" theme="purple" />
+              </span>
+            </div>
           </div>
         </div>
         <view slot="button" class="i-swipeout-demo-button-group">
@@ -82,9 +103,10 @@ import {
   ExitGroupAPI,
   RemoveMemberAPI,
   GetSelfGroupInfoAPI,
-  DisGroupAPI
+  DisGroupAPI,
+  SubmitGroupAPI
 } from '../api'
-import { STATUS_LEADER, STATUS_MEMBER, STATUS_INVITED } from '../const'
+import { STATUS_LEADER, STATUS_MEMBER, STATUS_INVITED, TIMESPAN_MAP, TIMESPAN_SHORT_MAP } from '../const'
 
 const statusCodeOrder = {
   [STATUS_LEADER]: 3,
@@ -101,16 +123,25 @@ const sortMemberFn = (a, b) => {
 const minimumMembers = 4
 const maximumMembers = 5
 
+const statusMap = {
+  leader: ['green', '组长'],
+  member: ['blue', '成员'],
+  invited: ['yellow', '邀请中']
+}
+
 export default {
   data () {
     return {
-      hasGroup: '',
       isCaptain: '',
       groupNo: '',
       membersinf: [],
       studentNo: '',
       addblock: false,
-      groupSubmitted: undefined
+      groupSubmitted: undefined,
+      allowTime: null,
+      allowTimeBanner: [],
+      submitBanner: [],
+      timespanMap: TIMESPAN_SHORT_MAP
     }
   },
   computed: {
@@ -121,11 +152,19 @@ export default {
     })
   },
   beforeMount () {
-    const param = { openid: this.openid }
+    const { submitBanner, openid } = this
+    const param = { openid }
     GetSelfGroupInfoAPI(param).then(res => {
-      this.$set(this, 'hasGroup', res.hasGroup)
-      this.$set(this, 'isCaptain', res.isCaptain)
-      this.$set(this, 'groupSubmitted', res.isSubmit || false)
+      const { isCaptain, isSubmit, allowTime } = res
+      this.$set(this, 'isCaptain', isCaptain)
+      this.$set(this, 'groupSubmitted', isSubmit || false)
+      this.$set(this, 'allowTime', allowTime)
+
+      if (!isSubmit) submitBanner.push('组长尚未提交当前分组')
+      if (isCaptain) submitBanner.push('组长可左划管理成员')
+
+      const allowTimeBanner = [`当前分组环节所属课时: ${TIMESPAN_MAP[allowTime]}`]
+      this.$set(this, 'allowTimeBanner', allowTimeBanner)
     })
     this.getGroupMembers()
   },
@@ -136,7 +175,13 @@ export default {
         if (res.members) {
           const membersSorted = res.members.sort(sortMemberFn)
           membersSorted.forEach(item => {
-            if (item.studentNo) item.studentNo = item.studentNo.toUpperCase()
+            const { studentNo, status } = item
+            if (studentNo) item.studentNo = studentNo.toUpperCase()
+            if (status in statusMap) {
+              const [theme, text] = statusMap[status]
+              item.theme = theme
+              item.text = text
+            }
           })
           this.$set(this, 'membersinf', membersSorted)
         }
@@ -150,6 +195,8 @@ export default {
       this.$set(this, 'addblock', false)
     },
     addnew () {
+      const { openid, studentNo } = this
+      if (!studentNo) return
       if (this.membersinf.length >= 5) {
         wx.showToast({
           title: '最多只能五个成员',
@@ -158,7 +205,6 @@ export default {
         })
         return
       }
-      const { openid, studentNo } = this
       const params = { openid, studentNo }
       AddGroupMemberAPI(params).then(res => {
         if (res.repCode === 200) {
@@ -210,10 +256,22 @@ export default {
       })
     },
     async submitGroup () {
-      this.$set(this, 'groupSubmitted', true)
-      wx.showToast({
-        title: '提交成功',
-        during: 1500
+      const param = { openid: this.openid }
+      SubmitGroupAPI(param).then(res => {
+        const { repCode, errMsg } = res
+        if (repCode === 200) {
+          this.$set(this, 'groupSubmitted', true)
+          wx.showToast({
+            title: '提交成功',
+            during: 1500
+          })
+        } else {
+          wx.showToast({
+            title: errMsg,
+            during: 1500,
+            icon: 'none'
+          })
+        }
       })
     },
     exitgroup () {
@@ -363,52 +421,6 @@ button {
   color: #555;
 }
 
-.status-icon {
-  font-weight: normal;
-  font-size: 20rpx;
-  margin-left: 24rpx;
-  display: inline-block;
-  bottom: 6rpx;
-  position: relative;
-  padding: 2rpx 8rpx;
-  border: 2rpx #555 solid;
-  border-radius: 6rpx;
-  display: none;
-}
-
-.status-icon.leader {
-  display: unset !important;
-  color: #52c41a;
-  background: #f6ffed;
-  border-color: #b7eb8f;
-
-  &::before {
-    content: '组长';
-  }
-}
-
-.status-icon.member {
-  display: unset !important;
-  color: #1890ff;
-  background: #e6f7ff;
-  border-color: #91d5ff;
-
-  &::before {
-    content: '成员';
-  }
-}
-
-.status-icon.invited {
-  display: unset !important;
-  color: #faad14;
-  background: #fffbe6;
-  border-color: #ffe58f;
-
-  &::before {
-    content: '邀请中';
-  }
-}
-
 .delete-button {
   background: #ff5252;
   color: #ffffff;
@@ -421,16 +433,5 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.banner {
-  font-size: 24rpx;
-  color: #fa541c;
-  background-color: #fff2e8;
-  text-align: center;
-  padding: 8rpx;
-  margin: 10rpx;
-  border: 2rpx solid #ffbb96;
-  border-radius: 14rpx;
 }
 </style>
