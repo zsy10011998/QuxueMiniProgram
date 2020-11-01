@@ -12,6 +12,10 @@
       color="#1890ff"
       :hidable="false"
     />
+    <div class="quota-list">
+      <div>四人组已选: <span class="now">{{now4}}</span>/<span class="max">{{max4}}</span></div>
+      <div>五人组已选: <span class="now">{{now5}}</span>/<span class="max">{{max5}}</span></div>
+    </div>
     <div class="member-list">
       <i-swipeout
         v-for="(item, i) in membersinf"
@@ -156,8 +160,10 @@ export default {
       allowTimeBanner: [],
       submitBanner: [],
       timespanMap: TIMESPAN_SHORT_MAP,
-      max4: null,
-      max5: null
+      max4: '-',
+      max5: '-',
+      now4: '-',
+      now5: '-'
     }
   },
   computed: {
@@ -179,11 +185,15 @@ export default {
       if (isCaptain) submitBanner.push('组长可左划管理成员')
     })
     GetGroupsInfoAPI({}).then(res => {
-      const { Max4, Max5, allowTime } = res
+      const { Max4, Max5, allowTime, now4, now5 } = res
       this.$set(this, 'allowTime', allowTime)
 
       const allowTimeBanner = [`当前分组环节所属课时: ${TIMESPAN_MAP[allowTime]}`]
       this.$set(this, 'allowTimeBanner', allowTimeBanner)
+      this.$set(this, 'max4', Max4)
+      this.$set(this, 'max5', Max5)
+      this.$set(this, 'now4', now4)
+      this.$set(this, 'now5', now5)
     }).catch(res => {
       console.log(res)
     })
