@@ -14,9 +14,9 @@
     />
     <div class="member-list">
       <i-swipeout
-        v-for="(item, index) in membersinf"
+        v-for="(item, i) in membersinf"
         :operateWidth="!groupSubmitted && isCaptain && item.status !== 'leader' ? 120 : 0"
-        :key="index"
+        :key="i"
         class="member-item"
       >
         <div class="member-card" slot="content">
@@ -31,7 +31,7 @@
             </div>
             <div class="student-id">
               <span>{{ item.studentNo }}</span>
-              <span v-for="(timespan, _) in item.myTimes" :key="timespan">
+              <span v-for="timespan in item.myTimes" :key="timespan">
                 <color-tag :text="timespanMap[timespan]" :theme="timespan === allowTime ? 'purple': 'grey'" />
               </span>
             </div>
