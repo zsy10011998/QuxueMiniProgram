@@ -73,6 +73,11 @@
         class="login-button"
         @click="beforeDisGroup"
       >解散分组</button>
+      <button
+        hover-class="clicked"
+        class="login-button"
+        @click="testFunction"
+      >测试按钮</button>
     </div>
     <!-- 添加组员操作：确认添加 & 取消 -->
     <div v-if="isCaptain && addblock">
@@ -107,7 +112,16 @@ import {
   SubmitGroupAPI,
   GetGroupsInfoAPI
 } from '../api'
-import { STATUS_LEADER, STATUS_MEMBER, STATUS_INVITED, TIMESPAN_MAP, TIMESPAN_SHORT_MAP } from '../const'
+import {
+  STATUS_LEADER,
+  STATUS_MEMBER,
+  STATUS_INVITED,
+  TIMESPAN_MAP,
+  TIMESPAN_SHORT_MAP,
+  FEErrorMsg,
+  MINIMUM_MEMBERS,
+  MAXIMUM_MEMBERS
+} from '../const'
 
 const statusCodeOrder = {
   [STATUS_LEADER]: 3,
@@ -120,9 +134,6 @@ const sortMemberFn = (a, b) => {
   const ob = statusCodeOrder[b.status] || 0
   return ob - oa
 }
-
-const minimumMembers = 4
-const maximumMembers = 5
 
 const statusMap = {
   leader: ['green', '组长'],
@@ -168,7 +179,6 @@ export default {
     GetGroupsInfoAPI({}).then(res => {
       const { Max4, Max5, allowTime } = res
       this.$set(this, 'allowTime', allowTime)
-      console.log(res)
 
       const allowTimeBanner = [`当前分组环节所属课时: ${TIMESPAN_MAP[allowTime]}`]
       this.$set(this, 'allowTimeBanner', allowTimeBanner)
@@ -195,6 +205,18 @@ export default {
       })
     },
     displayAddBlock () {
+      const { membersinf } = this
+      let errorMessage
+      if (membersinf.length >= 5) errorMessage = FEErrorMsg.CANNOT_MORE_THAN_5_MEMBERS
+      if (!this.isAllTimespanValid()) errorMessage = FEErrorMsg.INVALID_TIMESPAN
+      if (errorMessage) {
+        wx.showToast({
+          title: errorMessage,
+          during: 1500,
+          icon: 'none'
+        })
+        return
+      }
       this.$set(this, 'addblock', true)
     },
     hideAddBlock () {
@@ -204,14 +226,6 @@ export default {
     addnew () {
       const { openid, studentNo } = this
       if (!studentNo) return
-      if (this.membersinf.length >= 5) {
-        wx.showToast({
-          title: '最多只能五个成员',
-          during: 1500,
-          icon: 'none'
-        })
-        return
-      }
       const params = { openid, studentNo }
       AddGroupMemberAPI(params).then(res => {
         this.getGroupMembers()
@@ -238,9 +252,10 @@ export default {
       // Check whether the group is valid
       const members = this.membersinf
       let errorMessage = ''
-      if (members.length < minimumMembers) errorMessage = `成员数不能少于${minimumMembers}人`
-      if (members.length > maximumMembers) errorMessage = `成员数不能多于${maximumMembers}人`
-      if (members.filter(item => item.status === STATUS_INVITED).length > 0) errorMessage = '还有成员没有接受邀请'
+      if (members.length < MINIMUM_MEMBERS) errorMessage = FEErrorMsg.CANNOT_LESS_THAN_4_MEMBERS
+      if (members.length > MAXIMUM_MEMBERS) errorMessage = FEErrorMsg.CANNOT_MORE_THAN_5_MEMBERS
+      if (members.filter(item => item.status === STATUS_INVITED).length > 0) errorMessage = FEErrorMsg.EXIST_NOT_ACCEPTED_INVITED
+      if (!this.isAllTimespanValid()) errorMessage = FEErrorMsg.INVALID_TIMESPAN
       if (errorMessage) {
         wx.showToast({
           title: errorMessage,
@@ -294,6 +309,8 @@ export default {
       })
     },
     beforeDisGroup () {
+      if (!this.isAllTimespanValid(true)) return
+
       const $this = this
       wx.showModal({
         title: '解散分组',
@@ -321,8 +338,9 @@ export default {
     deleteMember (item) {
       const $this = this
       let errorMessage = ''
-      if (item.status === STATUS_LEADER) errorMessage = '无法移除组长'
-      if (!this.isCaptain) errorMessage = '您无权限删除成员'
+      if (item.status === STATUS_LEADER) errorMessage = FEErrorMsg.CANNOT_REMOVE_LEADER
+      if (!this.isCaptain) errorMessage = FEErrorMsg.CANNOT_REMOVE_BY_NON_LEADER
+      if (!this.isAllTimespanValid()) errorMessage = FEErrorMsg.INVALID_TIMESPAN
 
       if (errorMessage) {
         wx.showToast({
@@ -347,6 +365,22 @@ export default {
           }
         }
       })
+    },
+    isAllTimespanValid(toast = false) {
+      const { membersinf, allowTime } = this
+      // const ret = false
+      const ret = membersinf.every(item => item.myTimes.indexOf(allowTime) >= 0)
+      if (!ret && toast) {
+        wx.showToast({
+          title: FEErrorMsg.INVALID_TIMESPAN,
+          during: 1500,
+          icon: 'none'
+        })
+      }
+      return ret
+    },
+    testFunction() {
+      console.log(this.isAllTimespanValid())
     }
   }
 }
