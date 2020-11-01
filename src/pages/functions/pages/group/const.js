@@ -32,3 +32,15 @@ export const FEErrorMsg = {
     CANNOT_MORE_THAN_5_MEMBERS: `成员数不能多于${MAXIMUM_MEMBERS}人`,
     CANNOT_LESS_THAN_4_MEMBERS: `成员数不能少于${MINIMUM_MEMBERS}人`
 }
+
+export const FENoticeMsg = {
+    SUBMIT_TITLE: '确定提交分组',
+    SUBMIT_CONTENT: '提交分组后将不能修改',
+    SUBMIT_SUCCESS: '提交成功',
+    DISGROUP_TITLE: '解散分组',
+    DISGROUP_CONTENT: '是否解散分组',
+    DISGROUP_SUCCESS: '解散成功',
+    REMOVE_MEMBER_TITLE: '删除成员',
+    REMOVE_MEMBER_SUCCESS: '删除成功',
+    EXIT_SUCCESS: '退出成功'
+}

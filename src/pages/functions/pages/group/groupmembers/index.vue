@@ -14,9 +14,9 @@
     />
     <div class="member-list">
       <i-swipeout
-        v-for="(item, index) in membersinf"
+        v-for="(item, i) in membersinf"
         :operateWidth="!groupSubmitted && isCaptain && item.status !== 'leader' ? 120 : 0"
-        :key="index"
+        :key="i"
         class="member-item"
       >
         <div class="member-card" slot="content">
@@ -31,14 +31,14 @@
             </div>
             <div class="student-id">
               <span>{{ item.studentNo }}</span>
-              <span v-for="(timespan, _) in item.myTimes" :key="timespan">
+              <span v-for="timespan in item.myTimes" :key="timespan">
                 <color-tag :text="timespanMap[timespan]" :theme="timespan === allowTime ? 'purple': 'grey'" />
               </span>
             </div>
           </div>
         </div>
         <view slot="button" class="i-swipeout-demo-button-group">
-          <view class="i-swipeout-demo-button delete-button" @click="deleteMember(item)">
+          <view class="i-swipeout-demo-button delete-button" @click="beforeRemoveMember(item)">
             <i-icon size="32" type="delete_fill"></i-icon>
           </view>
         </view>
@@ -102,6 +102,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import { showToast, showModal } from '../../../../../utils/wx-components'
 import {
   GetGroupMembersAPI,
   AddGroupMemberAPI,
@@ -119,6 +120,7 @@ import {
   TIMESPAN_MAP,
   TIMESPAN_SHORT_MAP,
   FEErrorMsg,
+  FENoticeMsg,
   MINIMUM_MEMBERS,
   MAXIMUM_MEMBERS
 } from '../const'
@@ -210,11 +212,7 @@ export default {
       if (membersinf.length >= 5) errorMessage = FEErrorMsg.CANNOT_MORE_THAN_5_MEMBERS
       if (!this.isAllTimespanValid()) errorMessage = FEErrorMsg.INVALID_TIMESPAN
       if (errorMessage) {
-        wx.showToast({
-          title: errorMessage,
-          during: 1500,
-          icon: 'none'
-        })
+        showToast(errorMessage)
         return
       }
       this.$set(this, 'addblock', true)
@@ -231,17 +229,9 @@ export default {
         this.getGroupMembers()
         this.hideAddBlock()
 
-        wx.showToast({
-          title: '等待学生确认',
-          duration: 1500,
-          icon: 'none'
-        })
+        showToast('等待学生确认')
       }).catch(res =>{
-        wx.showToast({
-          title: res.errMsg,
-          duration: 1500,
-          icon: 'none'
-        })
+        showToast(res.errMsg)
       })
     },
     updatestudetNo (event) {
@@ -251,119 +241,88 @@ export default {
     beforeSubmitGroup () {
       // Check whether the group is valid
       const members = this.membersinf
-      let errorMessage = ''
-      if (members.length < MINIMUM_MEMBERS) errorMessage = FEErrorMsg.CANNOT_LESS_THAN_4_MEMBERS
-      if (members.length > MAXIMUM_MEMBERS) errorMessage = FEErrorMsg.CANNOT_MORE_THAN_5_MEMBERS
-      if (members.filter(item => item.status === STATUS_INVITED).length > 0) errorMessage = FEErrorMsg.EXIST_NOT_ACCEPTED_INVITED
-      if (!this.isAllTimespanValid()) errorMessage = FEErrorMsg.INVALID_TIMESPAN
+      const errorMessage = !this.isAllTimespanValid()
+        ? FEErrorMsg.INVALID_TIMESPAN
+        : (members.filter(item => item.status === STATUS_INVITED).length > 0)
+        ? FEErrorMsg.EXIST_NOT_ACCEPTED_INVITED
+        : members.length > MAXIMUM_MEMBERS
+        ? FEErrorMsg.CANNOT_MORE_THAN_5_MEMBERS
+        : members.length < MINIMUM_MEMBERS
+        ? FEErrorMsg.CANNOT_LESS_THAN_4_MEMBERS
+        : undefined
       if (errorMessage) {
-        wx.showToast({
-          title: errorMessage,
-          during: 1500,
-          icon: 'none'
-        })
+        showToast(errorMessage)
         return
       }
-      const $this = this
-      wx.showModal({
-        title: '确定提交分组',
-        content: '提交分组后将不能修改',
-        success (res) {
-          if (res.confirm) {
-            $this.submitGroup()
-          }
-        }
-      })
+      showModal(
+        FENoticeMsg.SUBMIT_TITLE,
+        FENoticeMsg.SUBMIT_CONTENT,
+        this.submitGroup.bind(this)
+      )
     },
     async submitGroup () {
       const param = { openid: this.openid }
       SubmitGroupAPI(param).then(res => {
-        const { repCode, errMsg } = res
-        if (repCode === 200) {
-          this.$set(this, 'groupSubmitted', true)
-          wx.showToast({
-            title: '提交成功',
-            during: 1500
-          })
-        } else {
-          wx.showToast({
-            title: errMsg,
-            during: 1500,
-            icon: 'none'
-          })
-        }
+        this.$set(this, 'groupSubmitted', true)
+        showToast(FENoticeMsg.SUBMIT_CONTENT, '')
+      }).catch(res => {
+        showToast(res.errMsg)
       })
     },
     exitgroup () {
       const param = { openid: this.openid}
       ExitGroupAPI(param).then(res => {
-        if (res.repCode === 200) {
-          wx.showToast({
-            title: '退出成功',
-            during: 1500,
-            icon: 'none'
-          }).then(
-            wx.redirectTo({ url: '../main' })
-          )
-        }
+        showToast(FENoticeMsg.EXIT_SUCCESS, '').then(
+          wx.redirectTo({ url: '../main' })
+        )
       })
     },
     beforeDisGroup () {
       if (!this.isAllTimespanValid(true)) return
 
-      const $this = this
-      wx.showModal({
-        title: '解散分组',
-        content: '是否解散分组',
-        success: function (result) {
-          if (result.confirm)
-          $this.disGroup()
-        }
-      })
+      showModal(
+        FENoticeMsg.DISGROUP_TITLE,
+        FENoticeMsg.DISGROUP_CONTENT,
+        this.disGroup.bind(this)
+      )
     },
     disGroup () {
       const param = { openid: this.openid }
       DisGroupAPI(param).then(res => {
-        if (res.repCode === 200) {
-          wx.showToast({
-            title: '解散成功',
-            during: 1500
-          })
-          setTimeout(() => {
-            wx.redirectTo({ url: '../main' })
-          }, 1500)
-        }
+        showToast(FENoticeMsg.DISGROUP_SUCCESS, '')
+        setTimeout(() => {
+          wx.redirectTo({ url: '../main' })
+        }, 1500)
       })
     },
-    deleteMember (item) {
-      const $this = this
-      let errorMessage = ''
-      if (item.status === STATUS_LEADER) errorMessage = FEErrorMsg.CANNOT_REMOVE_LEADER
-      if (!this.isCaptain) errorMessage = FEErrorMsg.CANNOT_REMOVE_BY_NON_LEADER
-      if (!this.isAllTimespanValid()) errorMessage = FEErrorMsg.INVALID_TIMESPAN
+    beforeRemoveMember (item) {
+      const errorMessage = !this.isAllTimespanValid()
+        ? FEErrorMsg.INVALID_TIMESPAN
+        : !this.isCaptain
+        ? FEErrorMsg.CANNOT_REMOVE_BY_NON_LEADER
+        : item.status === STATUS_LEADER
+        ? FEErrorMsg.CANNOT_REMOVE_LEADER
+        : undefined
 
       if (errorMessage) {
-        wx.showToast({
-          title: errorMessage,
-          during: 1500,
-          icon: 'none'
-        })
+        showToast(errorMessage)
         return
       }
-      wx.showModal({
-        title: '删除成员',
-        content: `确定删除小组成员"${item.name}"吗`,
-        success (res) {
-          if (res.confirm) {
-            const params = {
-              openid: $this.openid,
-              removeopenid: item.openid
-            }
-            RemoveMemberAPI(params).then(_ => {
-              $this.getGroupMembers()
-            })
-          }
-        }
+
+      showModal(
+        FENoticeMsg.REMOVE_MEMBER_TITLE,
+        `确定删除小组成员"${item.name}"吗`,
+        this.removeMember.bind(this, item)
+      )
+    },
+    removeMember (item) {
+      const params = {
+        openid: this.openid,
+        removeopenid: item.openid
+      }
+      RemoveMemberAPI(params).then(_ => {
+        this.getGroupMembers()
+        showToast(FENoticeMsg.REMOVE_MEMBER_SUCCESS, '')
       })
     },
     isAllTimespanValid(toast = false) {
@@ -371,11 +330,7 @@ export default {
       // const ret = false
       const ret = membersinf.every(item => item.myTimes.indexOf(allowTime) >= 0)
       if (!ret && toast) {
-        wx.showToast({
-          title: FEErrorMsg.INVALID_TIMESPAN,
-          during: 1500,
-          icon: 'none'
-        })
+        showToast(FEErrorMsg.INVALID_TIMESPAN)
       }
       return ret
     },
