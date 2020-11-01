@@ -73,11 +73,11 @@
         class="login-button"
         @click="beforeDisGroup"
       >解散分组</button>
-      <button
+      <!-- <button
         hover-class="clicked"
         class="login-button"
         @click="testFunction"
-      >测试按钮</button>
+      >测试按钮</button> -->
     </div>
     <!-- 添加组员操作：确认添加 & 取消 -->
     <div v-if="isCaptain && addblock">
