@@ -1,5 +1,6 @@
 {
-  "navigationBarTitleText": "...",
+  "navigationBarTitleText": "成绩查询",
   "usingComponents": {
+    "i-button": "../../../../../static/iview/button/index"
   }
 }
