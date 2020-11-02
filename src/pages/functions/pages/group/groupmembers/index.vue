@@ -12,10 +12,6 @@
       color="#1890ff"
       :hidable="false"
     />
-    <div class="quota-list">
-      <div>四人组已选: <span class="now">{{now4}}</span>/<span class="max">{{max4}}</span></div>
-      <div>五人组已选: <span class="now">{{now5}}</span>/<span class="max">{{max5}}</span></div>
-    </div>
     <div class="member-list">
       <i-swipeout
         v-for="(item, i) in membersinf"
@@ -47,6 +43,10 @@
           </view>
         </view>
       </i-swipeout>
+    </div>
+    <div class="quota-list">
+      <div>四人组已选: <span class="now">{{now4}}</span>/<span class="max">{{max4}}</span></div>
+      <div>五人组已选: <span class="now">{{now5}}</span>/<span class="max">{{max5}}</span></div>
     </div>
 
     <i-input
