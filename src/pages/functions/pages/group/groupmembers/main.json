@@ -8,6 +8,7 @@
     "i-icon": "../../../../../static/iview/icon/index",
     "i-swipeout": "../../../../../static/iview/swipeout/index",
     "loop-banner": "../../../../../static/component/banner/index",
-    "color-tag": "../../../../../static/component/color-tag/index"
+    "color-tag": "../../../../../static/component/color-tag/index",
+    "member-icon": "../../../../../static/component/member-icon/index"
   }
 }

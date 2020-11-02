@@ -20,10 +20,7 @@
         class="member-item"
       >
         <div class="member-card" slot="content">
-          <div class="image-container">
-            <image v-if="item.avatarUrl" :src="item.avatarUrl" />
-            <image v-else src="/static/images/avatar.png" />
-          </div>
+          <member-icon :avatarUrl="item.avatarUrl" />
           <div class="text-container">
             <div class="student-name">
               <span>{{ item.name }}</span>
