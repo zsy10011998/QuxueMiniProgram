@@ -42,16 +42,6 @@
       </i-swipeout>
     </div>
 
-    <i-input
-      type="text"
-      title="学号"
-      placeholder="新成员学号"
-      maxlength="20"
-      i-class="input"
-      @change="updatestudetNo"
-      v-if="addblock"
-    />
-
     <!-- 队长操作button：添加 & 解散 & Submit -->
     <div v-if="isCaptain && !addblock && !groupSubmitted">
       <div class="quota-list">
@@ -82,6 +72,8 @@
     </div>
     <!-- 添加组员操作：确认添加 & 取消 -->
     <div v-if="isCaptain && addblock">
+      <h1 class="menu-title">推荐成员
+      </h1>
       <view class="recommend-list">
         <view
           class="recommend-item"
@@ -100,7 +92,20 @@
       <button
         hover-class="clicked"
         class="login-button"
-        @click="addnew">确认添加</button>
+        @click="getRecommended()">换一批</button>
+      <h1 class="menu-title">学号添加</h1>
+      <i-input
+        type="text"
+        title="学号"
+        placeholder="新成员学号"
+        maxlength="20"
+        i-class="input"
+        @change="updatestudetNo"
+      />
+      <button
+        hover-class="clicked"
+        class="login-button"
+        @click="addnew(studentNo)">确认添加</button>
       <button
         hover-class="clicked"
         class="login-button"
@@ -177,6 +182,7 @@ export default {
       max5: '-',
       now4: '-',
       now5: '-',
+      allStudents: [],
       recommend: []
     }
   },
@@ -202,7 +208,6 @@ export default {
       const { Max4, Max5, allowTime, now4, now5, studentInf } = res
 
       const allowTimeBanner = [`当前分组环节所属课时: ${TIMESPAN_MAP[allowTime]}`]
-      const randomRecommend = randomPick(studentInf, 5)
 
       this.$set(this, 'allowTime', allowTime)
       this.$set(this, 'allowTimeBanner', allowTimeBanner)
@@ -210,7 +215,9 @@ export default {
       this.$set(this, 'max5', Max5)
       this.$set(this, 'now4', now4)
       this.$set(this, 'now5', now5)
-      this.$set(this, 'recommend', randomRecommend)
+      this.$set(this, 'allStudents', studentInf)
+
+      this.getRecommended(studentInf)
     })
     this.getGroupMembers()
   },
@@ -242,13 +249,18 @@ export default {
       }
       this.$set(this, 'addblock', true)
     },
+    getRecommended (all, n = 3) {
+      if (!all) all = this.allStudents
+      const randomRecommend = randomPick(all, n)
+      this.$set(this, 'recommend', randomRecommend)
+    },
     hideAddBlock () {
       this.$set(this, 'studentNo', '')
       this.$set(this, 'addblock', false)
     },
-    addnew (item) {
+    addnew (studentNo) {
       const { openid } = this
-      const studentNo = item ? item.studentNo : this.studentNo
+      studentNo = studentNo || this.studentNo
       if (!studentNo) return
 
       const params = { openid, studentNo }
@@ -265,7 +277,7 @@ export default {
       showModal(
         '邀请成员',
         `确认邀请成员"${item.name}"`,
-        this.addnew.bind(this, item)
+        this.addnew.bind(this, item.studentNo)
       )
     },
     updatestudetNo (event) {
@@ -492,5 +504,12 @@ button {
   font-weight: bold;
   color: #555;
   margin-top: 10rpx;
+}
+.menu-title {
+  color: rgb(28, 133, 185);
+  letter-spacing: 1px;
+  font-size: 30rpx;
+  font-weight: bolder;
+  margin: 30rpx 0 30rpx 10rpx;
 }
 </style>
