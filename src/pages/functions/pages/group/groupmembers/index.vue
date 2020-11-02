@@ -438,4 +438,12 @@ button {
   align-items: center;
   justify-content: center;
 }
+
+.quota-list {
+  margin-left: 70rpx;
+  font-size: 28rpx;
+  color: #999;
+  line-height: 40rpx;
+  position: relative;
+}
 </style>
