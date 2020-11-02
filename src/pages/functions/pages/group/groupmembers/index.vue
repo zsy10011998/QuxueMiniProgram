@@ -44,10 +44,6 @@
         </view>
       </i-swipeout>
     </div>
-    <div class="quota-list">
-      <div>四人组已选: <span class="now">{{now4}}</span>/<span class="max">{{max4}}</span></div>
-      <div>五人组已选: <span class="now">{{now5}}</span>/<span class="max">{{max5}}</span></div>
-    </div>
 
     <i-input
       type="text"
@@ -61,6 +57,10 @@
 
     <!-- 队长操作button：添加 & 解散 & Submit -->
     <div v-if="isCaptain && !addblock && !groupSubmitted">
+      <div class="quota-list">
+        <div>四人组已选: <span class="now">{{now4}}</span>/<span class="max">{{max4}}</span></div>
+        <div>五人组已选: <span class="now">{{now5}}</span>/<span class="max">{{max5}}</span></div>
+      </div>
       <button
         hover-class="clicked"
         class="login-button"
@@ -440,10 +440,12 @@ button {
 }
 
 .quota-list {
-  margin-left: 70rpx;
+  margin: 0 25rpx;
   font-size: 28rpx;
-  color: #999;
+  color: #777;
   line-height: 40rpx;
   position: relative;
+  background: rgba(255,255,255,0.8);
+  padding: 15px 20px;
 }
 </style>
