@@ -91,7 +91,7 @@
           <div class="avatar-wrapper">
             <member-icon
               :avatarUrl="item.avatarUrl"
-              @click="addnew(item)"
+              @click="addRecommendedNew(item)"
             />
           </div>
           <div class="name">{{item.name}}</div>
@@ -260,6 +260,13 @@ export default {
       }).catch(res =>{
         showToast(res.errMsg)
       })
+    },
+    addRecommendedNew (item) {
+      showModal(
+        '邀请成员',
+        `确认邀请成员"${item.name}"`,
+        this.addnew.bind(this, item)
+      )
     },
     updatestudetNo (event) {
       let title = event.mp.detail.detail.value
