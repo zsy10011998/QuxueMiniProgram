@@ -1,5 +1,6 @@
 <template>
-  <view>
+  <view v-if="checksyllabus">
+
     <view style="background-color: ghostwhite">
       <view class='top'>
         <view :wx:for="['周一','周二','周三','周四','周五','周六','周日']" class="top-text">{{item}}</view>
@@ -41,82 +42,82 @@
       </view>
     </scroll-view>
   </view>
+
+  <view v-else class="counter-warp">
+    <div class="header">
+      <div class="header-content">
+        <div class="text">
+          <div class="text-header">统一账号登录</div>
+          <div class="text-content">请输入你的教务网站北航统一账号和密码，该信息不会被保留记录，仅仅作为课程表的获取使用</div>
+        </div>
+      </div>
+    </div>
+    <i-panel i-class="login-table">
+      <i-input type="text"
+               title="统一账户账号"
+               placeholder="请输入你的统一账号"
+               maxlength=20
+               i-class="input"
+               @change='fetchAccount'
+                />
+      <i-input type="password"
+               title="统一账户密码"
+               placeholder="请输入你的统一账户密码"
+               maxlength=15
+               i-class="input"
+               @change='fetchPassword'
+                />
+    </i-panel>
+    <button hover-class="clicked"
+            class="login-button"
+            @click='signUp()'
+            >登录</button>
+  </view>
 </template>
 
-<!--<script>
-export default {
-  data () {
-    return {
-      lessons: [
-        {weekDay: 1, time: 1, information: '计算机工程中最优化的方法\n冷 彪[1-17]周(一)201 第1，2节', skcd: 2},
-        {weekDay: 3, time: 1, information: '数据库系统原理\n郎 波[1-13]周(一)304 第1，2节', skcd: 2},
-        {weekDay: 4, time: 1, information: 'MATLAB基础及其应用\n张永飞[1-13]周主南305 第1，2节', skcd: 2},
-        {weekDay: 5, time: 1, information: '信号处理与信息推断\n刘雪峰[1-17]周(一)204 第1，2节', skcd: 2},
-        {weekDay: 7, time: 1, information: '芭蕾艺术鉴赏\n李爱华[6-13]周 第1，2节', skcd: 2},
-        {weekDay: 2, time: 3, information: '编译技术\n史晓华[2]周\n主M302 第3，4，5节，史晓华[3-17]周\n机房 第3，4，5节，杨海燕[2]周\n主M302 第3，4，5节，杨海燕[3-17]周\n机房 第3，4，5节', skcd: 3},
-        {weekDay: 3, time: 3, information: '具体数学\n赵启阳[1-13]周(一)301 第3，4节', skcd: 3},
-        {weekDay: 4, time: 3, information: '编译技术\n史晓华[1-13]周E207 第3，4节', skcd: 3},
-        {weekDay: 5, time: 3, information: '数据库系统原理\n郎 波[1-13]周(一)304 第3，4节', skcd: 3},
-        {weekDay: 7, time: 3, information: '芭蕾艺术鉴赏\n李爱华[6-13]周 第3，4节', skcd: 3},
-        {weekDay: 1, time: 6, information: '算法设计与分析\n童咏昕[1-17]周主南210 第6，7节', skcd: 2},
-        {weekDay: 2, time: 6, information: '编译技术\n史晓华[1-13]周E207 第6，7节', skcd: 2},
-        {weekDay: 5, time: 6, information: '体育（5）(散打1)\n张立臣[1-17]周 第6节', skcd: 2},
-        {weekDay: 1, time: 8, information: '数学建模入门\n郑 锦[1-13]周(一)212 第8，9节', skcd: 3},
-        {weekDay: 2, time: 8, information: 'MATLAB 应用\n杨继平[10-14]周（五）203 第8，9，10节\nMATLAB 应用\n杨继平[15]周（五）203 第8，9节', skcd: 3},
-        {weekDay: 4, time: 8, information: 'MATLAB 应用\n杨继平[10-14]周（五）203 第8，9，10节', skcd: 3},
-        {weekDay: 5, time: 8, information: '诗歌与中国文化\n罗 旻[3-17]周（五）303 第8，9节', skcd: 3},
-        {weekDay: 7, time: 13, information: '探索心理学的奥秘\n智慧树[6-14]周 第13，14节', skcd: 2}],
-      setUp: true,
-      colors: ['#ff7772', '#99CC33', '#6ca6ff', '#deb887', '#dda0dd', '#ff8c00', '#708090']
-    }
-  },
-  methods: {
-    showDetail (information) {
-      wx.showModal({  
-        title: '课程详细信息',  
-        content: information,  
-        success: function(res) {  
-          if (res.confirm) {  
-            console.log('用户点击确定')  
-          } else if (res.cancel) {  
-            console.log('用户点击取消')  
-          }  
-        }  
-      })
-    }
-  }
-}
-</script>-->
-
 <script>
+import { mapState } from 'vuex'
+
 export default {
   data () {
     return {
       lessons: [],
       setUp: true,
+      checksyllabus: false,
+      getsyllabus: {
+        account: '',
+        password: ''
+      },
       colors: ['#ff7772', '#99CC33', '#6ca6ff', '#deb887', '#dda0dd', '#ff8c00', '#708090']
     }
   },
+
+  computed: {
+    ...mapState({
+      openid: state => state.student.openid,
+    })
+  },
+
   onShow: function () {
     this.loadAllLessons()
     if (this.lessons === []) {
       this.refresh()
     }
   },
+
   methods: {
     loadAllLessons () {
       let id = wx.store.state.user.userId
-      console.log('userId=' + id)
       this.$WXRequest.get({
-        url: '/get_classes/' + id + '/',
+        url: '/lessons/' + id + '/',
         data: {
         }
       }).then(res => {
-        console.log('In couser schedule initial')
-        console.log(res)
         if (res.repCode === 200) {
-          this.lessons = res.data
+          this.$set(this,'lessons',res.data.lessons)
+          this.$set(this,'checksyllabus',res.data.checksyllabus)
         } else {
+          this.checksyllabus = false
           wx.showToast({
             title: res.errMsg,
             icon: 'none',
@@ -125,43 +126,69 @@ export default {
         }
       })
     },
-    refresh () {
-      console.log('In refresh')
-      let id = wx.store.state.user.userId
-      console.log('userId=' + id)
-      this.$WXRequest.get({
-        url: '/newest_classes/' + id + '/',
-        data: {
-        }
-      }).then(res => {
-        console.log('In course schedule refresh')
-        console.log(res)
-        if (res.repCode === 200) {
-          this.lessons = res.data
-        } else {
-          wx.showToast({
-            title: res.errMsg,
-            icon: 'none',
-            duration: 1500
-          })
-        }
-      })
-    },
+
     showDetail (detail) {
       wx.showModal({  
         title: '课程详细信息',  
-        content: detail  
+        content: detail
       })
+    },
+
+    signUp () {
+        if (!this.getsyllabus.account) {
+          wx.showToast({
+            title: '请输入用户名',
+            icon: 'none',
+            duration: 1500
+          })
+          return
+        } else if (!this.getsyllabus.password) {
+          wx.showToast({
+            title: '请输入密码',
+            icon: 'none',
+            duration: 1500
+          })
+          return
+        }
+
+        
+        this.$WXRequest.post({
+        url: '/lessons/',
+        data: {
+          openid: this.openid,
+          account: this.getsyllabus.account,
+          password: this.getsyllabus.password
+        }
+        }).then(res => {
+        if (res.repCode === 200) {
+          wx.store.commit('setAccount', this.account)
+          wx.store.commit('setPassword', this.password)
+        wx.showToast({
+            title: '请稍后，正在获取课表,将会为您自动跳转',
+            icon: 'none',
+            duration: 1500
+          })
+
+        //wx.switchTab({ url: './course-schedule/main' })
+        } else {
+        wx.showToast({
+            title: res.errMsg,
+            icon: 'none',
+            duration: 1500
+          })
+        }
+      })
+    },
+
+    fetchAccount (event) {
+      let account = event.mp.detail.detail.value
+      this.$set(this.getsyllabus, 'account', account)
+    },
+    
+    fetchPassword (event) {
+      let password = event.mp.detail.detail.value
+      this.$set(this.getsyllabus, 'password', password)
     }
-  },
-  onPullDownRefresh () {
-    wx.showToast({
-      title: '刷新成功',
-      icon: 'success',
-      duration: 2000
-    })
-    this.refresh()
-    wx.stopPullDownRefresh()
   }
 }
 </script>
@@ -252,4 +279,64 @@ export default {
 .font-color{
   color:#a9a9a9;
 }
+
+.counter-warp{
+  height:100%;
+  background: white;
+  text-align: center;
+}
+.counter-warp .header{
+  padding:30px 40px;
+  background-color: #6699ff;
+  color:white;
+}
+.counter-warp .header .header-content{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+.counter-warp .header .header-content .text{
+  text-align: center;
+  padding-left: 8px;
+}
+.counter-warp .header .header-content .text .text-header{
+  font-size: 28px;
+  font-family: "YouYuan";
+}
+.counter-warp .header .header-content .text .text-content{
+  padding-top: 8px;
+  font-size: 16px;
+  font-family: "Microsoft YaHei";
+}
+
+
+.counter-warp .login-table{
+  margin: 60px auto 45px
+}
+.counter-warp .login-table .input{
+  text-align: center;
+  height: 32px;
+  width: 250px;
+  background-color: #f8f8f9;
+  border: #dddee1;
+  border-radius: 8px;
+  font-size: 32px;
+  border: 1px solid border-base;
+  margin-bottom: 8px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.counter-warp  .login-button{
+  width:80vw;
+  background-color:#6699ff;
+  color:white;
+  font-size:16px;
+  margin:10px auto 10px;
+}
+
+.counter-warp  .clicked{
+  background-color:#6699ff
+}
 </style>
+

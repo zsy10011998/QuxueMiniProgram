@@ -16,23 +16,66 @@
 
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
-    data () {
-        return {
-            assessments: [
-                {order: '1', score: '99', percent: '99%'},
-                {order: '2', score: '100', percent: '50%'},
-                {order: '3', score: '100', percent: '50%'},
-                {order: '4', score: '100', percent: '50%'},
-                {order: '5', score: '100', percent: '50%'},
-                {order: '6', score: '100', percent: '50%'},
-                {order: '7', score: '100', percent: '50%'},
-                {order: '8', score: '100', percent: '50%'},
-                {order: '9', score: '100', percent: '50%'},
-                {order: '10', score: '100', percent: '50%'}
+  data () {
+    return {
+      assessments: [
             ]
         }
+    },
+
+  computed: {
+    ...mapState({
+      openid: state => state.student.openid,
+    })
+  },
+
+  onShow: function () {
+    this.loadAllScores ()
+  },
+
+  methods: {
+    loadAllScores () {
+      let id = wx.store.state.user.userId
+      this.$WXRequest.get({
+        url: '/scores/' + id + '/',
+        data: {
+        }
+      }).then(res => {
+        if (res.repCode === 200) {
+          this.$set(this, 'assessments', res.data.assessments)
+        } else {
+          wx.showToast({
+            title: res.errMsg,
+            icon: 'none',
+            duration: 1500
+          })
+        }
+      })
+        // var that=this
+        // wx.request({
+        //   url: 'https://run.mocky.io/v3/6cc138e0-7076-4477-8934-24e83f158041',
+        //   data: {},
+        //   method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
+        //   // header: {}, // 设置请求的 header
+        //   success: function(res){
+        //     console.log(that)
+        //     console.log(res)
+        //     //that.$set(that, 'assessments', res.data.assessments)                  //这样子可以渲染出来
+        //     that.assessments = res.data.assessments
+        //     //console.log(that.assessments)
+        //   },
+        //   fail: function() {
+        //     // fail
+        //   },
+        //   complete: function() {
+        //     // complete
+        //   }
+        // })
     }
+  }
 }
 </script>
 
