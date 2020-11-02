@@ -88,7 +88,13 @@
           v-for="(item, i) in recommend"
           :key="i"
         >
-          <member-icon :avatarUrl="item.avatarUrl" />
+          <div class="avatar-wrapper">
+            <member-icon
+              :avatarUrl="item.avatarUrl"
+              @click="addnew(item)"
+            />
+          </div>
+          <div class="name">{{item.name}}</div>
         </view>
       </view>
       <button
@@ -112,6 +118,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import { randomPick } from '../../../../../utils/index'
 import { showToast, showModal } from '../../../../../utils/wx-components'
 import {
   GetGroupMembersAPI,
@@ -192,17 +199,18 @@ export default {
       if (isCaptain) submitBanner.push('组长可左划管理成员')
     })
     GetGroupsInfoAPI({}).then(res => {
-      const { Max4, Max5, allowTime, now4, now5 } = res
-      this.$set(this, 'allowTime', allowTime)
+      const { Max4, Max5, allowTime, now4, now5, studentInf } = res
 
       const allowTimeBanner = [`当前分组环节所属课时: ${TIMESPAN_MAP[allowTime]}`]
+      const randomRecommend = randomPick(studentInf, 5)
+
+      this.$set(this, 'allowTime', allowTime)
       this.$set(this, 'allowTimeBanner', allowTimeBanner)
       this.$set(this, 'max4', Max4)
       this.$set(this, 'max5', Max5)
       this.$set(this, 'now4', now4)
       this.$set(this, 'now5', now5)
-    }).catch(res => {
-      console.log(res)
+      this.$set(this, 'recommend', randomRecommend)
     })
     this.getGroupMembers()
   },
@@ -220,7 +228,6 @@ export default {
             item.text = text
           })
           this.$set(this, 'membersinf', membersSorted)
-          this.$set(this, 'recommend', membersSorted)
         }
       })
     },
@@ -239,9 +246,11 @@ export default {
       this.$set(this, 'studentNo', '')
       this.$set(this, 'addblock', false)
     },
-    addnew () {
-      const { openid, studentNo } = this
+    addnew (item) {
+      const { openid } = this
+      const studentNo = item ? item.studentNo : this.studentNo
       if (!studentNo) return
+
       const params = { openid, studentNo }
       AddGroupMemberAPI(params).then(res => {
         this.getGroupMembers()
@@ -460,10 +469,21 @@ button {
 .recommend-list {
   white-space: nowrap;
   overflow: auto;
+  margin: 0 45rpx;
 }
 
 .recommend-item {
   display: inline-block;
   width: 200rpx;
+}
+
+.avatar-wrapper {
+  padding-left: 40rpx
+}
+.name {
+  text-align: center;
+  font-weight: bold;
+  color: #555;
+  margin-top: 10rpx;
 }
 </style>

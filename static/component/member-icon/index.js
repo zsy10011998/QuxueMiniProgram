@@ -14,25 +14,6 @@ Component({
     avatarUrl: {
       type: String,
       value: ''
-    },
-    callback: {
-      type: Function,
-      value: null
     }
-  },
-
-  data: {
-  },
-
-  attached: function () {
-  },
-
-  detached: function () {
-  },
-
-  observers: {
-  },
-
-  methods: {
   }
 });
