@@ -1,8 +1,24 @@
 <template>
   <div class="main-container">
-    <div class="banner" v-if="groupSubmitted === false">组长尚未提交当前分组</div>
+    <loop-banner
+      :texts="submitBanner"
+      :v-if="submitBanner.length"
+    />
+    <loop-banner
+      v-if="allowTimeBanner.length"
+      :texts="allowTimeBanner"
+      backgroundColor="#e6f7ff"
+      borderColor="#91d5ff"
+      color="#1890ff"
+      :hidable="false"
+    />
     <div class="member-list">
-      <i-swipeout v-for="(item, index) in membersinf" :operateWidth="!groupSubmitted && isCaptain && item.status !== 'leader' ? 120 : 0" :key="index">
+      <i-swipeout
+        v-for="(item, i) in membersinf"
+        :operateWidth="!groupSubmitted && isCaptain && item.status !== 'leader' ? 120 : 0"
+        :key="i"
+        class="member-item"
+      >
         <div class="member-card" slot="content">
           <div class="image-container">
             <image v-if="item.avatarUrl" :src="item.avatarUrl" />
@@ -11,13 +27,18 @@
           <div class="text-container">
             <div class="student-name">
               <span>{{ item.name }}</span>
-              <span class="status-icon" :class="item.status"></span>
+              <color-tag :text="item.text" :theme="item.theme" />
             </div>
-            <div class="student-id">{{ item.studentNo }}</div>
+            <div class="student-id">
+              <span>{{ item.studentNo }}</span>
+              <span v-for="timespan in item.myTimes" :key="timespan">
+                <color-tag :text="timespanMap[timespan]" :theme="timespan === allowTime ? 'purple': 'grey'" />
+              </span>
+            </div>
           </div>
         </div>
         <view slot="button" class="i-swipeout-demo-button-group">
-          <view class="i-swipeout-demo-button delete-button" @click="deleteMember(item)">
+          <view class="i-swipeout-demo-button delete-button" @click="beforeRemoveMember(item)">
             <i-icon size="32" type="delete_fill"></i-icon>
           </view>
         </view>
@@ -52,6 +73,11 @@
         class="login-button"
         @click="beforeDisGroup"
       >解散分组</button>
+      <!-- <button
+        hover-class="clicked"
+        class="login-button"
+        @click="testFunction"
+      >测试按钮</button> -->
     </div>
     <!-- 添加组员操作：确认添加 & 取消 -->
     <div v-if="isCaptain && addblock">
@@ -76,15 +102,28 @@
 
 <script>
 import { mapState } from 'vuex'
+import { showToast, showModal } from '../../../../../utils/wx-components'
 import {
   GetGroupMembersAPI,
   AddGroupMemberAPI,
   ExitGroupAPI,
   RemoveMemberAPI,
   GetSelfGroupInfoAPI,
-  DisGroupAPI
+  DisGroupAPI,
+  SubmitGroupAPI,
+  GetGroupsInfoAPI
 } from '../api'
-import { STATUS_LEADER, STATUS_MEMBER, STATUS_INVITED } from '../const'
+import {
+  STATUS_LEADER,
+  STATUS_MEMBER,
+  STATUS_INVITED,
+  TIMESPAN_MAP,
+  TIMESPAN_SHORT_MAP,
+  FEErrorMsg,
+  FENoticeMsg,
+  MINIMUM_MEMBERS,
+  MAXIMUM_MEMBERS
+} from '../const'
 
 const statusCodeOrder = {
   [STATUS_LEADER]: 3,
@@ -98,19 +137,27 @@ const sortMemberFn = (a, b) => {
   return ob - oa
 }
 
-const minimumMembers = 4
-const maximumMembers = 5
+const statusMap = {
+  leader: ['green', '组长'],
+  member: ['blue', '成员'],
+  invited: ['yellow', '邀请中']
+}
 
 export default {
   data () {
     return {
-      hasGroup: '',
       isCaptain: '',
       groupNo: '',
       membersinf: [],
       studentNo: '',
       addblock: false,
-      groupSubmitted: undefined
+      groupSubmitted: undefined,
+      allowTime: null,  // 'BC'
+      allowTimeBanner: [],
+      submitBanner: [],
+      timespanMap: TIMESPAN_SHORT_MAP,
+      max4: null,
+      max5: null
     }
   },
   computed: {
@@ -121,11 +168,24 @@ export default {
     })
   },
   beforeMount () {
-    const param = { openid: this.openid }
+    const { submitBanner, openid } = this
+    const param = { openid }
     GetSelfGroupInfoAPI(param).then(res => {
-      this.$set(this, 'hasGroup', res.hasGroup)
-      this.$set(this, 'isCaptain', res.isCaptain)
-      this.$set(this, 'groupSubmitted', res.isSubmit || false)
+      const { isCaptain, isSubmit} = res
+      this.$set(this, 'isCaptain', isCaptain)
+      this.$set(this, 'groupSubmitted', isSubmit || false)
+
+      if (!isSubmit) submitBanner.push('组长尚未提交当前分组')
+      if (isCaptain) submitBanner.push('组长可左划管理成员')
+    })
+    GetGroupsInfoAPI({}).then(res => {
+      const { Max4, Max5, allowTime } = res
+      this.$set(this, 'allowTime', allowTime)
+
+      const allowTimeBanner = [`当前分组环节所属课时: ${TIMESPAN_MAP[allowTime]}`]
+      this.$set(this, 'allowTimeBanner', allowTimeBanner)
+    }).catch(res => {
+      console.log(res)
     })
     this.getGroupMembers()
   },
@@ -136,13 +196,25 @@ export default {
         if (res.members) {
           const membersSorted = res.members.sort(sortMemberFn)
           membersSorted.forEach(item => {
-            if (item.studentNo) item.studentNo = item.studentNo.toUpperCase()
+            const { studentNo, status } = item
+            if (studentNo) item.studentNo = studentNo.toUpperCase()
+            const [theme, text] = statusMap[status]
+            item.theme = theme
+            item.text = text
           })
           this.$set(this, 'membersinf', membersSorted)
         }
       })
     },
     displayAddBlock () {
+      const { membersinf } = this
+      let errorMessage
+      if (membersinf.length >= 5) errorMessage = FEErrorMsg.CANNOT_MORE_THAN_5_MEMBERS
+      if (!this.isAllTimespanValid()) errorMessage = FEErrorMsg.INVALID_TIMESPAN
+      if (errorMessage) {
+        showToast(errorMessage)
+        return
+      }
       this.$set(this, 'addblock', true)
     },
     hideAddBlock () {
@@ -150,33 +222,16 @@ export default {
       this.$set(this, 'addblock', false)
     },
     addnew () {
-      if (this.membersinf.length >= 5) {
-        wx.showToast({
-          title: '最多只能五个成员',
-          during: 1500,
-          icon: 'none'
-        })
-        return
-      }
       const { openid, studentNo } = this
+      if (!studentNo) return
       const params = { openid, studentNo }
       AddGroupMemberAPI(params).then(res => {
-        if (res.repCode === 200) {
-          this.getGroupMembers()
-          this.hideAddBlock()
+        this.getGroupMembers()
+        this.hideAddBlock()
 
-          wx.showToast({
-            title: '等待学生确认',
-            duration: 1500,
-            icon: 'none'
-          })
-        } else if (res.repCode === 700) {
-          wx.showToast({
-            title: res.errMsg,
-            duration: 1500,
-            icon: 'none'
-          })
-        }
+        showToast('等待学生确认')
+      }).catch(res =>{
+        showToast(res.errMsg)
       })
     },
     updatestudetNo (event) {
@@ -186,104 +241,101 @@ export default {
     beforeSubmitGroup () {
       // Check whether the group is valid
       const members = this.membersinf
-      let errorMessage = ''
-      if (members.length < minimumMembers) errorMessage = `成员数不能少于${minimumMembers}人`
-      if (members.length > maximumMembers) errorMessage = `成员数不能多于${maximumMembers}人`
-      if (members.filter(item => item.status === STATUS_INVITED).length > 0) errorMessage = '还有成员没有接受邀请'
+      const errorMessage = !this.isAllTimespanValid()
+        ? FEErrorMsg.INVALID_TIMESPAN
+        : (members.filter(item => item.status === STATUS_INVITED).length > 0)
+        ? FEErrorMsg.EXIST_NOT_ACCEPTED_INVITED
+        : members.length > MAXIMUM_MEMBERS
+        ? FEErrorMsg.CANNOT_MORE_THAN_5_MEMBERS
+        : members.length < MINIMUM_MEMBERS
+        ? FEErrorMsg.CANNOT_LESS_THAN_4_MEMBERS
+        : undefined
       if (errorMessage) {
-        wx.showToast({
-          title: errorMessage,
-          during: 1500,
-          icon: 'none'
-        })
+        showToast(errorMessage)
         return
       }
-      const $this = this
-      wx.showModal({
-        title: '确定提交分组',
-        content: '提交分组后将不能修改',
-        success (res) {
-          if (res.confirm) {
-            $this.submitGroup()
-          }
-        }
-      })
+      showModal(
+        FENoticeMsg.SUBMIT_TITLE,
+        FENoticeMsg.SUBMIT_CONTENT,
+        this.submitGroup.bind(this)
+      )
     },
     async submitGroup () {
-      this.$set(this, 'groupSubmitted', true)
-      wx.showToast({
-        title: '提交成功',
-        during: 1500
+      const param = { openid: this.openid }
+      SubmitGroupAPI(param).then(res => {
+        this.$set(this, 'groupSubmitted', true)
+        showToast(FENoticeMsg.SUBMIT_CONTENT, '')
+      }).catch(res => {
+        showToast(res.errMsg)
       })
     },
     exitgroup () {
       const param = { openid: this.openid}
       ExitGroupAPI(param).then(res => {
-        if (res.repCode === 200) {
-          wx.showToast({
-            title: '退出成功',
-            during: 1500,
-            icon: 'none'
-          }).then(
-            wx.redirectTo({ url: '../main' })
-          )
-        }
+        showToast(FENoticeMsg.EXIT_SUCCESS, '').then(
+          wx.redirectTo({ url: '../main' })
+        )
       })
     },
     beforeDisGroup () {
-      const $this = this
-      wx.showModal({
-        title: '解散分组',
-        content: '是否解散分组',
-        success: function (result) {
-          if (result.confirm)
-          $this.disGroup()
-        }
-      })
+      if (!this.isAllTimespanValid(true)) return
+
+      showModal(
+        FENoticeMsg.DISGROUP_TITLE,
+        FENoticeMsg.DISGROUP_CONTENT,
+        this.disGroup.bind(this)
+      )
     },
     disGroup () {
       const param = { openid: this.openid }
       DisGroupAPI(param).then(res => {
-        if (res.repCode === 200) {
-          wx.showToast({
-            title: '解散成功',
-            during: 1500
-          })
-          setTimeout(() => {
-            wx.redirectTo({ url: '../main' })
-          }, 1500)
-        }
+        showToast(FENoticeMsg.DISGROUP_SUCCESS, '')
+        setTimeout(() => {
+          wx.redirectTo({ url: '../main' })
+        }, 1500)
       })
     },
-    deleteMember (item) {
-      const $this = this
-      let errorMessage = ''
-      if (item.status === STATUS_LEADER) errorMessage = '无法移除组长'
-      if (!this.isCaptain) errorMessage = '您无权限删除成员'
+    beforeRemoveMember (item) {
+      const errorMessage = !this.isAllTimespanValid()
+        ? FEErrorMsg.INVALID_TIMESPAN
+        : !this.isCaptain
+        ? FEErrorMsg.CANNOT_REMOVE_BY_NON_LEADER
+        : item.status === STATUS_LEADER
+        ? FEErrorMsg.CANNOT_REMOVE_LEADER
+        : undefined
 
       if (errorMessage) {
-        wx.showToast({
-          title: errorMessage,
-          during: 1500,
-          icon: 'none'
-        })
+        showToast(errorMessage)
         return
       }
-      wx.showModal({
-        title: '删除成员',
-        content: `确定删除小组成员"${item.name}"吗`,
-        success (res) {
-          if (res.confirm) {
-            const params = {
-              openid: $this.openid,
-              removeopenid: item.openid
-            }
-            RemoveMemberAPI(params).then(_ => {
-              $this.getGroupMembers()
-            })
-          }
-        }
+
+      showModal(
+        FENoticeMsg.REMOVE_MEMBER_TITLE,
+        `确定删除小组成员"${item.name}"吗`,
+        this.removeMember.bind(this, item)
+      )
+    },
+    removeMember (item) {
+      const params = {
+        openid: this.openid,
+        removeopenid: item.openid
+      }
+      RemoveMemberAPI(params).then(_ => {
+        this.getGroupMembers()
+        showToast(FENoticeMsg.REMOVE_MEMBER_SUCCESS, '')
       })
+    },
+    isAllTimespanValid(toast = false) {
+      const { membersinf, allowTime } = this
+      // const ret = false
+      const ret = membersinf.every(item => item.myTimes.indexOf(allowTime) >= 0)
+      if (!ret && toast) {
+        showToast(FEErrorMsg.INVALID_TIMESPAN)
+      }
+      return ret
+    },
+    testFunction() {
+      console.log(this.isAllTimespanValid())
     }
   }
 }
@@ -363,52 +415,6 @@ button {
   color: #555;
 }
 
-.status-icon {
-  font-weight: normal;
-  font-size: 20rpx;
-  margin-left: 24rpx;
-  display: inline-block;
-  bottom: 6rpx;
-  position: relative;
-  padding: 2rpx 8rpx;
-  border: 2rpx #555 solid;
-  border-radius: 6rpx;
-  display: none;
-}
-
-.status-icon.leader {
-  display: unset !important;
-  color: #52c41a;
-  background: #f6ffed;
-  border-color: #b7eb8f;
-
-  &::before {
-    content: '组长';
-  }
-}
-
-.status-icon.member {
-  display: unset !important;
-  color: #1890ff;
-  background: #e6f7ff;
-  border-color: #91d5ff;
-
-  &::before {
-    content: '成员';
-  }
-}
-
-.status-icon.invited {
-  display: unset !important;
-  color: #faad14;
-  background: #fffbe6;
-  border-color: #ffe58f;
-
-  &::before {
-    content: '邀请中';
-  }
-}
-
 .delete-button {
   background: #ff5252;
   color: #ffffff;
@@ -421,16 +427,5 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.banner {
-  font-size: 24rpx;
-  color: #fa541c;
-  background-color: #fff2e8;
-  text-align: center;
-  padding: 8rpx;
-  margin: 10rpx;
-  border: 2rpx solid #ffbb96;
-  border-radius: 14rpx;
 }
 </style>

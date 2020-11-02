@@ -10,7 +10,7 @@
           <div class="content">
             <div class="name">
               <template v-if="message.flow === 'in'">
-                {{isChat ? '菲菲' : '加加'}}
+                菲菲
               </template>
               <template v-else>
                 {{name}}
@@ -34,7 +34,7 @@
             <i-avatar i-class="avatar"
                       v-else
                       shape="square"
-                      :src="isChat?'/static/images/avatar1.png':'/static/images/avatar2.png'" />
+                      src="/static/images/avatar1.png" />
           </div>
         </div>
       </li>
@@ -43,11 +43,6 @@
     <div class="bottom">
       <div class="bottom-div"
            :style="{marginBottom: isFocus ? '10px' : 0}">
-        <!-- <div class="switch"
-             @click="changeRobot"
-             v-if="!isFocus">
-          {{isChat?"吐槽":"聊天"}}
-        </div> -->
         <div style="width: 100%">
           <input type="text"
                  class="input"
@@ -70,6 +65,8 @@
 
 <script>
 import { mapState } from 'vuex'
+import { GetMessageHistoryAPI, SendMessageAPI } from './api'
+import { isnull, scrollbottom } from './logics'
 
 const sentimentMap = {
   '-1': 'negative',
@@ -82,23 +79,17 @@ export default {
       messageContent: '',
       messageList: [],
       height: 0,
-      isFocus: false,
-      isChat: true
-      // botname: this.isChat ? '菲菲' : '丽丽'
+      isFocus: false
     }
   },
   onLoad (options) {
     wx.setNavigationBarTitle({
       title: '聊天机器人'
     })
-    // this.getMessgage(this.isChat)
   },
   onShow () {
-    this.getMessgage(this.isChat)
+    this.getMessgage()
   },
-  // onReady () {
-  //   this.getMessgage(this.isChat)
-  // },
   onUnload () {
     this.messageContent = ''
     wx.switchTab({
@@ -106,8 +97,6 @@ export default {
     })
   },
   computed: {
-    // botname: function () { return this.isChat ? '菲菲' : '加加' },
-
     ...mapState({
       myInfo: state => state.user.myInfo,
       openid: state => state.student.openid,
@@ -116,78 +105,41 @@ export default {
     })
   },
   methods: {
-    scrollbottom () {
-      wx.createSelectorQuery().select('#list').boundingClientRect(function (rect) {
-        console.log(rect.height)
-        wx.pageScrollTo({
-          scrollTop: rect.height
-          // scrollTop: 99999999999
-        })
-      }).exec()
-    },
-    isnull (content) {
-      if (content === '') {
-        return true
-      }
-      const reg = '^[ ]+$'
-      const re = new RegExp(reg)
-      return re.test(content)
-    },
     // 发送text message 包含 emoji
-    getMessgage (type) {
-      console.log(type)
-      return this.$WXRequest.post({
-        url: '/chatrobotapi/',
-        data: {
-          'openid': this.openid,
-          'op': 'get',
-          'msg': this.messageContent,
-          'isChat': type
-        }
-      }, false).then(res => {
-        if (type) {
-          this.$set(this, 'messageList', [{
-            flow: 'in',
-            content: 'Hi! 我可以和你聊天，现在开始吧'
-          }])
-        } else {
-          this.$set(this, 'messageList', [{
-            flow: 'in',
-            content: 'Hi! 我可以分析你的情感，说一句话试试吧'
-          }])
-        }
-        // for (var i = 0; i < res.length; i++) {
-        //   this.messageList.push(res[i])
-        // }
-        console.log(this.messageList)
-        this.messageList.push(...res)
-        console.log(this.messageList)
+    getMessgage () {
+      const params = {
+        openid: this.openid,
+        isChat: true
+      }
+      return GetMessageHistoryAPI(params).then(res => {
+        const messageList = [{
+          flow: 'in',
+          content: 'Hi! 我可以和你聊天，现在开始吧'
+        }].concat(res.map(message => ({ ...message, sentiment: sentimentMap[message.score]})))
+        this.$set(this, 'messageList', messageList)
         setTimeout(() => {
-          this.scrollbottom()
+          scrollbottom()
         }, 500)
       })
     },
     sendMessage () {
-      if (!this.isnull(this.messageContent)) {
+      if (!isnull(this.messageContent)) {
         const { messageList } = this
         const id = `${messageList.length}${(Math.random() * 97) << 0}`
+        const params = {
+          openid: this.openid,
+          msg: this.messageContent,
+          isChat: true
+        }
         this.messageList.push({
           flow: 'out',
           content: this.messageContent,
           id,
           sentiment: 'neutral'
         })
-        this.scrollbottom()
+        scrollbottom()
 
-        this.$WXRequest.post({
-          url: '/chatrobotapi/',
-          data: {
-            'openid': this.openid,
-            'op': 'send',
-            'msg': this.messageContent,
-            'isChat': this.isChat
-          }
-        }, false).then(
+        SendMessageAPI(params).then(
           res => {
             const { text, score } = res
             const ans = text.replace('{br}', '。')
@@ -201,37 +153,15 @@ export default {
             }
           }
         ).then(() => {
-          this.scrollbottom()
+          scrollbottom()
         })
         this.messageContent = ''
       } else {
         this.$store.commit('showToast', { title: '消息不能为空' })
       }
       this.isFocus = false
-    },
-    changeRobot () {
-      // console.log(this.isChat)
-
-      wx.setNavigationBarTitle({
-        title: '切换中...'
-      })
-
-      this.getMessgage(!this.isChat).then(() => {
-        this.isChat = !this.isChat
-        if (this.isChat) {
-          wx.setNavigationBarTitle({
-            title: '聊天机器人'
-          })
-        } else {
-          wx.setNavigationBarTitle({
-            title: '情感分析机器人'
-          })
-        }
-      })
     }
-  },
-
-  destory () { }
+  }
 }
 </script>
 

@@ -25,6 +25,12 @@ Component({
     color: {
       type: String,
       value: '#fa541c'
+    },
+
+    // 能否点击清除
+    hidable: {
+      type: Boolean,
+      value: true
     }
   },
 
@@ -41,6 +47,12 @@ Component({
 
   detached: function () {
     this.clearCurrentInterval ()
+  },
+
+  observers: {
+    'texts': function (_) {
+      this.setCurrentInterval()
+    }
   },
 
   methods: {
@@ -79,6 +91,7 @@ Component({
     },
 
     close () {
+      if (!this.data.hidable) return
       this.clearCurrentInterval()
       this.setData({ display: false })
     }

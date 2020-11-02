@@ -57,23 +57,21 @@ export default {
   methods: {
     create () {
       CreateGroupAPI({openid: this.openid}).then(res => {
-        if (res.repCode === 200) {
-          wx.showToast({
-            title: '创建分组成功',
-            duration: 1500,
-            icon: 'none'
-          }).then(res => {
-            this.$set(this, 'hasGroup', true)
-            wx.redirectTo({ url: '../group/groupmembers/main' })
-          }
-          )
-        } else if (res.repCode === 700) {
-          wx.showToast({
-            title: res.errMsg,
-            duration: 1500,
-            icon: 'none'
-          })
+        wx.showToast({
+          title: '创建分组成功',
+          duration: 1500,
+          icon: 'none'
+        }).then(res => {
+          this.$set(this, 'hasGroup', true)
+          wx.redirectTo({ url: '../group/groupmembers/main' })
         }
+        )
+      }).then(res => {
+        wx.showToast({
+          title: res.errMsg,
+          duration: 1500,
+          icon: 'none'
+        })
       })
     },
     check () {
