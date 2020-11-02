@@ -82,6 +82,15 @@
     </div>
     <!-- 添加组员操作：确认添加 & 取消 -->
     <div v-if="isCaptain && addblock">
+      <view class="recommend-list">
+        <view
+          class="recommend-item"
+          v-for="(item, i) in recommend"
+          :key="i"
+        >
+          <member-icon :avatarUrl="item.avatarUrl" />
+        </view>
+      </view>
       <button
         hover-class="clicked"
         class="login-button"
@@ -160,7 +169,8 @@ export default {
       max4: '-',
       max5: '-',
       now4: '-',
-      now5: '-'
+      now5: '-',
+      recommend: []
     }
   },
   computed: {
@@ -210,6 +220,7 @@ export default {
             item.text = text
           })
           this.$set(this, 'membersinf', membersSorted)
+          this.$set(this, 'recommend', membersSorted)
         }
       })
     },
@@ -444,5 +455,15 @@ button {
   position: relative;
   background: rgba(255,255,255,0.8);
   padding: 15px 20px;
+}
+
+.recommend-list {
+  white-space: nowrap;
+  overflow: auto;
+}
+
+.recommend-item {
+  display: inline-block;
+  width: 200rpx;
 }
 </style>
