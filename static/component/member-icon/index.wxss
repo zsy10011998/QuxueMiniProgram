@@ -1,0 +1,11 @@
+.member-icon-container {
+  height: 120rpx;
+  width: 120rpx;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.member-icon-container image {
+  width: 100%;
+  height: 100%;
+}

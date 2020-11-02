@@ -1,0 +1,5 @@
+<view class="member-icon-container">
+  <image
+    src="{{avatarUrl || '/static/images/avatar.png'}}"
+  />
+</view>
