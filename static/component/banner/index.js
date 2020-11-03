@@ -26,7 +26,10 @@ Component({
     interval: null,
     displayIndex: 0,
     opacity: 1,
-    display: true
+    display: true,
+    timeout1: null,
+    timeout2: null,
+    timeout3: null
   },
 
   attached: function () {
@@ -47,6 +50,7 @@ Component({
     setCurrentInterval () {
       const { texts } = this.data
       const $this = this
+      let {timeout1, timeout2, timeout3} = this.data
 
       this.clearCurrentInterval ()
       if (texts && texts.length) {
@@ -55,26 +59,35 @@ Component({
         if (texts.length > 1) {
           const interval = setInterval(() => {
             const index = $this.data.displayIndex
-            setTimeout(() => {
+            timeout1 = setTimeout(() => {
               $this.setData({ opacity: 0 })
             }, 1500)
-            setTimeout(() => {
+            timeout2 = setTimeout(() => {
               $this.setData({ displayIndex: (index + 1) % texts.length})
             }, 2000)
-            setTimeout(() => {
+            timeout3 = setTimeout(() => {
               $this.setData({ opacity: 1 })
             }, 2000)
           }, 4500)
 
-          this.setData({ interval })
+          this.setData({ interval, timeout1, timeout2, timeout3 })
         }
       }
     },
 
     clearCurrentInterval () {
-      if (this.data.interval) {
-        clearInterval(this.interval)
-        this.setData({ interval: null })
+      const {timeout1, timeout2, timeout3, interval} = this.data
+      if (interval) {
+        clearInterval(interval)
+        clearTimeout(timeout1)
+        clearTimeout(timeout2)
+        clearTimeout(timeout3)
+        this.setData({ 
+          interval: null,
+          timeout1: null,
+          timeout2: null,
+          timeout3: null
+        })
       }
     },
 
