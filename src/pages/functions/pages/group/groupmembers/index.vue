@@ -115,7 +115,7 @@
       hover-class="clicked"
       class="login-button"
       @click="exitgroup"
-      v-if="isCaptain==false"
+      v-if="isCaptain==false && !groupSubmitted"
     >退出分组</button>
   </div>
 </template>
@@ -194,15 +194,18 @@ export default {
     })
   },
   beforeMount () {
-    const { submitBanner, openid } = this
+    const { openid } = this
     const param = { openid }
     GetSelfGroupInfoAPI(param).then(res => {
       const { isCaptain, isSubmit} = res
+      const submitBanner = []
       this.$set(this, 'isCaptain', isCaptain)
-      this.$set(this, 'groupSubmitted', isSubmit || false)
+      this.$set(this, 'groupSubmitted', isSubmit)
 
       if (!isSubmit) submitBanner.push('组长尚未提交当前分组')
       if (isCaptain) submitBanner.push('组长可左划管理成员')
+      console.log(res, submitBanner)
+      this.$set(this, 'submitBanner', submitBanner)
     })
     GetGroupsInfoAPI({}).then(res => {
       const { Max4, Max5, allowTime, now4, now5, studentInf, MaxTotal } = res
@@ -311,7 +314,7 @@ export default {
       const param = { openid: this.openid }
       SubmitGroupAPI(param).then(res => {
         this.$set(this, 'groupSubmitted', true)
-        showToast(FENoticeMsg.SUBMIT_CONTENT, '')
+        showToast(FENoticeMsg.SUBMIT_SUCCESS, '')
       }).catch(res => {
         showToast(res.errMsg)
       })
