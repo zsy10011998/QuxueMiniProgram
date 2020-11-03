@@ -1,16 +1,32 @@
 <template>
   <div>
+    <loop-banner
+      :texts="allowTimeBanner"
+      :v-if="allowTimeBanner.length"
+      :theme="timeAvailable ? 'blue': ''"
+      :hidable="false"
+    />
+    
+    <view>
+      <h1 class="menu-title" style="display: inline-block; font-size: 32rpx;">我登记的时段:</h1>
+      <span v-for="timespan in myTimes" :key="timespan" style="display: inline-block">
+        <color-tag
+          :text="timespanMap[timespan]"
+          :theme="timespan === allowTime ? 'purple': 'grey'"
+          fontSize="28rpx"
+        />
+      </span>
+    </view>
     <button hover-class="clicked"
             class="login-button"
             v-if="hasGroup===false"
             @click="create()">创建分组</button>
     <button hover-class="clickedcheck"
             class="login-button"
-            v-if="hasGroup==true"
+            v-if="hasGroup===true"
             @click="check">查看分组</button>
     <button hover-class="clicked"
             class="login-button"
-            v-if="isInvited==true"
             @click="invite">分组邀请</button>
 
   </div>
@@ -19,14 +35,20 @@
 
 <script>
 import { mapState } from 'vuex'
+import { showToast } from '../../../../utils/wx-components'
 import { GetSelfGroupInfoAPI, CreateGroupAPI, GetInvitationAPI } from './api'
+import { TIMESPAN_MAP, TIMESPAN_SHORT_MAP } from './const'
 
 export default {
   data () {
     return {
       hasGroup: '',
-      isInvited: '',
-      groupNo: ''
+      groupNo: '',
+      allowTime: null,
+      myTimes: [],
+      allowTimeBanner: [],
+      timeAvailable: true,
+      timespanMap: TIMESPAN_SHORT_MAP,
     }
   },
   computed: {
@@ -38,20 +60,16 @@ export default {
   },
   beforeMount () {
     const param = {openid: this.openid}
-    const promiseSelfInfo = GetSelfGroupInfoAPI(param).then(res => {
-      this.$set(this, 'hasGroup', res.hasGroup)
-    })
-    const promiseGroupInfo = GetInvitationAPI(param).then(res => {
-      const invitations = res.invitedinf
-      if (invitations && invitations.length) {
-        this.$set(this, 'isInvited', true)
+    GetSelfGroupInfoAPI(param).then(res => {
+      const { hasGroup, allowTime, myTimes, groupNo } = res
+      this.$set(this, 'hasGroup', hasGroup)
+      this.$set(this, 'groupNo', groupNo)
+      this.$set(this, 'allowTime', allowTime)
+      this.$set(this, 'myTimes', myTimes)
+      this.$set(this, 'timeAvailable', allowTime && myTimes.indexOf(allowTime) >= 0)
+      if (allowTime && TIMESPAN_MAP[allowTime]) {
+        this.$set(this, 'allowTimeBanner', [`当前分组环节所属课时: ${TIMESPAN_MAP[allowTime]}`])
       }
-    })
-
-    Promise.all([promiseSelfInfo, promiseGroupInfo]).then(() => {
-      // if (this.hasGroup) {
-      //   this.check()
-      // }
     })
   },
   methods: {
@@ -67,18 +85,19 @@ export default {
         }
         )
       }).then(res => {
-        wx.showToast({
-          title: res.errMsg,
-          duration: 1500,
-          icon: 'none'
-        })
+        showToast(res.errMsg)
       })
     },
     check () {
       wx.redirectTo({ url: '../group/groupmembers/main' })
     },
     invite () {
+    const param = {openid: this.openid}
+    const promiseGroupInfo = GetInvitationAPI(param).then(res => {
       wx.redirectTo({ url: '../group/invitations/main' })
+    }).catch(res => {
+      showToast(res.errMsg)
+    })
     }
   }
 
@@ -102,10 +121,13 @@ button
   font-size 20px
   margin 50px auto
   padding 30px auto
-  // &::before
-  // width 20px
-  // height 20px
-  // margin 0 6px 2px 0
 .clicked
-  background-color $dark-blue
+  background-color $dark-blue 
+.menu-title {
+  color: rgb(28, 133, 185);
+  letter-spacing: 1px;
+  font-size: 30rpx;
+  font-weight: bolder;
+  margin: 30rpx 0 30rpx 10rpx;
+}
 </style>

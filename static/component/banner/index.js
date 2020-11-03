@@ -9,22 +9,10 @@ Component({
       value: []
     },
 
-    // 背景颜色
-    backgroundColor: {
+    // 颜色
+    theme: {
       type: String,
-      value: '#fff2e8'
-    },
-
-    // 边框颜色
-    borderColor: {
-      type: String,
-      value: '#ffbb96'
-    },
-
-    // 文字颜色
-    color: {
-      type: String,
-      value: '#fa541c'
+      value: ''
     },
 
     // 能否点击清除

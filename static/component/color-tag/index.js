@@ -11,11 +11,9 @@ Component({
       type: String,
       value: 'blue'
     },
-  },
-
-  data: {
-    color: undefined,
-    backgroundColor: undefined,
-    borderColor: undefined
+    fontSize: {
+      type: String,
+      value: '20rpx'
+    }
   }
 });

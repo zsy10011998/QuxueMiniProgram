@@ -11,3 +11,9 @@
 .banner span {
   transition: opacity 0.5s;
 }
+
+.banner.blue {
+  background-color: #e6f7ff;
+  border-color: #91d5ff;
+  color: #1890ff;
+}
