@@ -24,10 +24,10 @@
         label="featured"
         @click="openGroup()"
       />
-      <!-- <entry picSrc="/static/utils/grade.png"
+      <entry picSrc="/static/utils/grade.png"
              entryName="成绩查询"
              entryText="春风得意马蹄疾，一日看尽长安花。"
-             @click="openScoreQuery()"/> -->
+             @click="openScoreQuery()"/>
       <entry picSrc="/static/utils/schedule.png"
             entryName="我的课程表"
             label="coming"
