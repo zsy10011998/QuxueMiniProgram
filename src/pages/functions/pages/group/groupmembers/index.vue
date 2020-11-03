@@ -325,7 +325,7 @@ export default {
       })
     },
     beforeDisGroup () {
-      if (!this.isAllTimespanValid(true)) return
+      // if (!this.isAllTimespanValid(true)) return
 
       showModal(
         FENoticeMsg.DISGROUP_TITLE,
@@ -343,9 +343,7 @@ export default {
       })
     },
     beforeRemoveMember (item) {
-      const errorMessage = !this.isAllTimespanValid()
-        ? FEErrorMsg.INVALID_TIMESPAN
-        : !this.isCaptain
+      const errorMessage = !this.isCaptain
         ? FEErrorMsg.CANNOT_REMOVE_BY_NON_LEADER
         : item.status === STATUS_LEADER
         ? FEErrorMsg.CANNOT_REMOVE_LEADER
