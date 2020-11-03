@@ -3,15 +3,15 @@
 
     <view style="background-color: ghostwhite">
       <view class='top'>
-        <view :wx:for="['周一','周二','周三','周四','周五','周六','周日']" class="top-text">{{item}}</view>
+        <view :wx:for="['周一','周二','周三','周四','周五','周六','周日']" wx:key="key" class="top-text">{{item}}</view>
       </view>
     </view>
     <scroll-view scroll-y="true" class="scroll">
       <view style="height:1400;width:730rpx;display:flex;">
         <view style="color:#8e968c">
-          <view :wx:for="[1,2,3,4,5,6,7,8,9,10,11,12,13,14]" class="left">{{item}}</view>
+          <view :wx:for="[1,2,3,4,5,6,7,8,9,10,11,12,13,14]" wx:key="key" class="left">{{item}}</view>
         </view>
-        <view :wx:for="[1,2,3,4,5,6,7,8,9,11,12,13,14]">
+        <view :wx:for="[1,2,3,4,5,6,7,8,9,11,12,13,14]" wx:key="key">
           <view :style="{width: '750rpx', 'margin-top': (index+1)*100 +'rpx', position: 'absolute', 
             'border-bottom-style': 'solid',
             'border-bottom-width': (index)%3 == 1?'0.7px':'0.5px',
@@ -82,7 +82,6 @@ export default {
   data () {
     return {
       lessons: [],
-      setUp: true,
       checksyllabus: false,
       getsyllabus: {
         account: '',
@@ -117,7 +116,7 @@ export default {
         if (res.repCode === 200) {
           this.$set(this,'lessons',res.syllabus)
           this.$set(this,'checksyllabus',res.hasSyllabus)
-          console.log(res)
+          // console.log(res)
         } else {
           this.checksyllabus = false
           wx.showToast({
@@ -166,17 +165,17 @@ export default {
           op: 'getsyllabus'
         }
       }).then(res => {
-        console.log(res)
         if (res.repCode === 200) {    
           // wx.store.commit('setAccount', this.account)
           // wx.store.commit('setPassword', this.password)
-          // wx.showToast({
-          //   title: '请稍后，正在获取课表,将会为您自动跳转',
-          //   icon: 'none',
-          //   duration: 1500
-          // })
-          this.$set(this, checksyllabus , true)
-          wx.switchTab({ url: './course-schedule/main' })
+          wx.showToast({
+            title: '请稍后，正在获取课表,将会为您自动跳转',
+            icon: 'none',
+            duration: 1500
+          })
+          console.log(res)
+          //this.$set(this, checksyllabus , true)
+          wx.navigateTo({ url: 'main' })
         } else if (res.repCode === 700) {
           wx.showToast({
             title: '请重新提交',

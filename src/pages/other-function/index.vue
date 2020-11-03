@@ -91,11 +91,9 @@ export default {
       wx.navigateTo({ url: '../functions/pages/group/main' })
     },
     openScoreQuery () {
-      console.log('sq')
       wx.navigateTo({ url: '../functions/pages/score-query/main' })
     },
     openCourseSchedule () {
-      console.log('cs')
       wx.navigateTo({ url: '../functions/pages/course-schedule/main' })
     }
   }
