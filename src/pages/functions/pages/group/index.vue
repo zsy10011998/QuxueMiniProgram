@@ -82,9 +82,8 @@ export default {
         }).then(res => {
           this.$set(this, 'hasGroup', true)
           wx.redirectTo({ url: '../group/groupmembers/main' })
-        }
-        )
-      }).then(res => {
+        })
+      }).catch(res => {
         showToast(res.errMsg)
       })
     },
