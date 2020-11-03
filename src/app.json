@@ -55,7 +55,7 @@
     "position": "bottom"
   },
   "networkTimeout": {
-    "request": 50000,
+    "request": 10000,
     "downloadFile": 10000
   }
 }

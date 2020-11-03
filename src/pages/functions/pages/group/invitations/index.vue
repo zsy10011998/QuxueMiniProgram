@@ -80,6 +80,8 @@ export default {
           title: '成功加入该小组',
           duration: 1500
         })
+      }).catch(res => {
+        showToast(res.errMsg)
       })
     },
     rejectInvitation: function (groupNo) {
@@ -91,6 +93,12 @@ export default {
           icon: 'none',
           duration: 1500
         })
+      }).catch(res => {
+        showToast(res.errMsg)
+        setTimeout(
+          this.fetchInvitations.bind(this),
+          1500
+        )
       })
     }
   }

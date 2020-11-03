@@ -12,7 +12,8 @@ export const STATUS_INVITED = 'invited'
 export const TIMESPAN_MAP = {
     [TIMESPAN_67]: '第6-7小节',
     [TIMESPAN_89]: '第8-9小节',
-    [TIMESPAN_BC]: '第11-12小节'
+    [TIMESPAN_BC]: '第11-12小节',
+    '': '未开放选课'
 }
 
 export const TIMESPAN_SHORT_MAP = {
@@ -25,7 +26,7 @@ export const MINIMUM_MEMBERS = 4
 export const MAXIMUM_MEMBERS = 5
 
 export const FEErrorMsg = {
-    INVALID_TIMESPAN: '您在当前课时不可操作',
+    INVALID_TIMESPAN: '存在不属于当前课时的成员',
     CANNOT_REMOVE_LEADER: '无法移除组长',
     CANNOT_REMOVE_BY_NON_LEADER: '您无权限删除成员',
     EXIST_NOT_ACCEPTED_INVITED: '还有成员没有接受邀请',

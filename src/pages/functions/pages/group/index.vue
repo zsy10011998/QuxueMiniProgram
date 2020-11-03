@@ -67,9 +67,7 @@ export default {
       this.$set(this, 'allowTime', allowTime)
       this.$set(this, 'myTimes', myTimes)
       this.$set(this, 'timeAvailable', allowTime && myTimes.indexOf(allowTime) >= 0)
-      if (allowTime && TIMESPAN_MAP[allowTime]) {
-        this.$set(this, 'allowTimeBanner', [`当前分组环节所属课时: ${TIMESPAN_MAP[allowTime]}`])
-      }
+      this.$set(this, 'allowTimeBanner', [`当前分组环节所属课时: ${TIMESPAN_MAP[allowTime]}`])
     })
   },
   methods: {
@@ -82,9 +80,8 @@ export default {
         }).then(res => {
           this.$set(this, 'hasGroup', true)
           wx.redirectTo({ url: '../group/groupmembers/main' })
-        }
-        )
-      }).then(res => {
+        })
+      }).catch(res => {
         showToast(res.errMsg)
       })
     },
