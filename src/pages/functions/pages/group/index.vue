@@ -12,7 +12,7 @@
       <span v-for="timespan in myTimes" :key="timespan" style="display: inline-block">
         <color-tag
           :text="timespanMap[timespan]"
-          :theme="timespan === allowTime ? 'purple': 'grey'"
+          theme="purple"
           fontSize="28rpx"
         />
       </span>
