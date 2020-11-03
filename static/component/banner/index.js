@@ -55,15 +55,15 @@ Component({
         if (texts.length > 1) {
           const interval = setInterval(() => {
             const index = $this.data.displayIndex
-            setTimeout(() => {
-              $this.setData({ opacity: 0 })
-            }, 1500)
+            // setTimeout(() => {
+            //   $this.setData({ opacity: 0 })
+            // }, 1500)
             setTimeout(() => {
               $this.setData({ displayIndex: (index + 1) % texts.length})
             }, 2000)
-            setTimeout(() => {
-              $this.setData({ opacity: 1 })
-            }, 2000)
+            // setTimeout(() => {
+            //   $this.setData({ opacity: 1 })
+            // }, 2000)
           }, 4500)
 
           this.setData({ interval })
