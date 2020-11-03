@@ -1,13 +1,16 @@
 <template>
   <view class="main-container">
-    <view v-for="(assessment, index) in assessments" wx:key="id">
+    <view v-for="(assessment, index) in assessments" :key=index>
         <view class="function-card" hover-class="hover">
             <view class="order-container">
-                <view class="order-icon">{{assessment.order}}</view>
+                <view class="order-icon">{{assessment.time}}</view>
             </view>
             <view class="content">
-                <view class="score">{{assessment.score}}分</view>
-                <view class="percent">Wow! {{assessment.percent}} Defeated!</view>
+
+                <view v-if="assessment.pureNum" class="score">{{assessment.grade}}分</view>
+                <view v-else class="score-lost">{{assessment.grade}}</view>
+
+                <view class="percent">Theme About: {{assessment.theme}}</view>
             </view>
         </view>
     </view>
@@ -29,6 +32,7 @@ export default {
   computed: {
     ...mapState({
       openid: state => state.student.openid,
+      studentNo: state => state.student.studentNo
     })
   },
 
@@ -38,42 +42,27 @@ export default {
 
   methods: {
     loadAllScores () {
-      let id = wx.store.state.user.userId
-      this.$WXRequest.get({
-        url: '/scores/' + id + '/',
+      let id = wx.store.state.user.studentNo
+      this.$WXRequest.post({
+        url: '/getGrades/' ,
         data: {
+          studentNo:this.studentNo
         }
-      }).then(res => {
-        if (res.repCode === 200) {
-          this.$set(this, 'assessments', res.data.assessments)
-        } else {
-          wx.showToast({
-            title: res.errMsg,
-            icon: 'none',
-            duration: 1500
-          })
-        }
+      }).then(data => {
+        this.$set(this,'assessments',data)
+        this.assessments.forEach((item, index) => {
+          item.pureNum = this.isNum(item.grade)
+        })
       })
-        // var that=this
-        // wx.request({
-        //   url: 'https://run.mocky.io/v3/6cc138e0-7076-4477-8934-24e83f158041',
-        //   data: {},
-        //   method: 'GET', // OPTIONS, GET, HEAD, POST, PUT, DELETE, TRACE, CONNECT
-        //   // header: {}, // 设置请求的 header
-        //   success: function(res){
-        //     console.log(that)
-        //     console.log(res)
-        //     //that.$set(that, 'assessments', res.data.assessments)                  //这样子可以渲染出来
-        //     that.assessments = res.data.assessments
-        //     //console.log(that.assessments)
-        //   },
-        //   fail: function() {
-        //     // fail
-        //   },
-        //   complete: function() {
-        //     // complete
-        //   }
-        // })
+    },
+
+    isNum (str) {
+      var numReg = /^[0-9]*$/
+      var numRe = new RegExp(numReg)
+      if (numRe.test(str)) {
+        return true
+      }
+      return false
     }
   }
 }
@@ -131,6 +120,15 @@ export default {
   .function-card>.content>.score {
     font-size: 58rpx;
     color: #666;
+    line-height: 1.6;
+    height: 50rpx;
+    position: absolute;
+    right: 36rpx;
+    top: 48rpx;
+  }
+  .function-card>.content>.score-lost {
+    font-size: 58rpx;
+    color:lightgray;
     line-height: 1.6;
     height: 50rpx;
     position: absolute;
