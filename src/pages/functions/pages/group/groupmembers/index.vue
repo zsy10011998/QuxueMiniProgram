@@ -325,6 +325,8 @@ export default {
         showToast(FENoticeMsg.EXIT_SUCCESS, '').then(
           wx.redirectTo({ url: '../main' })
         )
+      }).catch(res => {
+        showToast(res.errMsg)
       })
     },
     beforeDisGroup () {
