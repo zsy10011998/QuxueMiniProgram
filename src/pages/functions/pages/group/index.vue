@@ -67,9 +67,7 @@ export default {
       this.$set(this, 'allowTime', allowTime)
       this.$set(this, 'myTimes', myTimes)
       this.$set(this, 'timeAvailable', allowTime && myTimes.indexOf(allowTime) >= 0)
-      if (allowTime && TIMESPAN_MAP[allowTime]) {
-        this.$set(this, 'allowTimeBanner', [`当前分组环节所属课时: ${TIMESPAN_MAP[allowTime]}`])
-      }
+      this.$set(this, 'allowTimeBanner', [`当前分组环节所属课时: ${TIMESPAN_MAP[allowTime]}`])
     })
   },
   methods: {

@@ -12,7 +12,8 @@ export const STATUS_INVITED = 'invited'
 export const TIMESPAN_MAP = {
     [TIMESPAN_67]: '第6-7小节',
     [TIMESPAN_89]: '第8-9小节',
-    [TIMESPAN_BC]: '第11-12小节'
+    [TIMESPAN_BC]: '第11-12小节',
+    '': '未开放选课'
 }
 
 export const TIMESPAN_SHORT_MAP = {

@@ -80,6 +80,8 @@ export default {
           title: '成功加入该小组',
           duration: 1500
         })
+      }).catch(res => {
+        showToast(res.errMsg)
       })
     },
     rejectInvitation: function (groupNo) {
