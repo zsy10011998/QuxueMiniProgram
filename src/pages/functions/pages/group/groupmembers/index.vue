@@ -7,9 +7,7 @@
     <loop-banner
       v-if="allowTimeBanner.length"
       :texts="allowTimeBanner"
-      backgroundColor="#e6f7ff"
-      borderColor="#91d5ff"
-      color="#1890ff"
+      theme="blue"
       :hidable="false"
     />
     <div class="member-list">
@@ -97,7 +95,7 @@
       <i-input
         type="text"
         title="学号"
-        placeholder="新成员学号"
+        placeholder="输入新成员学号"
         maxlength="20"
         i-class="input"
         @change="updatestudetNo"

@@ -35,6 +35,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import { showToast } from '../../../../../utils/wx-components'
 import { GetInvitationAPI, AcceptInvitationAPI, RejectInvitationAPI } from '../api'
 
 export default {
@@ -61,9 +62,14 @@ export default {
         const invitations = res.invitedinf
         this.$set(this, 'invitations', invitations)
         if (invitations && invitations.length) {
-          const texts = [`您有${invitations.length}条分组邀请`, '左划以处理邀请']
+          const texts = ['左划以处理邀请', `您有${invitations.length}条分组邀请`]
           this.$set(this, 'bannerTexts', texts)
+        } else {
+          this.$set(this, 'bannerTexts', [])
         }
+      }).catch(res => {
+        const invitations = res.invitedinf
+        this.$set(this, 'invitations', invitations)
       })
     },
     acceptInvitation: function (groupNo) {
