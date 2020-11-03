@@ -31,8 +31,7 @@
       <entry picSrc="/static/utils/schedule.png"
             entryName="我的课程表"
             label="coming"
-            entryText="明日复明日，明日何其多。"
-            @click="openCourseSchedule()" />
+            entryText="明日复明日，明日何其多。"/>
     </view>
   </view>
 </template>
