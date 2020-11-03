@@ -42,9 +42,10 @@
 
     <!-- 队长操作button：添加 & 解散 & Submit -->
     <div v-if="isCaptain && !addblock && !groupSubmitted">
-      <div class="quota-list">
+      <div class="quota-list" v-if="now4 !== null && now5 !== null">
         <div>四人组已选: <span class="now">{{now4}}</span>/<span class="max">{{max4}}</span></div>
         <div>五人组已选: <span class="now">{{now5}}</span>/<span class="max">{{max5}}</span></div>
+        <div>全部已选: <span class="now">{{now4 + now5}}</span>/<span class="max">{{maxTotal}}</span></div>
       </div>
       <button
         hover-class="clicked"
@@ -86,11 +87,11 @@
           </div>
           <div class="name">{{item.name}}</div>
         </view>
+        <button
+          hover-class="clicked"
+          class="login-button"
+          @click="getRecommended()">换一批</button>
       </view>
-      <button
-        hover-class="clicked"
-        class="login-button"
-        @click="getRecommended()">换一批</button>
       <h1 class="menu-title">学号添加</h1>
       <i-input
         type="text"
@@ -176,10 +177,11 @@ export default {
       allowTimeBanner: [],
       submitBanner: [],
       timespanMap: TIMESPAN_SHORT_MAP,
-      max4: '-',
-      max5: '-',
-      now4: '-',
-      now5: '-',
+      max4: null,
+      max5: null,
+      now4: null,
+      now5: null,
+      maxTotal: null,
       allStudents: [],
       recommend: []
     }
@@ -203,7 +205,7 @@ export default {
       if (isCaptain) submitBanner.push('组长可左划管理成员')
     })
     GetGroupsInfoAPI({}).then(res => {
-      const { Max4, Max5, allowTime, now4, now5, studentInf } = res
+      const { Max4, Max5, allowTime, now4, now5, studentInf, MaxTotal } = res
 
       const allowTimeBanner = [`当前分组环节所属课时: ${TIMESPAN_MAP[allowTime]}`]
 
@@ -213,6 +215,7 @@ export default {
       this.$set(this, 'max5', Max5)
       this.$set(this, 'now4', now4)
       this.$set(this, 'now5', now5)
+      this.$set(this, 'maxTotal', MaxTotal)
       this.$set(this, 'allStudents', studentInf)
 
       this.getRecommended(studentInf)
@@ -487,6 +490,7 @@ button {
   white-space: nowrap;
   overflow: auto;
   margin: 0 45rpx;
+  background: rgba(255,255,255,0.8);
 }
 
 .recommend-item {
