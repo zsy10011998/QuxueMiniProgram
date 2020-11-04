@@ -27,6 +27,7 @@
             @click="check">查看分组</button>
     <button hover-class="clicked"
             class="login-button"
+            :class="hasInvitation ? 'red-dot' : ''"
             @click="invite">分组邀请</button>
 
   </div>
@@ -35,7 +36,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import { showToast } from '../../../../utils/wx-components'
+import { showToast, showModal } from '../../../../utils/wx-components'
 import { GetSelfGroupInfoAPI, CreateGroupAPI, GetInvitationAPI } from './api'
 import { TIMESPAN_MAP, TIMESPAN_SHORT_MAP } from './const'
 
@@ -49,6 +50,7 @@ export default {
       allowTimeBanner: [],
       timeAvailable: true,
       timespanMap: TIMESPAN_SHORT_MAP,
+      hasInvitation: false
     }
   },
   computed: {
@@ -69,32 +71,40 @@ export default {
       this.$set(this, 'timeAvailable', allowTime && myTimes.indexOf(allowTime) >= 0)
       this.$set(this, 'allowTimeBanner', [`当前分组环节所属课时: ${TIMESPAN_MAP[allowTime]}`])
     })
+    GetInvitationAPI(param).then(res => {
+      console.log(res, res.invitedinf)
+      if (res.invitedinf && res.invitedinf.length) {
+        this.$set(this, 'hasInvitation', true)
+      }
+    })
   },
   methods: {
     create () {
-      CreateGroupAPI({openid: this.openid}).then(res => {
-        wx.showToast({
-          title: '创建分组成功',
-          duration: 1500,
-          icon: 'none'
-        }).then(res => {
-          this.$set(this, 'hasGroup', true)
-          wx.redirectTo({ url: '../group/groupmembers/main' })
+      const param = {openid: this.openid}
+      showModal('是否创建分组', '成为组长后将不能被邀请, 且现有邀请会清空', () => {
+        CreateGroupAPI(param).then(res => {
+          wx.showToast('创建分组成功').then(res => {
+            this.$set(this, 'hasGroup', true)
+            wx.redirectTo({ url: '../group/groupmembers/main' })
+          })
+        }).catch(res => {
+          showToast(res.errMsg)
         })
-      }).catch(res => {
-        showToast(res.errMsg)
       })
     },
     check () {
       wx.redirectTo({ url: '../group/groupmembers/main' })
     },
     invite () {
-    const param = {openid: this.openid}
-    const promiseGroupInfo = GetInvitationAPI(param).then(res => {
-      wx.redirectTo({ url: '../group/invitations/main' })
-    }).catch(res => {
-      showToast(res.errMsg)
-    })
+      const param = {openid: this.openid}
+      const promiseGroupInfo = GetInvitationAPI(param).then(res => {
+        wx.redirectTo({ url: '../group/invitations/main' })
+      }).catch(res => {
+        showToast(res.errMsg)
+        if (!res.invitedinf || !res.invitedinf.length) {
+          this.$set(this, 'hasInvitation', false)
+        }
+      })
     }
   }
 
@@ -126,5 +136,15 @@ button
   font-size: 30rpx;
   font-weight: bolder;
   margin: 30rpx 0 30rpx 10rpx;
+}
+.red-dot::before {
+  content: "";
+  position: absolute;
+  right: 10%;
+  top: 20rpx;
+  background: #dc4040;
+  border-radius: 50%;
+  height: 15rpx;
+  width: 15rpx;
 }
 </style>

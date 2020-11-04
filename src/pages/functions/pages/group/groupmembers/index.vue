@@ -194,41 +194,49 @@ export default {
     })
   },
   beforeMount () {
-    const { openid } = this
-    const param = { openid }
-    GetSelfGroupInfoAPI(param).then(res => {
-      const { isCaptain, isSubmit} = res
-      const submitBanner = []
-      this.$set(this, 'isCaptain', isCaptain)
-      this.$set(this, 'groupSubmitted', isSubmit)
-
-      if (!isSubmit) submitBanner.push('组长尚未提交当前分组')
-      if (isCaptain) submitBanner.push('组长可左划管理成员')
-      console.log(res, submitBanner)
-      this.$set(this, 'submitBanner', submitBanner)
+    this.refreshData()
+  },
+  onPullDownRefresh () {
+    this.refreshData().then(() => {
+      wx.stopPullDownRefresh()
     })
-    GetGroupsInfoAPI({}).then(res => {
-      const { Max4, Max5, allowTime, now4, now5, studentInf, MaxTotal } = res
-
-      const allowTimeBanner = [`当前分组环节所属课时: ${TIMESPAN_MAP[allowTime]}`]
-
-      this.$set(this, 'allowTime', allowTime)
-      this.$set(this, 'allowTimeBanner', allowTimeBanner)
-      this.$set(this, 'max4', Max4)
-      this.$set(this, 'max5', Max5)
-      this.$set(this, 'now4', now4)
-      this.$set(this, 'now5', now5)
-      this.$set(this, 'maxTotal', MaxTotal)
-      this.$set(this, 'allStudents', studentInf)
-
-      this.getRecommended(studentInf)
-    })
-    this.getGroupMembers()
   },
   methods: {
+    refreshData (){
+      const { openid } = this
+      const param = { openid }
+      const ret1 = GetSelfGroupInfoAPI(param).then(res => {
+        const { isCaptain, isSubmit} = res
+        const submitBanner = []
+        this.$set(this, 'isCaptain', isCaptain)
+        this.$set(this, 'groupSubmitted', isSubmit)
+
+        if (!isSubmit) submitBanner.push('组长尚未提交当前分组')
+        if (isCaptain && !isSubmit) submitBanner.push('组长可左划管理成员')
+        this.$set(this, 'submitBanner', submitBanner)
+      })
+      const ret2 = GetGroupsInfoAPI({}).then(res => {
+        const { Max4, Max5, allowTime, now4, now5, studentInf, MaxTotal } = res
+
+        const allowTimeBanner = [`当前分组环节所属课时: ${TIMESPAN_MAP[allowTime]}`]
+
+        this.$set(this, 'allowTime', allowTime)
+        this.$set(this, 'allowTimeBanner', allowTimeBanner)
+        this.$set(this, 'max4', Max4)
+        this.$set(this, 'max5', Max5)
+        this.$set(this, 'now4', now4)
+        this.$set(this, 'now5', now5)
+        this.$set(this, 'maxTotal', MaxTotal)
+        this.$set(this, 'allStudents', studentInf)
+
+        this.getRecommended(studentInf)
+      })
+      const ret3 = this.getGroupMembers()
+      return Promise.all([ret1, ret2, ret3])
+    },
     getGroupMembers () {
       const param = { openid: this.openid }
-      GetGroupMembersAPI(param).then(res => {
+      const ret = GetGroupMembersAPI(param).then(res => {
         if (res.members) {
           const membersSorted = res.members.sort(sortMemberFn)
           membersSorted.forEach(item => {
@@ -241,6 +249,7 @@ export default {
           this.$set(this, 'membersinf', membersSorted)
         }
       })
+      return ret
     },
     displayAddBlock () {
       const { membersinf } = this
