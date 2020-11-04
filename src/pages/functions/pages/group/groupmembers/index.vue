@@ -203,7 +203,7 @@ export default {
       this.$set(this, 'groupSubmitted', isSubmit)
 
       if (!isSubmit) submitBanner.push('组长尚未提交当前分组')
-      if (isCaptain) submitBanner.push('组长可左划管理成员')
+      if (isCaptain && !isSubmit) submitBanner.push('组长可左划管理成员')
       console.log(res, submitBanner)
       this.$set(this, 'submitBanner', submitBanner)
     })

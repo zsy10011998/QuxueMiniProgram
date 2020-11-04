@@ -1,3 +1,3 @@
-<view class="banner {{theme || ''}}" wx:if="{{display}}" bindtap="close">
+<view class="banner {{theme || ''}}" wx:if="{{display && texts.length}}" bindtap="close">
   <span style="opacity: {{opacity}};">{{texts && texts.length ? texts[displayIndex] : ''}}</span>
 </view>
