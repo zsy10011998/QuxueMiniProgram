@@ -35,7 +35,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import { showToast } from '../../../../utils/wx-components'
+import { showToast, showModal } from '../../../../utils/wx-components'
 import { GetSelfGroupInfoAPI, CreateGroupAPI, GetInvitationAPI } from './api'
 import { TIMESPAN_MAP, TIMESPAN_SHORT_MAP } from './const'
 
@@ -72,17 +72,15 @@ export default {
   },
   methods: {
     create () {
-      CreateGroupAPI({openid: this.openid}).then(res => {
-        wx.showToast({
-          title: '创建分组成功',
-          duration: 1500,
-          icon: 'none'
-        }).then(res => {
-          this.$set(this, 'hasGroup', true)
-          wx.redirectTo({ url: '../group/groupmembers/main' })
+      showModal('是否创建分组', '成为组长后将不能被邀请, 且现有邀请会清空', () => {
+        CreateGroupAPI({openid: this.openid}).then(res => {
+          wx.showToast('创建分组成功').then(res => {
+            this.$set(this, 'hasGroup', true)
+            wx.redirectTo({ url: '../group/groupmembers/main' })
+          })
+        }).catch(res => {
+          showToast(res.errMsg)
         })
-      }).catch(res => {
-        showToast(res.errMsg)
       })
     },
     check () {
