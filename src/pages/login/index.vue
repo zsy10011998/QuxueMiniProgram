@@ -5,17 +5,26 @@
         <img src="../../../static/images/quxue-logo-white.png"
              class="icon" />
         <div class="text">
-          <div class="text-header">计算机导论与伦理学</div>
-          <div class="text-content">2020年秋季学期</div>
+          <div class="text-header fadable" :class="fading ? 'transparent': ''">
+            {{ isAuthenticate ? '欢迎使用' : '计算机导论与伦理学' }}
+          </div>
+          <div class="text-content fadable" :class="fading ? 'transparent': ''">
+            {{ isAuthenticate ? '初次见面' : '2020年秋季学期'}}
+          </div>
+          <div class="text-content fadable lower" :class="fading ? 'transparent': ''">
+            {{ isAuthenticate ? '我们需要授权以关联您的信息' : ''}}
+          </div>
         </div>
       </div>
     </div>
     <div class="buttondiv">
       <button hover-class="clicked"
-              open-type="getUserInfo"
-              :loading="loading"
-              class="login-button"
-              @click="login">微信登录</button>
+        :open-type="isAuthenticate ? 'getUserInfo' : ''"
+        :loading="loading"
+        class="login-button"
+        @click="login">
+          <span class="fadable" :class="fading ? 'transparent': ''">{{ isAuthenticate ? '确认授权' : '微信登录'}}</span>
+      </button>
     </div>
   </div>
 </template>
@@ -27,12 +36,13 @@ import { mapState } from 'vuex'
 export default {
   data () {
     return {
-
+      isAuthenticate: false,
       loginForm: {
         username: '',
         password: ''
       },
-      loading: false
+      loading: false,
+      fading: false
     }
   },
   computed: {
@@ -44,17 +54,18 @@ export default {
     this.loading = false
   },
   mounted () {
-    this.login()
+    // this.login()
   },
   methods: {
     login () {
-      // let that = this
       wx.getSetting({
         success: (res) => {
           console.log('res', res)
+          console.log('scope.userinfo', res.authSetting['scope.userInfo'])
           if (res.authSetting['scope.userInfo']) {
             wx.login({
               success: (res) => {
+                console.log('success:', res)
                 if (res.code) {
                   this.$WXRequest.post({
                     url: '/onLogin/',
@@ -97,9 +108,23 @@ export default {
                 }
               }
             })
+          } else {
+            if (!this.isAuthenticate) {
+              this.fadeText(true)
+            } else {
+              this.fadeText(false)
+            }
           }
         }
       })
+    },
+    fadeText (isAuthenticate) {
+      if (this.isAuthenticate === isAuthenticate) return
+      this.$set(this, 'fading', true)
+      setTimeout(() => {
+        this.$set(this, 'isAuthenticate', isAuthenticate)
+        this.$set(this, 'fading', false)
+      }, 500)
     }
   }
 }
@@ -138,6 +163,8 @@ page{
           padding-top 8px
           font-size 16px
           font-family Microsoft YaHei
+        .text-content.lower
+          margin-top  10px
   >>> .login-table
     margin 60px auto 45px
 >>> .input
@@ -154,15 +181,17 @@ page{
   margin-right auto
 .buttondiv
   height 30%
-  // display table-cell
-  // vertical-align middle
-  // text-align center
 .login-button
   width 80vw
   background-color $theme-blue
   color white
   font-size 16px
   margin 30px auto 30px
+  transition all 0.5s
 .clicked
   background-color $dark-blue
+.transparent
+  opacity 0
+.fadable
+  transition all 0.5s
 </style>
