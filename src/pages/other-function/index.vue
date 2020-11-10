@@ -29,9 +29,10 @@
              entryText="春风得意马蹄疾，一日看尽长安花。"
              @click="openScoreQuery()"/>
       <entry picSrc="/static/utils/schedule.png"
-            entryName="我的课程表"
-            label="coming"
-            entryText="明日复明日，明日何其多。"/>
+        entryName="我的讨论课"
+        entryText="教育开始的方向，将决定一个人未来的生活。"
+        @click="openDiscussCourse()"
+      />
     </view>
   </view>
 </template>
@@ -82,10 +83,6 @@ export default {
     openBot () {
       wx.navigateTo({ url: '../functions/pages/chatterbot/main' })
     },
-    // openvideolist () {
-    //   console.log('videlList')
-    //   wx.navigateTo({ url: '../functions/pages/videos/main' })
-    // },
     openGroup () {
       wx.navigateTo({ url: '../functions/pages/group/main' })
     },
@@ -94,6 +91,9 @@ export default {
     },
     openCourseSchedule () {
       wx.navigateTo({ url: '../functions/pages/course-schedule/main' })
+    },
+    openDiscussCourse () {
+      wx.navigateTo({ url: '../functions/pages/discuss-course/main' })
     }
   }
 }

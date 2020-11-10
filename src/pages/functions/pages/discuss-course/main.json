@@ -1,0 +1,11 @@
+{
+  "navigationBarTitleText": "我的讨论课",
+  "disableScroll": false,
+  "usingComponents": {
+    "i-input": "../../../../../static/iview/input/index",
+    "i-button": "../../../../../static/iview/button/index",
+    "i-panel": "../../../../../static/iview/panel/index",
+    "loop-banner": "../../../../static/component/banner/index",
+    "color-tag": "../../../../static/component/color-tag/index"
+  }
+}
