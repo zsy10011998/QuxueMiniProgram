@@ -20,9 +20,9 @@
       "pages/schedule-index/main",
       "pages/chatterbot/main",
       "pages/group/main",
-      "pages/group/groupmembers/main",
       "pages/group/invitations/main",
-      "pages/score-query/main"
+      "pages/score-query/main",
+      "pages/discuss-course/main"
     ]
   }],
   "window": {
