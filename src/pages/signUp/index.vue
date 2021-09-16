@@ -6,7 +6,7 @@
              class="icon">
         <div class="text">
           <div class="text-header">计算机导论与伦理学</div>
-          <div class="text-content">2020年秋季学期</div>
+          <div class="text-content">2021年秋季学期</div>
         </div>
       </div>
     </div>
