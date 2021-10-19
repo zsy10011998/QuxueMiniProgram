@@ -47,7 +47,9 @@ function uploadFile (obj) {
     name: 'file',
     formData: {
       'user': 'test',
-      'filename': obj.filename
+      'filename': obj.name,
+      'openid': obj.openid,
+      'themeCode': obj.themeCode,
     },
     success (res) {
       const onOk = obj.onOk
