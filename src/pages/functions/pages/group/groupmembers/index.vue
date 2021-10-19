@@ -42,10 +42,10 @@
 
     <!-- 队长操作button：添加 & 解散 & Submit -->
     <div v-if="isCaptain && !addblock && !groupSubmitted">
-      <div class="quota-list" v-if="now4 !== null && now5 !== null">
-        <div>四人组已选: <span class="now">{{now4}}</span>/<span class="max">{{max4}}</span></div>
-        <div>五人组已选: <span class="now">{{now5}}</span>/<span class="max">{{max5}}</span></div>
-        <div>全部已选: <span class="now">{{now4 + now5}}</span>/<span class="max">{{maxTotal}}</span></div>
+      <div class="quota-list" v-if="now6 !== null && now7 !== null">
+        <div>六人组已选: <span class="now">{{now6}}</span>/<span class="max">{{max6}}</span></div>
+        <div>七人组已选: <span class="now">{{now7}}</span>/<span class="max">{{max7}}</span></div>
+        <div>全部已选: <span class="now">{{now6 + now7}}</span>/<span class="max">{{maxTotal}}</span></div>
       </div>
       <button
         hover-class="clicked"
@@ -177,10 +177,10 @@ export default {
       allowTimeBanner: [],
       submitBanner: [],
       timespanMap: TIMESPAN_SHORT_MAP,
-      max4: null,
-      max5: null,
-      now4: null,
-      now5: null,
+      max6: null,
+      max7: null,
+      now6: null,
+      now7: null,
       maxTotal: null,
       allStudents: [],
       recommend: []
@@ -216,16 +216,16 @@ export default {
         this.$set(this, 'submitBanner', submitBanner)
       })
       const ret2 = GetGroupsInfoAPI({}).then(res => {
-        const { Max4, Max5, allowTime, now4, now5, studentInf, MaxTotal } = res
+        const { max6, max7, allowTime, now6, now7, studentInf, MaxTotal } = res
 
         const allowTimeBanner = [`当前分组环节所属课时: ${TIMESPAN_MAP[allowTime]}`]
 
         this.$set(this, 'allowTime', allowTime)
         this.$set(this, 'allowTimeBanner', allowTimeBanner)
-        this.$set(this, 'max4', Max4)
-        this.$set(this, 'max5', Max5)
-        this.$set(this, 'now4', now4)
-        this.$set(this, 'now5', now5)
+        this.$set(this, 'max6', max6)
+        this.$set(this, 'max7', max7)
+        this.$set(this, 'now6', now6)
+        this.$set(this, 'now7', now7)
         this.$set(this, 'maxTotal', MaxTotal)
         this.$set(this, 'allStudents', studentInf)
 
@@ -254,7 +254,7 @@ export default {
     displayAddBlock () {
       const { membersinf } = this
       let errorMessage
-      if (membersinf.length >= 5) errorMessage = FEErrorMsg.CANNOT_MORE_THAN_5_MEMBERS
+      if (membersinf.length >= 7) errorMessage = FEErrorMsg.CANNOT_MORE_THAN_7_MEMBERS
       if (!this.isAllTimespanValid()) errorMessage = FEErrorMsg.INVALID_TIMESPAN
       if (errorMessage) {
         showToast(errorMessage)
@@ -305,9 +305,9 @@ export default {
         : (members.filter(item => item.status === STATUS_INVITED).length > 0)
         ? FEErrorMsg.EXIST_NOT_ACCEPTED_INVITED
         : members.length > MAXIMUM_MEMBERS
-        ? FEErrorMsg.CANNOT_MORE_THAN_5_MEMBERS
+        ? FEErrorMsg.CANNOT_MORE_THAN_7_MEMBERS
         : members.length < MINIMUM_MEMBERS
-        ? FEErrorMsg.CANNOT_LESS_THAN_4_MEMBERS
+        ? FEErrorMsg.CANNOT_LESS_THAN_6_MEMBERS
         : undefined
       if (errorMessage) {
         showToast(errorMessage)

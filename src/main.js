@@ -12,6 +12,8 @@ import TYPES from './utils/types'
 
 import WXRequest from './utils/wx-request'
 // import 'mpvue-weui/src/style/weui.css'
+import 'mpvue-weui/src/style/weui.css'
+
 
 Vue.prototype.$WXRequest = WXRequest
 const tim = TIM.create({

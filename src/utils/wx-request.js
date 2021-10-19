@@ -40,7 +40,6 @@ function request (url, method, data, loading = true) {
   })
 }
 function uploadFile (obj) {
-  console.log(obj)
   console.log(host + obj.url)
   wx.uploadFile({
     url: host + obj.url, // 仅为示例，非真实的接口地址
@@ -51,25 +50,16 @@ function uploadFile (obj) {
       'filename': obj.filename
     },
     success (res) {
-      console.log(res)
-      wx.showToast({
-        title: res.data,
-        icon: 'none',
-        duration: 1500
-      })
+      const onOk = obj.onOk
+      onOk(res)
 
-      console.log('success')
     },
     fail (res) {
-      console.log('fail')
-      wx.showToast({
-        title: '服务器维护',
-        icon: 'none',
-        duration: 1500
-      })
+      const onError = obj.onError
+      onError(res)
     },
     complete (res) {
-      console.log('complete')
+      //console.log('complete')
     }
   })
 }

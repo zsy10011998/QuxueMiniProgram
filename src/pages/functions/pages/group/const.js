@@ -22,8 +22,8 @@ export const TIMESPAN_SHORT_MAP = {
     [TIMESPAN_BC]: '11-12'
 }
 
-export const MINIMUM_MEMBERS = 4
-export const MAXIMUM_MEMBERS = 5
+export const MINIMUM_MEMBERS = 6
+export const MAXIMUM_MEMBERS = 7
 
 export const FEErrorMsg = {
     INVALID_TIMESPAN: '存在不属于当前课时的成员',
