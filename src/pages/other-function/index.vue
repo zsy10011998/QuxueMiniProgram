@@ -20,7 +20,6 @@
       <entry picSrc="/static/utils/work.png"
              entryName="分组管理"
              entryText="道同气合志相感，虽旷百世如同僚。"
-             label="featured"
              @click="openGroup()" />
       <entry picSrc="/static/utils/grade.png"
              entryName="成绩查询"
@@ -30,6 +29,10 @@
              entryName="我的讨论课"
              entryText="教育开始的方向，将决定一个人未来的生活。"
              @click="openDiscussCourse()" />
+      <entry picSrc="/static/utils/file.png"
+             entryName="自动评分"
+             entryText="结果仅供参考，实际得分以助教评判为准。"
+             @click="openScoreJudge()" />
     </view>
   </view>
 </template>
@@ -91,6 +94,9 @@ export default {
     },
     openDiscussCourse () {
       wx.navigateTo({ url: '../functions/pages/discuss-course/main' })
+    },
+    openScoreJudge () {
+      wx.navigateTo({ url: '../uploadfile/main' })
     }
   }
 }

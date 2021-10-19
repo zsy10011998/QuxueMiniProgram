@@ -4,29 +4,39 @@
       <h1 class="menu-title">您的作业</h1>
 
       <div class="item">
-        <button hover-class="clicked" class="login-button" @click="showMulLinkageTwoPicker">请选择您的题目</button>
-        <mp-picker ref="mpPicker" :mode="mode" :deepLength="deepLength"
-                :pickerValueDefault="pickerValueDefault" 
-                :pickerValueArray="pickerValueArray"
-                @onChange="onChange" @onConfirm="onConfirm" @onCancel="onCancel" ></mp-picker>
+        <button hover-class="clicked"
+                class="login-button"
+                @click="showMulLinkageTwoPicker">请选择您的题目</button>
+        <mp-picker ref="mpPicker"
+                   :mode="mode"
+                   :deepLength="deepLength"
+                   :pickerValueDefault="pickerValueDefault"
+                   :pickerValueArray="pickerValueArray"
+                   @onChange="onChange"
+                   @onConfirm="onConfirm"
+                   @onCancel="onCancel"></mp-picker>
 
         <div class="value">{{fileForm.themeMessage}}</div>
       </div>
 
       <div class="item">
-        <button hover-class="clicked" class="login-button" @click="uploadFile">上传作业</button>
+        <button hover-class="clicked"
+                class="login-button"
+                @click="uploadFile">上传作业</button>
         <div class="value">{{fileForm.fileMessage}}</div>
       </div>
 
       <div class="item">
-        <button hover-class="clicked" class="login-button" @click="submitFile">提交作业</button>
+        <button hover-class="clicked"
+                class="login-button"
+                @click="submitFile">提交作业</button>
       </div>
 
       <h1 class="menu-title">您的成绩</h1>
       <div class="item">
         <div class="value">{{fileForm.score}}</div>
       </div>
-      
+
     </div>
   </div>
 </template>
@@ -38,7 +48,6 @@ import mpPicker from 'mpvue-weui/src/picker'
 export default {
   data () {
     return {
-      openid: '',
       fileForm: {
         themeMessage: '您未选择作业题目',
         themeCode: '',
@@ -65,30 +74,30 @@ export default {
   onUnload () {
     this.loading = false
   },
-  onShow: function(){
+  onShow: function () {
     this.$WXRequest.get({
       url: '/getHomeWork/',
-      }).then(res => {
-        this.$set(this,'pickerValueArray',res)
-      })
+    }).then(res => {
+      this.$set(this, 'pickerValueArray', res)
+    })
   },
 
   methods: {
-    showMulLinkageTwoPicker() {
+    showMulLinkageTwoPicker () {
       this.$refs.mpPicker.show()
     },
-    onConfirm(e) {
+    onConfirm (e) {
       //console.log(e.value)
-      this.$set(this.fileForm,'themeMessage', '您选择提交: '+e.label)
-      this.$set(this.fileForm,'themeCode', e.value[1])
+      this.$set(this.fileForm, 'themeMessage', '您选择提交: ' + e.label)
+      this.$set(this.fileForm, 'themeCode', e.value[1])
       //console.log(this.fileForm.themeCode)
     },
-    onChange(e) {
+    onChange (e) {
       //console.log(e)
     },
-    onCancel(e) {
+    onCancel (e) {
       //console.log(e)
-      this.$set(this.fileForm,'themMessage', '您已取消选择作业题目')
+      this.$set(this.fileForm, 'themMessage', '您已取消选择作业题目')
     },
     uploadFile () {
       wx.chooseMessageFile({
@@ -96,15 +105,15 @@ export default {
         type: 'file',
         success: (res) => {
           const tempFile = res.tempFiles
-          var fileType = (function(filename){
+          var fileType = (function (filename) {
             var index = filename.lastIndexOf('.')
-	          return index === -1 ? false : filename.substr(index + 1)
+            return index === -1 ? false : filename.substr(index + 1)
           })(tempFile[0].name)
-          
-          if (fileType == 'docx' || fileType =='txt'){
-            this.$set(this.fileForm,'filePath',tempFile[0].path)
-            this.$set(this.fileForm,'fileName',tempFile[0].name)
-            this.$set(this.fileForm,'fileMessage', '您选择提交: '+tempFile[0].name)
+
+          if (fileType == 'docx' || fileType == 'txt') {
+            this.$set(this.fileForm, 'filePath', tempFile[0].path)
+            this.$set(this.fileForm, 'fileName', tempFile[0].name)
+            this.$set(this.fileForm, 'fileMessage', '您选择提交: ' + tempFile[0].name)
           }
           else {
             wx.showToast({
@@ -116,8 +125,8 @@ export default {
         }
       })
     },
-    submitFile (){
-      if ( this.fileForm.fileName != '' && this.fileForm.themeCode != '' ) {  // 作业题目不为空且作业文件不为空
+    submitFile () {
+      if (this.fileForm.fileName != '' && this.fileForm.themeCode != '') {  // 作业题目不为空且作业文件不为空
         this.$WXRequest.uploadFile({
           url: '/judgeScore/',
           filePath: this.fileForm.filePath,
@@ -125,7 +134,8 @@ export default {
           openid: this.openid,
           themeCode: this.fileForm.themeCode,
           onOk: (res) => {
-            this.$set(this.fileForm,'score',res.data)
+            console.log(res.data)
+            this.$set(this.fileForm, 'score', res.data)
           },
           onError: (res) => {
             wx.showToast({
@@ -137,9 +147,9 @@ export default {
         })
       } else {
         wx.showToast({
-                title: '请选择您的作业题目和作业文件',
-                icon: 'none',
-                duration: 1500
+          title: '请选择您的作业题目和作业文件',
+          icon: 'none',
+          duration: 1500
         })
       }
     }
@@ -149,56 +159,45 @@ export default {
 </script>
 
 <style lang='stylus' scoped>
-.main-container {
-  width: 100vw;
-  min-height: 100vh;
-  position: absolute;
-  background-image: url('https://cs.zhouyc.cc/images/homeEvaluate.png');
-  background-position: center 90%;
-  background-repeat: no-repeat;
-  background-size: 100%;
-  background-attachment: fixed;
-}
-.menu-title {
-  color: #1c85b9;
-  letter-spacing: 3rpx;
-  font-size: 40rpx;
-  font-weight: bolder;
-  margin: 30rpx 0 30rpx 10rpx;
-  float: left;
-}
-.information {
-  margin: 60rpx 40rpx;
-  padding: 30rpx;
-  background: rgba(255, 255, 255, 0.8);
-  float: left;
-}
-
-.item {
-  font-size: 32rpx;
-  font-weight: bold;
-  margin-bottom: 20rpx;
-  float: left;
-  position: relative;
-  width: 100%;
-}
-
-.title {
-  float: left;
-  width: 40%;
-  text-align: right;
-  box-sizing: border-box;
-  padding-right: 20rpx;
-}
-
-.value {
-
-  box-sizing: border-box;
-  padding-left: 20rpx;
-  color: #888;
-  text-align: center;
-}
-
+.main-container
+  width 100vw
+  min-height 100vh
+  position absolute
+  background-image url('https://cs.zhouyc.cc/images/homeEvaluate.png')
+  background-position center 90%
+  background-repeat no-repeat
+  background-size 100%
+  background-attachment fixed
+.menu-title
+  color #1c85b9
+  letter-spacing 3rpx
+  font-size 40rpx
+  font-weight bolder
+  margin 30rpx 0 30rpx 10rpx
+  float left
+.information
+  margin 60rpx 40rpx
+  padding 30rpx
+  background rgba(255, 255, 255, 0.8)
+  float left
+.item
+  font-size 32rpx
+  font-weight bold
+  margin-bottom 20rpx
+  float left
+  position relative
+  width 100%
+.title
+  float left
+  width 40%
+  text-align right
+  box-sizing border-box
+  padding-right 20rpx
+.value
+  box-sizing border-box
+  padding-left 20rpx
+  color #888
+  text-align center
 button
   width 60vw
   background-color $theme-blue
