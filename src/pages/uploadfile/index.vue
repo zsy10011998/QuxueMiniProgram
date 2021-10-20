@@ -60,6 +60,7 @@ export default {
       deepLength: 2,
       pickerValueDefault: [0, 0],
       pickerValueArray: '',
+      timelock: true,
     }
   },
   components: {
@@ -72,7 +73,7 @@ export default {
     })
   },
   onUnload () {
-    this.loading = false
+    this.loading = false  
   },
   onShow: function () {
     this.$WXRequest.get({
@@ -126,7 +127,21 @@ export default {
       })
     },
     submitFile () {
+      if (! this.timelock){
+        wx.showToast({
+          title: '频繁提交，请稍后再次尝试',
+          icon: 'none',
+          duration: 1500
+        })
+        return
+      } else {this.$set(this,'timelock',false)}
+
       if (this.fileForm.fileName != '' && this.fileForm.themeCode != '') {  // 作业题目不为空且作业文件不为空
+        wx.showLoading({
+          title: '加载中',
+        })
+        this.$set(this.fileForm,'score','AI计算中...')
+        
         this.$WXRequest.uploadFile({
           url: '/judgeScore/',
           filePath: this.fileForm.filePath,
@@ -145,6 +160,7 @@ export default {
             })
           }
         })
+        wx.hideLoading()
       } else {
         wx.showToast({
           title: '请选择您的作业题目和作业文件',
@@ -152,6 +168,9 @@ export default {
           duration: 1500
         })
       }
+      setTimeout(() =>{
+        this.$set(this,'timelock',true)
+      }, 60 * 1000)
     }
   }
 
