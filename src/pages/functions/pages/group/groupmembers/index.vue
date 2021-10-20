@@ -216,14 +216,15 @@ export default {
         this.$set(this, 'submitBanner', submitBanner)
       })
       const ret2 = GetGroupsInfoAPI({}).then(res => {
-        const { max4, max5, allowTime, now4, now5, studentInf, MaxTotal } = res
+        console.log(res)
+        const { Max4, Max5, allowTime, now4, now5, studentInf, MaxTotal } = res
 
         const allowTimeBanner = [`当前分组环节所属课时: ${TIMESPAN_MAP[allowTime]}`]
 
         this.$set(this, 'allowTime', allowTime)
         this.$set(this, 'allowTimeBanner', allowTimeBanner)
-        this.$set(this, 'max4', max4)
-        this.$set(this, 'max5', max5)
+        this.$set(this, 'max4', Max4)
+        this.$set(this, 'max5', Max5)
         this.$set(this, 'now4', now4)
         this.$set(this, 'now5', now5)
         this.$set(this, 'maxTotal', MaxTotal)
