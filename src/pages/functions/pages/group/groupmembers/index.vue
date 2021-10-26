@@ -197,9 +197,9 @@ export default {
     this.refreshData()
   },
   onPullDownRefresh () {
-    this.refreshData().then(() => {
-      wx.stopPullDownRefresh()
-    })
+    //console.log('刷新页面')
+    // wx.redirectTo({ url: 'main' })
+    this.refreshData()
   },
   methods: {
     refreshData (){
@@ -396,7 +396,7 @@ export default {
     },
     testFunction() {
       console.log(this.isAllTimespanValid())
-    }
+    },
   }
 }
 </script>

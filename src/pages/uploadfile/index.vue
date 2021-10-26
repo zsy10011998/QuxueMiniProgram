@@ -134,9 +134,10 @@ export default {
           duration: 1500
         })
         return
-      } else {this.$set(this,'timelock',false)}
+      }
 
       if (this.fileForm.fileName != '' && this.fileForm.themeCode != '') {  // 作业题目不为空且作业文件不为空
+        this.$set(this,'timelock',false)
         wx.showLoading({
           title: '加载中',
         })
@@ -170,7 +171,7 @@ export default {
       }
       setTimeout(() =>{
         this.$set(this,'timelock',true)
-      }, 60 * 1000)
+      }, 10 * 1000)
     }
   }
 

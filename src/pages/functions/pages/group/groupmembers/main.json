@@ -2,6 +2,7 @@
   "navigationBarTitleText": "小组成员",
   "disableScroll": false,
   "enablePullDownRefresh": true,
+  "backgroundTextStyle":"dark",
   "usingComponents": {
     "i-input": "../../../../../static/iview/input/index",
     "i-button": "../../../../../static/iview/button/index",

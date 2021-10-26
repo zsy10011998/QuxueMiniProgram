@@ -60,12 +60,12 @@ export default {
     login () {
       wx.getSetting({
         success: (res) => {
-          console.log('res', res)
-          console.log('scope.userinfo', res.authSetting['scope.userInfo'])
+          // console.log('res', res)
+          // console.log('scope.userinfo', res.authSetting['scope.userInfo'])
           if (res.authSetting['scope.userInfo']) {
             wx.login({
               success: (res) => {
-                console.log('success:', res)
+                // console.log('success:', res)
                 if (res.code) {
                   this.$WXRequest.post({
                     url: '/onLogin/',
@@ -75,24 +75,19 @@ export default {
                   }).then(res => {
                     if (res.repCode === 200) {
                       wx.store.commit('setOpenId', res.openid)
-                      console.log(res)
+                      // console.log(res)
                       if (res.isRegister === false) {
                         wx.navigateTo({ url: '../signUp/main' })
                       } else {
-                        wx.getUserInfo({
-                          success: (res) => {
-                            console.log('获得头像')
-                            wx.store.commit('setAvatarUrl', res.userInfo.avatarUrl)
-                            console.log(1)
-                            this.$WXRequest.post({
-                              url: '/changeInfo/',
-                              data: {
-                                openid: this.openid,
-                                avatarUrl: res.userInfo.avatarUrl
-                              }
-                            })
-                            wx.switchTab({ url: '../other-function/main' })
+                        this.$WXRequest.post({
+                          url: '/getInformation/',
+                          data: {
+                            openid: this.openid
                           }
+                        }).then((res) => {
+                          console.log('获得头像',res.avatarUrl)
+                          wx.store.commit('setAvatarUrl', res.avatarUrl)
+                          wx.switchTab({ url: '../other-function/main' })
                         })
                       }
                     } else {

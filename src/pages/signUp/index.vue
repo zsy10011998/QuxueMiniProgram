@@ -49,6 +49,7 @@ export default {
         username: '',
         studentNo: ''
       },
+      avatarUrl: '',
       loading: false
     }
   },
@@ -62,6 +63,7 @@ export default {
   },
   methods: {
     signUp () {
+
       if (!this.signUpForm.username) {
         wx.showToast({
           title: '请输入用户名',
@@ -69,60 +71,57 @@ export default {
           duration: 1500
         })
         return
-      } else if (this.signUpForm.studentNo.length < 8) {
+      } else if (this.signUpForm.studentNo.length != 8) {
         wx.showToast({
           title: '学号格式错误',
           icon: 'none',
           duration: 1500
         })
         return
-      }
-      console.log(this.openid)
-      console.log(this.signUpForm.username)
-      console.log(this.signUpForm.studentNo)
-      this.$WXRequest.post({
-        url: '/register/',
-        data: {
-          openid: this.openid,
-          name: this.signUpForm.username,
-          studentNo: this.signUpForm.studentNo
-          // avatarUrl: null
-        }
-      }).then(res => {
-        if (res.repCode === 200) {
-          wx.store.commit('setName', this.name)
-          wx.store.commit('setStudentNo', this.studentNo)
-          wx.showToast({
-            title: res.errMsg,
-            icon: 'none',
-            duration: 1500
-          }).then(() => {
-            wx.getUserInfo({
-              success: (res) => {
-                console.log('获得头像')
-                wx.store.commit('setAvatarUrl', res.userInfo.avatarUrl)
-                console.log(1)
-                this.$WXRequest.post({
-                  url: '/changeInfo/',
-                  data: {
-                    openid: this.openid,
-                    avatarUrl: res.userInfo.avatarUrl
-                  }
+      } else{
+        wx.getUserProfile({
+          desc: '用于获取您的微信头像', // 声明获取用户个人信息后的用途，后续会展示在弹窗中，请谨慎填写
+          success: (res) => {
+            this.$set(this,'avatarUrl',res.userInfo.avatarUrl)
+            this.$WXRequest.post({
+              url: '/register/',
+              data: {
+                openid: this.openid,
+                name: this.signUpForm.username,
+                studentNo: this.signUpForm.studentNo
+              }
+            }).then(res => {
+              if (res.repCode === 200) {
+                wx.store.commit('setName', this.name)
+                wx.store.commit('setStudentNo', this.studentNo)
+                wx.showToast({
+                  title: res.errMsg,
+                  icon: 'none',
+                  duration: 1500
+                }).then(() => {
+                  wx.store.commit('setAvatarUrl', this.avatarUrl)
+                  console.log(this.avatarUrl)
+                  this.$WXRequest.post({
+                    url: '/changeInfo/',
+                    data: {
+                      openid: this.openid,
+                      avatarUrl: this.avatarUrl
+                    }
+                  })
+                  wx.switchTab({ url: '../other-function/main' })
                 })
-                console.log('login success')
-                wx.switchTab({ url: '../other-function/main' })
+              } else {
+                wx.showToast({
+                  title: res.errMsg,
+                  icon: 'none',
+                  duration: 1500
+                })
+                this.loading = false
               }
             })
-          })
-        } else {
-          wx.showToast({
-            title: res.errMsg,
-            icon: 'none',
-            duration: 1500
-          })
-          this.loading = false
-        }
-      })
+          },
+        })
+      }
     },
     updateUsername (event) {
       console.log(event)
