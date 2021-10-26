@@ -196,7 +196,7 @@ export default {
         const submitBanner = []
         this.$set(this, 'isCaptain', isCaptain)
         this.$set(this, 'groupSubmitted', isSubmit)
-        submitBanner.push('下拉可刷新信息')
+        if (!isSubmit) submitBanner.push('下拉可刷新信息')
         if (!isSubmit) submitBanner.push('组长尚未提交当前分组')
         if (isCaptain && !isSubmit) submitBanner.push('组长可左划管理成员')
         this.$set(this, 'submitBanner', submitBanner)
