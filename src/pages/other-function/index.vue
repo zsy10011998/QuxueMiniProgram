@@ -25,14 +25,15 @@
              entryName="自动评分"
              entryText="结果仅供参考，实际得分以助教评判为准。"
              @click="openScoreJudge()" /> -->
-      <h1 class="menu-title">应用功能</h1>
-      <view class="function-card-list">
-        <entry picSrc="/static/utils/customer-service.png"
-               entryName="吐槽区"
-               entryText="虽无丝竹管弦之盛，一觞一咏，亦足以畅叙幽情。"
-               label="Robot"
-               @click="openBot()" />
-      </view>
+
+    </view>
+    <h1 class="menu-title">应用功能</h1>
+    <view class="function-card-list">
+      <entry picSrc="/static/utils/customer-service.png"
+             entryName="吐槽区"
+             entryText="虽无丝竹管弦之盛，一觞一咏，亦足以畅叙幽情。"
+             label="Robot"
+             @click="openBot()" />
     </view>
   </view>
 </template>
