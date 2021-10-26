@@ -84,7 +84,7 @@ export default {
   },
   onLoad (options) {
     wx.setNavigationBarTitle({
-      title: '聊天机器人'
+      title: '吐槽区'
     })
   },
   onShow () {
@@ -114,7 +114,7 @@ export default {
       return GetMessageHistoryAPI(params).then(res => {
         const messageList = [{
           flow: 'in',
-          content: 'Hi! 我可以和你聊天，现在开始吧'
+          content: 'Hi! 有什么想说的就告诉我吧！'
         }].concat(res.map(message => ({ ...message, sentiment: sentimentMap[message.score]})))
         this.$set(this, 'messageList', messageList)
         setTimeout(() => {

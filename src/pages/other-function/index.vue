@@ -6,14 +6,6 @@
                 shape="square"
                 :src="avatarUrl || '/static/images/avatar.png'" />
     </view>-->
-    <h1 class="menu-title">应用功能</h1>
-    <view class="function-card-list">
-      <entry picSrc="/static/utils/customer-service.png"
-             entryName="聊天机器人"
-             entryText="虽无丝竹管弦之盛，一觞一咏，亦足以畅叙幽情。"
-             label="Robot"
-             @click="openBot()" />
-    </view>
 
     <h1 class="menu-title">课程工具</h1>
     <view class="function-card-list">
@@ -29,10 +21,18 @@
              entryName="我的讨论课"
              entryText="教育开始的方向，将决定一个人未来的生活。"
              @click="openDiscussCourse()" />
-      <entry picSrc="/static/utils/file.png"
+      <!-- <entry picSrc="/static/utils/file.png"
              entryName="自动评分"
              entryText="结果仅供参考，实际得分以助教评判为准。"
-             @click="openScoreJudge()" />
+             @click="openScoreJudge()" /> -->
+      <h1 class="menu-title">应用功能</h1>
+      <view class="function-card-list">
+        <entry picSrc="/static/utils/customer-service.png"
+               entryName="吐槽区"
+               entryText="虽无丝竹管弦之盛，一觞一咏，亦足以畅叙幽情。"
+               label="Robot"
+               @click="openBot()" />
+      </view>
     </view>
   </view>
 </template>
