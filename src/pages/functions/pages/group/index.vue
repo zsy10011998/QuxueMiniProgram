@@ -1,3 +1,13 @@
+<!--
+<template>
+  <view class="main-container">
+    <h1 class="menu-title">
+      分组功能未开启，请耐心等待~~
+    </h1>
+  </view>
+</template>
+-->
+
 <template>
   <div>
     <loop-banner
@@ -33,6 +43,7 @@
   </div>
 
 </template>
+
 
 <script>
 import { mapState } from 'vuex'

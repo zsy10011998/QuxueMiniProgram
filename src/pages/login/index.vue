@@ -9,7 +9,7 @@
             {{ isAuthenticate ? '欢迎使用' : '计算机导论与伦理学' }}
           </div>
           <div class="text-content fadable" :class="fading ? 'transparent': ''">
-            {{ isAuthenticate ? '初次见面' : '2021年秋季学期'}}
+            {{ isAuthenticate ? '初次见面' : '2022年秋季学期'}}
           </div>
           <div class="text-content fadable lower" :class="fading ? 'transparent': ''">
             {{ isAuthenticate ? '我们需要授权以关联您的信息' : ''}}
