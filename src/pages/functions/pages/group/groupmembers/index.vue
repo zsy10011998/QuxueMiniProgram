@@ -42,11 +42,12 @@
     </div>
 
     <!-- 队长操作button：添加 & 解散 & Submit -->
+    <!-- 北京学院4/5，信息大类5/6 -->
     <div v-if="isCaptain && !addblock && !groupSubmitted">
       <div class="quota-list"
            v-if="now4 !== null && now5 !== null">
-        <div>六人组已选: <span class="now">{{now4}}</span>/<span class="max">{{max4}}</span></div>
-        <div>七人组已选: <span class="now">{{now5}}</span>/<span class="max">{{max5}}</span></div>
+        <div>五人组已选: <span class="now">{{now4}}</span>/<span class="max">{{max4}}</span></div>
+        <div>六人组已选: <span class="now">{{now5}}</span>/<span class="max">{{max5}}</span></div>
         <div>全部已选: <span class="now">{{now4 + now5}}</span>/<span class="max">{{maxTotal}}</span></div>
       </div>
       <button hover-class="clicked"
