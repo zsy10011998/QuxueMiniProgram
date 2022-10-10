@@ -46,8 +46,8 @@
     <div v-if="isCaptain && !addblock && !groupSubmitted">
       <div class="quota-list"
            v-if="now4 !== null && now5 !== null">
-        <div>四人组已选: <span class="now">{{now4}}</span>/<span class="max">{{max4}}</span></div>
-        <div>五人组已选: <span class="now">{{now5}}</span>/<span class="max">{{max5}}</span></div>
+        <div>五人组已选: <span class="now">{{now4}}</span>/<span class="max">{{max4}}</span></div>
+        <div>六人组已选: <span class="now">{{now5}}</span>/<span class="max">{{max5}}</span></div>
         <div>全部已选: <span class="now">{{now4 + now5}}</span>/<span class="max">{{maxTotal}}</span></div>
       </div>
       <button hover-class="clicked"
